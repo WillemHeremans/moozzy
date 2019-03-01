@@ -1,0 +1,54 @@
+
+body {
+  background-image: url("bg.png");
+  background-repeat: repeat;
+  margin:40px;
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+.btn-circle.btn-lg {
+  width: 50px;
+  height: 50px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 25px;
+}
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  font-size: 24px;
+  line-height: 1.33;
+  border-radius: 35px;
+}
+
+progress {
+  border-radius: 2px; 
+  width: 50%;
+  height: 22px;
+  margin-left:-11.5%;
+}
+progress::-webkit-progress-bar {
+  background-color: #17a2b8;
+  border-radius: 2px;
+}
+progress::-webkit-progress-value {
+   border-radius: 2px; 
+}
+progress::-moz-progress-bar {
+  background-color: #17a2b8;
+  border-radius: 2px;
+}
+
+button{
+  margin: 14px;
+}
