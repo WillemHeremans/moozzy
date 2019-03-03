@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Titre</title>
+    <title>Music Player</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -15,7 +15,7 @@
 <body onload="document.getElementById('progressBar').addEventListener('click', progressClick);">
     <div class="container">
 
-        <div class="row">
+        <div class="row align-items-center justify-content-center top-buffer">
 
             <div class="center-block">
 
@@ -23,24 +23,34 @@
                         class="fas fa-backward"></i></button>
 
                 <button type="button" class="btn btn-info btn-circle btn-xl" onclick="playButton()"><i id="playPause"
-                        class="fas fa-play"></i></i></button>
+                        class="fas fa-play"></i></button>
 
                 <button type="button" class="btn btn-info btn-circle btn-lg" onclick="playButton()"><i
                         class="fas fa-forward"></i></button>
+
             </div>
-
-
+            
         </div>
 
-        <p id="durationMetaData"> 0 / 0 </p>
-        <br />
-        <p id="screen-log"></p>
+        <div class="row align-items-center justify-content-center">
+                <!-- <div class="center-block"> -->
+            <p id="durationMetaData"> 0 / 0 </p>
+        <!-- </div>    -->
+        </div>
 
-        <progress id="progressBar"></progress>
+        <div class="row align-items-center justify-content-center">
+                <!-- <div class="center-block"> -->
+                <progress id="progressBar"></progress>
+            <!-- </div> -->
+            </div>
 
+            <div class="row align-items-center justify-content-center">
+                <input onchange="addFile()" type="file" name="client-file" id="get-files" multiple />
+            </div>
     </div>
-
+    
     <script src="script.js"></script>
+
 </body>
 
 </html>
