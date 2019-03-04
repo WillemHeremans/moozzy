@@ -17,7 +17,7 @@
 
         <div class="row align-items-center justify-content-center top-buffer">
             
-                    <img id="Monimage" src="elephant.png" alt="A close up of an elephant">
+                    <p></p>
           
         </div>
 
@@ -25,14 +25,17 @@
 
             <div class="center-block">
 
+                    <button type="button" class="btn btn-muted btn-circle btn-sm" onclick="playButton()"><i
+                        class="fas fa-fast-backward"></i></button>
+
                 <button type="button" class="btn btn-info btn-circle btn-lg" onclick="playButton()"><i
-                        class="fas fa-backward"></i></button>
+                        class="fas fa-step-backward"></i></button>
 
                 <button type="button" class="btn btn-info btn-circle btn-xl" onclick="playButton()"><i id="playPause"
                         class="fas fa-play"></i></button>
 
-                <button type="button" class="btn btn-info btn-circle btn-lg" onclick="playButton()"><i
-                        class="fas fa-forward"></i></button>
+                <button type="button" class="btn btn-info btn-circle btn-lg" onclick="playButton()"><i class="fas fa-step-forward"></i></button>
+                <button type="button" class="btn btn-muted btn-circle btn-sm" onclick="playButton()"><i class="fas fa-fast-forward"></i></button>
 
             </div>
 
@@ -51,7 +54,7 @@
         </div>
 
         <div class="row align-items-center justify-content-center">
-            <input onchange="addFile()" type="file" name="client-file" id="get-files" multiple />
+            <input onchange="onFilesSupplied()" type="file" name="client-file" id="get-files" multiple />
         </div>
 
         <!-- table : -->
@@ -93,6 +96,7 @@
 
     <script  src="script.js"></script>
     <script  src="mod.js"></script>
+    <script  src="metatag.js"></script>
 
 </body>
 

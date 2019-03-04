@@ -16,6 +16,7 @@ music.onloadedmetadata = function () {
   duration = music.duration;
   start = music.currentTime;
   durationMetaData.innerHTML = start + ' / ' + duration;
+  console.log(music.mozGetMetadata());
 }
 
 function playButton() {

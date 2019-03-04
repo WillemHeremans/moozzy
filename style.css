@@ -1,6 +1,6 @@
 
 body {
-  background-image: url("bg.png");
+  background-image: url("./bg/bg.png");
   background-repeat: repeat;
 }
 
@@ -16,6 +16,14 @@ body {
   font-size: 12px;
   line-height: 1.428571429;
   border-radius: 15px;
+}
+.btn-circle.btn-sm {
+  width: 35px;
+  height: 35px;
+  padding: 10px 12px;
+  font-size: 10px;
+  line-height: 1.33;
+  border-radius: 25px;
 }
 .btn-circle.btn-lg {
   width: 50px;
