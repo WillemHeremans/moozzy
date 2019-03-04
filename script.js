@@ -1,6 +1,4 @@
 
-
-
 let play = true;
 let pause = false;
 let music = new Audio('http://broadcast.infomaniak.ch/start-adofm-high.mp3');
@@ -69,17 +67,17 @@ function progressClick(event) {
   }
 }
 
-function addFile() {
-  let inp = document.getElementById("get-files");
-// Access and handle the files 
-for (i = 0; i < inp.files.length; i++) {
-  let file = inp.files[i];
-  // do things with file
-  console.log(file['name']);
-  openIndexedDB(file['name']);
-}
+// function addFile() {
+//   let inp = document.getElementById("get-files");
+// // Access and handle the files 
+// for (i = 0; i < inp.files.length; i++) {
+//   let file = inp.files[i];
+//   // do things with file
+//   console.log(file['name']);
+//   openIndexedDB(file['name']);
+// }
 
-}
+// }
 
 
 function openIndexedDB (fileindex) {
