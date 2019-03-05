@@ -8,6 +8,10 @@ body {
   margin-top:20px; 
 }
 
+.top-progress { 
+  margin-top:5px; 
+}
+
 .btn-circle {
   width: 30px;
   height: 30px;
@@ -46,6 +50,7 @@ progress {
   border-radius: 2px; 
   width: 100%;
   height: 22px;
+  border-style: none;
 }
 progress::-webkit-progress-bar {
   background-color: #17a2b8;

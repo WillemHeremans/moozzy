@@ -37,9 +37,17 @@ function addFile() {
   
     getDB.onsuccess = function () {
       let tracks = getDB.result;
+      var table = document.getElementById("tBody");
       for (i in tracks) {
         console.log(tracks[i]);
+        var row = table.insertRow(i);
+        var cell1 = row.insertCell(i);
+  cell1.innerHTML = 'tracks[i]';
       }
+
+      
+  
+  
      
       getKey.onsuccess = function() {
         let trackTime = getKey.result;
