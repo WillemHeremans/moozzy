@@ -1,7 +1,8 @@
 
 let play = true;
 let pause = false;
-let music = new Audio('http://broadcast.infomaniak.ch/start-adofm-high.mp3');
+let music = new Audio();
+music.src = document.getElementById('music').src;
 music.preload = 'metadata';
 // let start = 0;
 // let duration = 0;

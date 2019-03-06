@@ -31,31 +31,34 @@ function addFile() {
 
 
     var transaction = db.transaction(["MySongs"], "readwrite");
-    console.log(transaction.objectStore("MySongs").put('http://broadcast.infomaniak.ch/start-adofm-high.mp3', new Date().toLocaleString('fr-FR')));
+    console.log(transaction.objectStore("MySongs").put(file['name'], new Date().toLocaleString('fr-FR')));
     let getDB = transaction.objectStore("MySongs").getAll();
-    let getKey = transaction.objectStore("MySongs").getAllKeys();
+    let getKey = transaction.objectStore("MySongs").get('06/03/2019 à 13:48:16');
   
-  //   getDB.onsuccess = function () {
-  //     let tracks = getDB.result;
-  //     var table = document.getElementById("tBody");
-  //     for (i in tracks) {
-  //       console.log(tracks[i]);
+    getDB.onsuccess = function () {
+      let tracks = getDB.result;
+      // var table = document.getElementById("tBody");
+      for (i in tracks) {
+        console.log(tracks[i]);
   //       var row = table.insertRow(i);
   //       var cell1 = row.insertCell(i);
   // cell1.innerHTML = 'tracks[i]';
-  //     }
+      }
 
+      
+  
+  
+     
+      getKey.onsuccess = function() {
+        let trackTime = getKey.result;
+        // for (i in trackTime) {
+          console.log('result de get : ');
+          console.log(trackTime);
+        // }
 
-  //     getKey.onsuccess = function() {
-  //       let trackTime = getKey.result;
-  //       for (i in trackTime) {
-  //         console.log(trackTime[i]);
-  //       }
+      }
 
-  //     }
-
-  //   }
-
+    }
       db.onerror = function (event) {
           console.log("Error creating/accessing IndexedDB database");
       };
