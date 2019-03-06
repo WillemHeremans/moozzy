@@ -71,17 +71,13 @@
 
         <!-- table : -->
         <div class="row">
+            <div class="col-sm-11">
             <table class="table table-striped table-hover" id="tBody">
                 <thead>
                     <tr>
                         <th>Title</th>
                         <th>Artist</th>
                         <th>Duration</th>
-                        <th>
-                                <label class="btn btn-danger">
-                                        <i class="fas fa-plus"></i> <input onchange="addFile()" id="get-files" type="file" hidden multiple>
-                                    </label>
-                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -107,7 +103,18 @@
                     </tr>
                 </tbody>
             </table>
-
+        </div>
+        <div class="col-sm-1">
+                <label class="btn btn-danger btn-lg">
+                        <i class="fas fa-plus"></i> <input onchange="addFile()" id="get-files" type="file" hidden multiple>
+                    </label>
+                    <label class="btn btn-danger btn-lg">
+                            <i class="fas fa-broadcast-tower fa-xs"></i> <input onchange="addFile()" id="get-files" type="file" hidden multiple>
+                        </label>
+                        <label class="btn btn-danger btn-lg">
+                                <i class="fas fa-music"></i> <input onchange="addFile()" id="get-files" type="file" hidden multiple>
+                            </label>
+        </div>
         </div>
     </div>
 
