@@ -1,7 +1,7 @@
 
 let play = true;
 let pause = false;
-let music = new Audio('./songs/Blue_Dot_Sessions.mp3');
+let music = new Audio('http://broadcast.infomaniak.ch/start-adofm-high.mp3');
 music.preload = 'metadata';
 // let start = 0;
 // let duration = 0;
