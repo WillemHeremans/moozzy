@@ -33,7 +33,7 @@ function addFile() {
     var transaction = db.transaction(["MySongs"], "readwrite");
     console.log(transaction.objectStore("MySongs").put(file['name'], new Date().toLocaleString('fr-FR')));
     let getDB = transaction.objectStore("MySongs").getAll();
-    let getKey = transaction.objectStore("MySongs").get('06/03/2019 à 13:48:16');
+    let getKey = transaction.objectStore("MySongs").get('juno');
   
     getDB.onsuccess = function () {
       let tracks = getDB.result;
@@ -54,6 +54,15 @@ function addFile() {
         // for (i in trackTime) {
           console.log('result de get : ');
           console.log(trackTime);
+          document.getElementById('music').src = trackTime;
+          let music = new Audio();
+          music.src = document.getElementById('music').src;
+          music.onloadedmetadata = function () {
+            duration = music.duration;
+            start = music.currentTime;
+            durationMetaData.innerHTML = start + ' / ' + duration;
+            console.log(music.mozGetMetadata());
+          }
         // }
 
       }
