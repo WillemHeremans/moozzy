@@ -1,11 +1,6 @@
 
 let play = true;
 let pause = false;
-// let music = new Audio();
-// music.src = document.getElementById('music').src;
-// music.preload = 'metadata';
-// let start = 0;
-// let duration = 0;
 let progressBar = document.getElementById('progressBar');
 let playPause = document.getElementById('playPause');
 let durationMetaData = document.getElementById('durationMetaData');
@@ -33,8 +28,6 @@ function playButton() {
     playPause.setAttribute('class', 'fas fa-pause')
     music.currentTime = start;
     music.play();
-    console.log('music après butt play');
-    console.log(music);
     pause = true;
     move();
   } else {
@@ -91,29 +84,29 @@ function progressClick(event) {
 // }
 
 
-function openIndexedDB (fileindex) {
-  // This works on all devices/browsers, and uses IndexedDBShim as a final fallback 
-  var indexedDB = window.indexedDB;
+// function openIndexedDB (fileindex) {
+//   // This works on all devices/browsers, and uses IndexedDBShim as a final fallback 
+//   var indexedDB = window.indexedDB;
 
-  var openDB = indexedDB.open("MyDatabase", 1);
+//   var openDB = indexedDB.open("MyDatabase", 1);
 
-  openDB.onupgradeneeded = function() {
-    var db = {}
-    db.result = openDB.result;
-    db.store = db.result.createObjectStore("MyObjectStore", {keyPath: "id"});
-    if (fileindex) db.index = db.store.createIndex("NameIndex", fileindex);
-  };
+//   openDB.onupgradeneeded = function() {
+//     var db = {}
+//     db.result = openDB.result;
+//     db.store = db.result.createObjectStore("MyObjectStore", {keyPath: "id"});
+//     if (fileindex) db.index = db.store.createIndex("NameIndex", fileindex);
+//   };
 
-  console.log(openDB);
-}
+//   console.log(openDB);
+// }
 
-function getStoreIndexedDB (openDB) {
-  var db = {};
-  db.result = openDB.result;
-  db.tx = db.result.transaction("MyObjectStore", "readwrite");
-  db.store = db.tx.objectStore("MyObjectStore");
-  db.index = db.store.index("NameIndex");
+// function getStoreIndexedDB (openDB) {
+//   var db = {};
+//   db.result = openDB.result;
+//   db.tx = db.result.transaction("MyObjectStore", "readwrite");
+//   db.store = db.tx.objectStore("MyObjectStore");
+//   db.index = db.store.index("NameIndex");
 
-  console.log(db);
-}
+//   console.log(db);
+// }
 
