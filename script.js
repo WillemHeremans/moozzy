@@ -1,9 +1,9 @@
 
 let play = true;
 let pause = false;
-let music = new Audio();
-music.src = document.getElementById('music').src;
-music.preload = 'metadata';
+// let music = new Audio();
+// music.src = document.getElementById('music').src;
+// music.preload = 'metadata';
 // let start = 0;
 // let duration = 0;
 let progressBar = document.getElementById('progressBar');
@@ -11,13 +11,20 @@ let playPause = document.getElementById('playPause');
 let durationMetaData = document.getElementById('durationMetaData');
 progressBar.setAttribute('value', music.currentTime.toString())
 progressBar.setAttribute('max', music.duration.toString())
-console.log(music);
 
-music.onloadedmetadata = function () {
-  duration = music.duration;
-  start = music.currentTime;
-  durationMetaData.innerHTML = start + ' / ' + duration;
-  console.log(music.mozGetMetadata());
+function loadSong(element) {
+  let music = new Audio();
+  document.getElementById('music').setAttribute('src', element.textContent)
+  music.src = element.textContent;
+  music.preload = 'metadata';
+  console.log(music);
+
+  music.onloadedmetadata = function () {
+    duration = music.duration;
+    start = music.currentTime;
+    durationMetaData.innerHTML = start + ' / ' + duration;
+    console.log(music.mozGetMetadata());
+  }
 }
 
 function playButton() {
@@ -26,6 +33,8 @@ function playButton() {
     playPause.setAttribute('class', 'fas fa-pause')
     music.currentTime = start;
     music.play();
+    console.log('music après butt play');
+    console.log(music);
     pause = true;
     move();
   } else {

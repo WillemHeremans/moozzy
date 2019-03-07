@@ -14,7 +14,7 @@
 
 <body onload="document.getElementById('progressBar').addEventListener('click', progressClick);">
     
-    <audio id="music" src="http://broadcast.infomaniak.ch/start-adofm-high.mp3"></audio>
+    <audio id="music"></audio>
     
     <div class="container">
 
@@ -80,29 +80,40 @@
                     <tr>
                         <th>Title</th>
                         <th>Artist</th>
-                        <th>Duration</th>
+                        <th>Album</th>
+                        <th>link</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Info</td>
-                        <td>Dooley</td>
-                        <td>july@example.com</td>
+                    <tr class='clickable-row'>
+                        <td>Starling</td>
+                        <td>Podington Bear</td>
+                        <td>Solo Instruments</td>
+                        <td onclick="loadSong(this)" id="song">./songs/Podington_Bear_-_Starling.mp3</td>
                     </tr>
                     <tr>
-                        <td>Default</td>
-                        <td>Defaultson</td>
-                        <td>def@somemail.com</td>
+                        <td>Stucco Blue</td>
+                        <td>Blue Dot Sessions</td>
+                        <td>Orange Cat</td>
+                        <td onclick="loadSong(this)">./songs/Blue_Dot_Sessions.mp3</td>
                     </tr>
                     <tr>
-                        <td>Active</td>
-                        <td>Activeson</td>
-                        <td>act@example.com</td>
+                        <td>Dream (instrumental)</td>
+                        <td>Chan Wai Fat</td>
+                        <td>Children of Soul Mountain</td>
+                        <td onclick="loadSong(this)">./songs/Chan_Wai_Fat_Dream_instrumental.mp3</td>
                     </tr>
                     <tr>
-                        <td>Default</td>
-                        <td>Defaultson</td>
-                        <td>def@somemail.com</td>
+                        <td>Super Sloppy Space Junk</td>
+                        <td>Milkshake Daddy</td>
+                        <td>Aquatic Ape Hypothesis</td>
+                        <td onclick="loadSong(this)">./songs/Milkshake_Daddy_-_08_-_Super_Sloppy_Space_Junk.mp3</td>
+                    </tr>
+                    <tr>
+                        <td> Swigg</td>
+                        <td>Radio</td>
+                        <td>Hip Hop, RnB</td>
+                        <td onclick="loadSong(this)">http://broadcast.infomaniak.ch/start-adofm-high.mp3</td>
                     </tr>
                 </tbody>
             </table>

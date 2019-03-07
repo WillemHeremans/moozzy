@@ -45,10 +45,6 @@ function addFile() {
   // cell1.innerHTML = 'tracks[i]';
       }
 
-      
-  
-  
-     
       getKey.onsuccess = function() {
         let trackTime = getKey.result;
         // for (i in trackTime) {
