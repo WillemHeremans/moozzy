@@ -1,6 +1,7 @@
 
 let play = true;
 let pause = false;
+let songInfo = document.getElementById('songInfo');
 let progressBar = document.getElementById('progressBar');
 let playPause = document.getElementById('playPause');
 let durationMetaData = document.getElementById('durationMetaData');
