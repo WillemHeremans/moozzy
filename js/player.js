@@ -5,8 +5,29 @@ let songInfo = document.getElementById('songInfo');
 let progressBar = document.getElementById('progressBar');
 let playPause = document.getElementById('playPause');
 let durationMetaData = document.getElementById('durationMetaData');
+let fastForward = document.getElementById('fastForward');
+let fastBackward = document.getElementById('fastBackward');
+let volumeUpValue = document.getElementById('volumeUp');
+let volumeDownValue = document.getElementById('volumeDown');
 progressBar.setAttribute('value', music.currentTime.toString())
 progressBar.setAttribute('max', music.duration.toString())
+
+fastForward.onmousedown = function () {
+  music.playbackRate += 2.0;
+}
+
+fastForward.onmouseup = function () {
+  music.playbackRate = 1.0;
+}
+
+
+fastBackward.onmousedown = function () {
+  music.playbackRate -= 0.5;
+}
+
+fastBackward.onmouseup = function () {
+  music.playbackRate = 1.0;
+}
 
 function loadSong(element) {
   let music = new Audio();
@@ -18,7 +39,7 @@ function loadSong(element) {
   music.onloadedmetadata = function () {
     duration = music.duration;
     start = music.currentTime;
-    durationMetaData.innerHTML = start + ' / ' + duration;
+    durationMetaData.innerHTML = ~~(start / 3600) + ':' + ~~((start % 3600) / 60) + ':' + (~~start % 60) + ' / ' + ~~(duration / 3600) + ':' +  ~~((duration % 3600) / 60) + ':' + (~~duration % 60);
     console.log(music.mozGetMetadata());
   }
 }
@@ -51,7 +72,7 @@ function move() {
       start = song.currentTime;
       progressBar.setAttribute('max', duration.toString());
       progressBar.setAttribute('value', start.toString());
-      durationMetaData.innerHTML = start + ' / ' + duration;
+      durationMetaData.innerHTML = ~~(start / 3600) + ':' + ~~((start % 3600) / 60) + ':' + (~~start % 60) + ' / ' + ~~(duration / 3600) + ':' + ~~((duration % 3600) / 60) + ':' + (~~duration % 60);
     }
   }
 }
@@ -69,6 +90,62 @@ function progressClick(event) {
   } else {
     start = event.target['value'];
     playButton();
+  }
+}
+
+function loop(element) {
+  if (music.loop) {
+    music.loop = false;
+    element.style.color = '#4c4c4c';
+  } else {
+    music.loop = true;
+    element.style.color = 'red';
+  }
+}
+
+function muted(element) {
+  if (music.muted) {
+    music.muted = false;
+    element.style.color = '#4c4c4c';
+  } else {
+    music.muted = true;
+    element.style.color = 'red';
+  }
+}
+
+function volumeUp(element) {
+  if (music.volume < 1) {
+    if (volumeDownValue.childNodes[1]) {
+      volumeDownValue.removeChild(volumeDownValue.childNodes[1]);
+    }
+    let span = document.createElement('SPAN');
+    let volumeValue = document.createTextNode(Math.round((music.volume * 10) + 1).toString().replace('10', ''));
+      span.appendChild(volumeValue);
+      element.appendChild(span);
+    element.onpointerup  = function () {
+      if (element.childNodes[1]) {
+        element.removeChild(span);
+      }
+    }
+    music.volume += 0.1;
+  }
+}
+
+function volumeDown (element) {
+  if (music.volume > 1.3877787807814457e-16) {
+    if (volumeUpValue.childNodes[1]) {
+      volumeUpValue.removeChild(volumeUpValue.childNodes[1]);
+    }
+    let span = document.createElement('SPAN');
+    let volumeValue = document.createTextNode(Math.round((music.volume * 10) - 1).toString().replace('0', ''));
+    span.appendChild(volumeValue);
+    element.appendChild(span);
+    element.onpointerup = function () {
+      if (element.childNodes[1]) {
+        element.removeChild(span);
+      }
+    }
+    music.volume -= 0.1;
   }
 }
 
