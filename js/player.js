@@ -9,6 +9,8 @@ let fastForward = document.getElementById('fastForward');
 let fastBackward = document.getElementById('fastBackward');
 let volumeUpValue = document.getElementById('volumeUp');
 let volumeDownValue = document.getElementById('volumeDown');
+
+document.getElementById('progressBar').addEventListener('click', progressClick);
 progressBar.setAttribute('value', music.currentTime.toString())
 progressBar.setAttribute('max', music.duration.toString())
 
@@ -19,7 +21,6 @@ fastForward.onpointerdown = function () {
 fastForward.onpointerup = function () {
   music.playbackRate = 1.0;
 }
-
 
 fastBackward.onpointerdown = function () {
   music.playbackRate -= 0.5;
@@ -39,7 +40,7 @@ function loadSong(element) {
   music.onloadedmetadata = function () {
     duration = music.duration;
     start = music.currentTime;
-    durationMetaData.innerHTML = ~~(start / 3600) + ':' + ~~((start % 3600) / 60) + ':' + (~~start % 60) + ' / ' + ~~(duration / 3600) + ':' +  ~~((duration % 3600) / 60) + ':' + (~~duration % 60);
+    durationMetaData.innerHTML = ~~(start / 3600) + ':' + ~~((start % 3600) / 60) + ':' + (~~start % 60) + ' / ' + ~~(duration / 3600) + ':' + ~~((duration % 3600) / 60) + ':' + (~~duration % 60);
     console.log(music.mozGetMetadata());
   }
 }
@@ -120,9 +121,9 @@ function volumeUp(element) {
     }
     let span = document.createElement('SPAN');
     let volumeValue = document.createTextNode(Math.round((music.volume * 10) + 1).toString().replace('10', ''));
-      span.appendChild(volumeValue);
-      element.appendChild(span);
-    element.onpointerup  = function () {
+    span.appendChild(volumeValue);
+    element.appendChild(span);
+    element.onpointerup = function () {
       if (element.childNodes[1]) {
         element.removeChild(span);
       }
@@ -131,7 +132,7 @@ function volumeUp(element) {
   }
 }
 
-function volumeDown (element) {
+function volumeDown(element) {
   if (music.volume > 1.3877787807814457e-16) {
     if (volumeUpValue.childNodes[1]) {
       volumeUpValue.removeChild(volumeUpValue.childNodes[1]);
