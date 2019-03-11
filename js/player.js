@@ -12,20 +12,20 @@ let volumeDownValue = document.getElementById('volumeDown');
 progressBar.setAttribute('value', music.currentTime.toString())
 progressBar.setAttribute('max', music.duration.toString())
 
-fastForward.onmousedown = function () {
+fastForward.onpointerdown = function () {
   music.playbackRate += 2.0;
 }
 
-fastForward.onmouseup = function () {
+fastForward.onpointerup = function () {
   music.playbackRate = 1.0;
 }
 
 
-fastBackward.onmousedown = function () {
+fastBackward.onpointerdown = function () {
   music.playbackRate -= 0.5;
 }
 
-fastBackward.onmouseup = function () {
+fastBackward.onpointerup = function () {
   music.playbackRate = 1.0;
 }
 
