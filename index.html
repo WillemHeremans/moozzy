@@ -12,7 +12,7 @@
 
 </head>
 
-<body>
+<body onload="loadData()">
 
     <audio id="music"></audio>
 
@@ -128,16 +128,32 @@
                 <label class="btn btn-danger btn-lg">
                     <i class="fas fa-plus"></i> <input onchange="addFile()" id="get-files" type="file" hidden multiple>
                 </label>
+                <a href="#broadcast">
                 <label class="btn btn-danger btn-lg">
-                    <i class="fas fa-broadcast-tower fa-xs"></i> <input onchange="addFile()" id="get-files" type="file"
-                        hidden multiple>
+                    
+                    <i class="fas fa-broadcast-tower fa-xs"></i>
+                    
                 </label>
+            </a>
                 <label class="btn btn-danger btn-lg">
                     <i class="fas fa-music"></i> <input onchange="addFile()" id="get-files" type="file" hidden multiple>
                 </label>
             </div>
         </div>
     </div>
+
+    <div id="datas">
+
+    </div>
+
+    <!-- pop-up's -->
+
+    <div class="modalLayer" id="broadcast">
+		<div class="popup_block">
+			<a href="#home" class="croix">&#10006;</a>
+				<p class="toggle1">add Broadcast</p>
+		</div>
+</div>
 
     <script src="./js/player.js"></script>
     <script src="./js/database.js"></script>
