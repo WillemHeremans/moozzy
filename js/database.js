@@ -1,6 +1,33 @@
 let indexedDB = window.indexedDB
 let dbVersion = 4;
 
+// function addBroadcast() {
+//   let request = indexedDB.open("MesRadios", dbVersion);
+//   request.onerror = function(event) {
+//     console.log('Erreur de création/accès')
+//   };
+//   request.onsuccess = function(event) {
+//     db = event.target.result;
+//     var transaction = db.transaction(["listeRadios"], "readwrite");
+//     transaction.objectStore("listeRadios").add('maclé')
+
+//   };
+
+//   // request.onupgradeneeded = function(event) { 
+//   //   var db = event.target.result;
+  
+//   //   // Crée un objet de stockage pour cette base de données
+//   //   var objectStore = db.createObjectStore("listeRadios", { keyPath: "radioName", autoIncrement: true });
+//   //   objectStore.createIndex("name", "name", { unique: false });
+//   //   objectStore.createIndex("hours", "hours", { unique: false });
+//   //   objectStore.createIndex("minutes", "minutes", { unique: false });
+//   //   objectStore.createIndex("day", "day", { unique: false });
+//   //   objectStore.createIndex("month", "month", { unique: false });
+//   //   objectStore.createIndex("year", "year", { unique: false });
+
+//   // };
+// }
+ 
 function loadData() {
 
   let request = indexedDB.open("songs", dbVersion);
@@ -29,10 +56,13 @@ function loadData() {
       let displayData = document.getElementById('datas');
       for (i in tracks) {
         console.log(tracks[i]);
-        let para = document.createElement('P');
-        let songData = document.createTextNode(tracks[i]);
-        para.appendChild(songData);
-        displayData.appendChild(para);
+        let tr = document.createElement('tr');
+        let td = document.createElement('td');
+        let songLink = document.createTextNode(tracks[i]);
+        td.setAttribute('onclick', 'loadSong(this)');
+        td.appendChild(songLink);
+        displayData.appendChild(tr);
+        tr.appendChild(td);
       }
     }
 
@@ -46,7 +76,6 @@ function loadData() {
 
   }
 }
-
 
 
 function addFile() {

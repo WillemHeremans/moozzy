@@ -48,9 +48,7 @@ a {
    #broadcast:target, #settings:target{
   display: block;
   }
-  .popup_block{
-  background: rgba(245, 245, 245, 0.7);
-  padding: 2.5%;
+  .popupBlock{
   position: relative;
   margin: 5% auto;
   width: 60%;
