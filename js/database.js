@@ -55,7 +55,7 @@ function loadData() {
       let tracks = getDB.result;
       let displayData = document.getElementById('datas');
       for (i in tracks) {
-        console.log(tracks[i]);
+        console.log(tracks[i].name + ' ' + tracks[i].gender + ' ' + tracks[i].url);
         let tr = document.createElement('tr');
         let td = document.createElement('td');
         let songLink = document.createTextNode(tracks[i]);
