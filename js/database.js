@@ -108,7 +108,7 @@ function addFile() {
       console.log(db);
 
       var transaction = db.transaction(["MySongs"], "readwrite");
-      console.log(transaction.objectStore("MySongs").put(file['name'], new Date().toLocaleString('fr-FR')));
+      console.log(transaction.objectStore("MySongs").put({'name': 'Ma radio', 'gender': 'RnB', 'url': 'http://broadcast.infomaniak.ch'}, new Date().toLocaleString('fr-FR')));
       let getDB = transaction.objectStore("MySongs").getAll();
       let getKey = transaction.objectStore("MySongs").get('juno');
 
