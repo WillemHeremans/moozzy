@@ -89,7 +89,6 @@ function addFile() {
     console.log('Ce script est bien appelé')
     // IndexedDB
 
-
     // Create/open database
     var request = indexedDB.open("songs", dbVersion),
       db,
@@ -107,7 +106,6 @@ function addFile() {
       console.log("Success creating/accessing IndexedDB database");
       db = request.result;
       console.log(db);
-
 
       var transaction = db.transaction(["MySongs"], "readwrite");
       console.log(transaction.objectStore("MySongs").put(file['name'], new Date().toLocaleString('fr-FR')));

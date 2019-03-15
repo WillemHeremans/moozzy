@@ -8,6 +8,10 @@ a {
   text-decoration: none;
 }
 
+td {
+  cursor: pointer;
+}
+
 /* infos song marquee animation*/
 .marquee {
   width: 100%;
