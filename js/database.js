@@ -57,12 +57,15 @@ function loadData() {
       for (i in tracks) {
         console.log(tracks[i].name + ' ' + tracks[i].gender + ' ' + tracks[i].url);
         let tr = document.createElement('tr');
-        let td = document.createElement('td');
-        let songLink = document.createTextNode(tracks[i]);
-        td.setAttribute('onclick', 'loadSong(this)');
-        td.appendChild(songLink);
+        // let td = document.createElement('td');
+        tr.innerHTML = '<td onclick="loadSong(this)">' + tracks[i].name + '</td>'
+                      + '<td onclick="loadSong(this)">' + tracks[i].gender + '</td>'
+                      + '<td onclick="loadSong(this)">' + tracks[i].url + '</td>';
+        // let songLink = document.createTextNode(tracks[i]);
+        // td.setAttribute('onclick', 'loadSong(this)');
+        // td.appendChild(songLink);
         displayData.appendChild(tr);
-        tr.appendChild(td);
+        // tr.appendChild(td);
       }
     }
 
@@ -108,7 +111,7 @@ function addFile() {
       console.log(db);
 
       var transaction = db.transaction(["MySongs"], "readwrite");
-      console.log(transaction.objectStore("MySongs").put({'name': 'SWIGG', 'gender': 'Pop, RnB, rap', 'url': 'http://broadcast.infomaniak.ch'}, new Date().toLocaleString('fr-FR')));
+      console.log(transaction.objectStore("MySongs").put({'name': 'SWIGG', 'gender': 'Pop, RnB, rap', 'url': 'http://swingfm.ice.infomaniak.ch/swingfm-128'}, new Date().toLocaleString('fr-FR')));
       let getDB = transaction.objectStore("MySongs").getAll();
       let getKey = transaction.objectStore("MySongs").get('juno');
 
