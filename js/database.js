@@ -33,10 +33,7 @@ function loadSongsData() {
         trTag.innerHTML = '<td>' + tracks[i].name + '</td>'
                       + '<td>' + tracks[i].gender + '</td>'
                       + '<td>' + tracks[i].url + '</td>'
-                      +'<td><i class="fas fa-bars"></i></td>';
-        // let songLink = document.createTextNode(tracks[i]);
-        // td.setAttribute('onclick', 'loadSong(this)');
-        // td.appendChild(songLink);
+                      +'<td title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>';
         displayData.appendChild(trTag);
  
       }
