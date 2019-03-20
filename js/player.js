@@ -16,8 +16,8 @@ progressBar.setAttribute('max', music.duration.toString())
 
 function loadSong(element) {
   let music = new Audio();
-  document.getElementById('music').setAttribute('src', element.textContent)
-  music.src = element.textContent;
+  document.getElementById('music').setAttribute('src', element.childNodes[2].textContent)
+  music.src = element.childNodes[2].textContent;
   music.preload = 'metadata';
   console.log(music);
 

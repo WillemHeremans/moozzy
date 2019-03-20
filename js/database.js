@@ -1,6 +1,58 @@
 let indexedDB = window.indexedDB
 let dbVersion = 4;
 
+function loadSongsData() {
+
+  let request = indexedDB.open("songs", dbVersion);
+
+    createObjectStore = function (dataBase) {
+      // Create an objectStore
+      console.log("Creating objectStore")
+      dataBase.createObjectStore("MySongs");
+    }
+
+  request.onerror = function (event) {
+    console.log("Error creating/accessing IndexedDB database");
+  };
+
+  request.onsuccess = function (event) {
+    console.log("Success creating/accessing IndexedDB database :");
+    db = request.result;
+
+    let transaction = db.transaction(["MySongs"], "readonly");
+    let getDB = transaction.objectStore("MySongs").getAll();
+    let countData = transaction.objectStore("MySongs").count();
+
+    getDB.onsuccess = function () {
+      let tracks = getDB.result;
+      let displayData = document.getElementById('datas');
+      for (i in tracks) {
+        console.log(tracks[i].name + ' ' + tracks[i].gender + ' ' + tracks[i].url);
+        let trTag = document.createElement('tr');
+        trTag.setAttribute('onclick', 'loadSong(this)');
+        trTag.innerHTML = '<td>' + tracks[i].name + '</td>'
+                      + '<td>' + tracks[i].gender + '</td>'
+                      + '<td>' + tracks[i].url + '</td>'
+                      +'<td><i class="fas fa-bars"></i></td>';
+        // let songLink = document.createTextNode(tracks[i]);
+        // td.setAttribute('onclick', 'loadSong(this)');
+        // td.appendChild(songLink);
+        displayData.appendChild(trTag);
+ 
+      }
+    }
+
+    countData.onsuccess = function() {
+      console.log(countData.result);
+    }
+
+    db.onerror = function (event) {
+      console.log("Error creating/accessing IndexedDB database");
+    };
+
+  }
+}
+
 // function addBroadcast() {
 //   let request = indexedDB.open("MesRadios", dbVersion);
 //   request.onerror = function(event) {
@@ -27,59 +79,6 @@ let dbVersion = 4;
 
 //   // };
 // }
- 
-function loadSongsData() {
-
-  let request = indexedDB.open("songs", dbVersion);
-
-    createObjectStore = function (dataBase) {
-      // Create an objectStore
-      console.log("Creating objectStore")
-      dataBase.createObjectStore("MySongs");
-    }
-
-  request.onerror = function (event) {
-    console.log("Error creating/accessing IndexedDB database");
-  };
-
-  request.onsuccess = function (event) {
-    console.log("Success creating/accessing IndexedDB database :");
-    db = request.result;
-
-    let transaction = db.transaction(["MySongs"], "readonly");
-    let getDB = transaction.objectStore("MySongs").getAll();
-    let countData = transaction.objectStore("MySongs").count();
-    // let monIndex = transaction.objectStore("MySongs").createIndex('NomIndex', 'Maclé', { unique: false, locale: 'fr-FR' });
-
-    getDB.onsuccess = function () {
-      let tracks = getDB.result;
-      let displayData = document.getElementById('datas');
-      for (i in tracks) {
-        console.log(tracks[i].name + ' ' + tracks[i].gender + ' ' + tracks[i].url);
-        let tr = document.createElement('tr');
-        // let td = document.createElement('td');
-        tr.innerHTML = '<td onclick="loadSong(this)">' + tracks[i].name + '</td>'
-                      + '<td onclick="loadSong(this)">' + tracks[i].gender + '</td>'
-                      + '<td onclick="loadSong(this)">' + tracks[i].url + '</td>';
-        // let songLink = document.createTextNode(tracks[i]);
-        // td.setAttribute('onclick', 'loadSong(this)');
-        // td.appendChild(songLink);
-        displayData.appendChild(tr);
-        // tr.appendChild(td);
-      }
-    }
-
-    countData.onsuccess = function() {
-      console.log(countData.result);
-    }
-
-    db.onerror = function (event) {
-      console.log("Error creating/accessing IndexedDB database");
-    };
-
-  }
-}
-
 
 function addFile() {
 
