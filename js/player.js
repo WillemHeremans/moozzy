@@ -14,6 +14,22 @@ document.getElementById('progressBar').addEventListener('click', progressClick);
 progressBar.setAttribute('value', music.currentTime.toString())
 progressBar.setAttribute('max', music.duration.toString())
 
+function loadSong(element) {
+  let music = new Audio();
+  document.getElementById('music').setAttribute('src', element.textContent)
+  music.src = element.textContent;
+  music.preload = 'metadata';
+  console.log(music);
+
+  music.onloadedmetadata = function () {
+    duration = music.duration;
+    start = music.currentTime;
+    durationMetaData.innerHTML = ~~(start / 3600) + ':' + ~~((start % 3600) / 60) + ':' + (~~start % 60) + ' / ' + ~~(duration / 3600) + ':' + ~~((duration % 3600) / 60) + ':' + (~~duration % 60);
+    console.log(music.mozGetMetadata());
+  }
+}
+
+
 fastForward.onpointerdown = function () {
   music.playbackRate += 2.0;
 }
@@ -30,21 +46,6 @@ fastBackward.onpointerup = function () {
   music.playbackRate = 1.0;
 }
 
-function loadSong(element) {
-  let music = new Audio();
-  document.getElementById('music').setAttribute('src', element.textContent)
-  music.src = element.textContent;
-  music.preload = 'metadata';
-  console.log(music);
-
-  music.onloadedmetadata = function () {
-    duration = music.duration;
-    start = music.currentTime;
-    durationMetaData.innerHTML = ~~(start / 3600) + ':' + ~~((start % 3600) / 60) + ':' + (~~start % 60) + ' / ' + ~~(duration / 3600) + ':' + ~~((duration % 3600) / 60) + ':' + (~~duration % 60);
-    console.log(music.mozGetMetadata());
-  }
-}
-
 function playButton() {
   if (play) {
     play = false;
@@ -52,7 +53,7 @@ function playButton() {
     music.currentTime = start;
     music.play();
     pause = true;
-    move();
+    autoMove();
   } else {
     play = true;
     playPause.setAttribute('class', 'fas fa-play')
@@ -62,7 +63,7 @@ function playButton() {
   }
 }
 
-function move() {
+function autoMove() {
   const song = music;
   const id = setInterval(frame, 500);
   function frame() {
@@ -149,43 +150,4 @@ function volumeDown(element) {
     music.volume -= 0.1;
   }
 }
-
-// function addFile() {
-//   let inp = document.getElementById("get-files");
-// // Access and handle the files 
-// for (i = 0; i < inp.files.length; i++) {
-//   let file = inp.files[i];
-//   // do things with file
-//   console.log(file['name']);
-//   openIndexedDB(file['name']);
-// }
-
-// }
-
-
-// function openIndexedDB (fileindex) {
-//   // This works on all devices/browsers, and uses IndexedDBShim as a final fallback 
-//   var indexedDB = window.indexedDB;
-
-//   var openDB = indexedDB.open("MyDatabase", 1);
-
-//   openDB.onupgradeneeded = function() {
-//     var db = {}
-//     db.result = openDB.result;
-//     db.store = db.result.createObjectStore("MyObjectStore", {keyPath: "id"});
-//     if (fileindex) db.index = db.store.createIndex("NameIndex", fileindex);
-//   };
-
-//   console.log(openDB);
-// }
-
-// function getStoreIndexedDB (openDB) {
-//   var db = {};
-//   db.result = openDB.result;
-//   db.tx = db.result.transaction("MyObjectStore", "readwrite");
-//   db.store = db.tx.objectStore("MyObjectStore");
-//   db.index = db.store.index("NameIndex");
-
-//   console.log(db);
-// }
 

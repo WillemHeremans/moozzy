@@ -28,7 +28,7 @@ let dbVersion = 4;
 //   // };
 // }
  
-function loadData() {
+function loadSongsData() {
 
   let request = indexedDB.open("songs", dbVersion);
 
