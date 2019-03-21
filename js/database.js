@@ -1,21 +1,28 @@
-let indexedDB = window.indexedDB
-let dbVersion = 4;
+let indexedDB = window.indexedDB;
+let dbName = 'MusicPlayer';
+let dbVersion = 1;
+let storeName = 'MySongs';
 
 function loadSongsData() {
 
-  let request = indexedDB.open("songs", dbVersion);
+  let request = indexedDB.open(dbName, dbVersion);
 
   request.onerror = function (event) {
-    console.log("Error creating/accessing IndexedDB database");
+    console.log('Error creating/accessing IndexedDB database');
   };
 
+  request.onupgradeneeded = function(){
+    db = request.result;
+    db.createObjectStore(storeName, { autoIncrement : true });
+  }
+
   request.onsuccess = function (event) {
-    console.log("Success creating/accessing IndexedDB database :");
+    console.log('Success creating/accessing IndexedDB database :');
     db = request.result;
 
-    let transaction = db.transaction(["MySongs"], "readonly");
-    let getDB = transaction.objectStore("MySongs").getAll();
-    let countData = transaction.objectStore("MySongs").count();
+    let transaction = db.transaction([storeName], 'readonly');
+    let getDB = transaction.objectStore(storeName).getAll();
+    let countData = transaction.objectStore(storeName).count();
 
     getDB.onsuccess = function () {
       let tracks = getDB.result;
@@ -29,7 +36,6 @@ function loadSongsData() {
           + '<td>' + tracks[i].url + '</td>'
           + '<td title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>';
         displayData.appendChild(trTag);
-
       }
     }
     countData.onsuccess = function () {
@@ -40,7 +46,7 @@ function loadSongsData() {
 
 function addFile() {
 
-  let inp = document.getElementById("get-files");
+  let inp = document.getElementById('get-files');
   // Access and handle the files 
   for (i = 0; i < inp.files.length; i++) {
     let file = inp.files[i];
@@ -50,32 +56,32 @@ function addFile() {
     // IndexedDB
 
     // Create/open database
-    var request = indexedDB.open("songs", dbVersion),
+    var request = indexedDB.open(dbName, dbVersion),
       db,
       createObjectStore = function (dataBase) {
         // Create an objectStore
-        console.log("Creating objectStore")
-        //   var objectStore = db.createObjectStore("listeRadios", { autoIncrement: true });
-        dataBase.createObjectStore("MyNewData");
+        console.log('Creating objectStore')
+        //   var objectStore = db.createObjectStore('listeRadios', { autoIncrement: true });
+        dataBase.createObjectStore('MyNewData');
       }
 
     request.onerror = function (event) {
-      console.log("Error creating/accessing IndexedDB database");
+      console.log('Error creating/accessing IndexedDB database');
     };
 
     request.onsuccess = function (event) {
-      console.log("Success creating/accessing IndexedDB database");
+      console.log('Success creating/accessing IndexedDB database');
       db = request.result;
       console.log(db);
 
-      var transaction = db.transaction(["MySongs"], "readwrite");
-      console.log(transaction.objectStore("MySongs").put({ 'name': 'SWIGG', 'gender': 'Pop, RnB, rap', 'url': 'http://swingfm.ice.infomaniak.ch/swingfm-128' }, new Date().toLocaleString('fr-FR')));
-      let getDB = transaction.objectStore("MySongs").getAll();
-      let getKey = transaction.objectStore("MySongs").get('juno');
+      var transaction = db.transaction([storeName], 'readwrite');
+      console.log(transaction.objectStore(storeName).put({ 'name': 'SWIGG', 'gender': 'Pop, RnB, rap', 'url': 'http://swingfm.ice.infomaniak.ch/swingfm-128', 'date': new Date().toLocaleString('fr-FR') }));
+      let getDB = transaction.objectStore(storeName).getAll();
+      let getKey = transaction.objectStore(storeName).get('juno');
 
       getDB.onsuccess = function () {
         let tracks = getDB.result;
-        // var table = document.getElementById("tBody");
+        // var table = document.getElementById('tBody');
         for (i in tracks) {
           console.log(tracks[i]);
           //       var row = table.insertRow(i);
@@ -102,7 +108,7 @@ function addFile() {
 
       }
       db.onerror = function (event) {
-        console.log("Error creating/accessing IndexedDB database");
+        console.log('Error creating/accessing IndexedDB database');
       };
     }
 
