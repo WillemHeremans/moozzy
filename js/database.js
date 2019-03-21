@@ -5,12 +5,6 @@ function loadSongsData() {
 
   let request = indexedDB.open("songs", dbVersion);
 
-    createObjectStore = function (dataBase) {
-      // Create an objectStore
-      console.log("Creating objectStore")
-      dataBase.createObjectStore("MySongs");
-    }
-
   request.onerror = function (event) {
     console.log("Error creating/accessing IndexedDB database");
   };
@@ -31,51 +25,18 @@ function loadSongsData() {
         let trTag = document.createElement('tr');
         trTag.setAttribute('onclick', 'loadSong(this)');
         trTag.innerHTML = '<td>' + tracks[i].name + '</td>'
-                      + '<td>' + tracks[i].gender + '</td>'
-                      + '<td>' + tracks[i].url + '</td>'
-                      +'<td title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>';
+          + '<td>' + tracks[i].gender + '</td>'
+          + '<td>' + tracks[i].url + '</td>'
+          + '<td title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>';
         displayData.appendChild(trTag);
- 
+
       }
     }
-
-    countData.onsuccess = function() {
+    countData.onsuccess = function () {
       console.log(countData.result);
     }
-
-    db.onerror = function (event) {
-      console.log("Error creating/accessing IndexedDB database");
-    };
-
   }
 }
-
-// function addBroadcast() {
-//   let request = indexedDB.open("MesRadios", dbVersion);
-//   request.onerror = function(event) {
-//     console.log('Erreur de création/accès')
-//   };
-//   request.onsuccess = function(event) {
-//     db = event.target.result;
-//     var transaction = db.transaction(["listeRadios"], "readwrite");
-//     transaction.objectStore("listeRadios").add('maclé')
-
-//   };
-
-//   // request.onupgradeneeded = function(event) { 
-//   //   var db = event.target.result;
-  
-//   //   // Crée un objet de stockage pour cette base de données
-//   //   var objectStore = db.createObjectStore("listeRadios", { keyPath: "radioName", autoIncrement: true });
-//   //   objectStore.createIndex("name", "name", { unique: false });
-//   //   objectStore.createIndex("hours", "hours", { unique: false });
-//   //   objectStore.createIndex("minutes", "minutes", { unique: false });
-//   //   objectStore.createIndex("day", "day", { unique: false });
-//   //   objectStore.createIndex("month", "month", { unique: false });
-//   //   objectStore.createIndex("year", "year", { unique: false });
-
-//   // };
-// }
 
 function addFile() {
 
@@ -94,6 +55,7 @@ function addFile() {
       createObjectStore = function (dataBase) {
         // Create an objectStore
         console.log("Creating objectStore")
+        //   var objectStore = db.createObjectStore("listeRadios", { autoIncrement: true });
         dataBase.createObjectStore("MyNewData");
       }
 
@@ -107,7 +69,7 @@ function addFile() {
       console.log(db);
 
       var transaction = db.transaction(["MySongs"], "readwrite");
-      console.log(transaction.objectStore("MySongs").put({'name': 'SWIGG', 'gender': 'Pop, RnB, rap', 'url': 'http://swingfm.ice.infomaniak.ch/swingfm-128'}, new Date().toLocaleString('fr-FR')));
+      console.log(transaction.objectStore("MySongs").put({ 'name': 'SWIGG', 'gender': 'Pop, RnB, rap', 'url': 'http://swingfm.ice.infomaniak.ch/swingfm-128' }, new Date().toLocaleString('fr-FR')));
       let getDB = transaction.objectStore("MySongs").getAll();
       let getKey = transaction.objectStore("MySongs").get('juno');
 
