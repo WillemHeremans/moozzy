@@ -3,6 +3,11 @@ let dbName = 'MusicPlayer';
 let dbVersion = 1;
 let storeName = 'MySongs';
 
+let trackName = document.getElementById('trackName');
+let trackGenre = document.getElementById('trackGenre');
+let trackURL = document.getElementById('trackURL');
+let trackID = document.getElementById('trackID');
+
 function loadSongsData() {
 
   let request = indexedDB.open(dbName, dbVersion);
@@ -54,23 +59,56 @@ function loadSongsData() {
 }
 
 function songSettings(element) {
+
   let request = indexedDB.open(dbName, dbVersion);
-  console.log('settings');
 
- request.onsuccess = function() {
-  console.log('settings -> success');
-  let transaction = db.transaction([storeName], 'readwrite');
-  console.log(element.id);
-  let getTrackData = transaction.objectStore(storeName).get(Number(element.id));
+  request.onsuccess = function () {
 
-  getTrackData.onsuccess = function() {
-    let track = getTrackData.result;
-    document.getElementById('trackName').value = track.name;
-    document.getElementById('trackGenre').value = track.gender;
-    document.getElementById('trackURL').value = track.url;
+    let transaction = db.transaction([storeName], 'readwrite');
+    let getTrackData = transaction.objectStore(storeName).get(Number(element.id));
+
+    getTrackData.onsuccess = function () {
+      let track = getTrackData.result;
+      trackName.value = track.name;
+      trackGenre.value = track.gender;
+      trackURL.value = track.url;
+      trackID.value = element.id;
+    }
+
   }
 
- }
+}
+
+function unloadModal() {
+  trackName.value = '';
+  trackGenre.value = '';
+  trackURL.value = '';
+  trackID.value = '';
+}
+
+function submit() {
+
+  let request = indexedDB.open(dbName, dbVersion);
+
+  if (trackID.value) {
+
+    request.onsuccess = function () {
+
+      let transaction = db.transaction([storeName], 'readwrite');
+      transaction.objectStore(storeName).put({ 'name': trackName.value, 'gender': trackGenre.value, 'url': trackURL.value, 'date': new Date().toLocaleString('fr-FR') }, Number(trackID.value));
+
+    }
+
+  } else {
+
+    request.onsuccess = function () {
+
+      let transaction = db.transaction([storeName], 'readwrite');
+      transaction.objectStore(storeName).put({ 'name': trackName.value, 'gender': trackGenre.value, 'url': trackURL.value, 'date': new Date().toLocaleString('fr-FR') });
+
+    }
+
+  }
 
 }
 

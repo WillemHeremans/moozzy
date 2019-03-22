@@ -118,13 +118,13 @@
     </div>
 
 
-    <!-- pop-up's -->
+    <!-- pop-up -->
 
     <div class="modalLayer" id="broadcast">
 		<div class="popupBlock">
                 <div class="card">
                         <div class="card-header">
-                                <a href="#" class="btn close croix">&#10006;</a>
+                                <a onclick="unloadModal()" href="#" class="btn close croix">&#10006;</a>
                         </div>
                         <div class="card-body">
                                 <div class="input-group input-group-sm mb-3">
@@ -136,9 +136,12 @@
                             <div class="input-group input-group-sm mb-3">
                             <input id="trackURL" class="form-control form-control-sm" type="text" placeholder="Enter a web radio URL">
                         </div>
+                        <div class="input-group input-group-sm mb-3">
+                            <input id="trackID" class="form-control form-control-sm" type="hidden">
+                        </div>
                         </div>
                         <div class="card-footer">
-                                <button type="button" class="btn btn-danger">
+                                <button onclick="submit()" type="button" class="btn btn-danger">
                                     Submit
                                 </button>
                         </div>
