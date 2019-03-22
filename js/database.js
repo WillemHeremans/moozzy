@@ -11,37 +11,67 @@ function loadSongsData() {
     console.log('Error creating/accessing IndexedDB database');
   };
 
-  request.onupgradeneeded = function(){
+  request.onupgradeneeded = function () {
     db = request.result;
-    db.createObjectStore(storeName, { autoIncrement : true });
+    db.createObjectStore(storeName, { autoIncrement: true });
   }
 
-  request.onsuccess = function (event) {
+  request.onsuccess = function () {
     console.log('Success creating/accessing IndexedDB database :');
     db = request.result;
 
     let transaction = db.transaction([storeName], 'readonly');
     let getDB = transaction.objectStore(storeName).getAll();
+    let getKey = transaction.objectStore(storeName).getAllKeys();
     let countData = transaction.objectStore(storeName).count();
 
     getDB.onsuccess = function () {
+
       let tracks = getDB.result;
-      let displayData = document.getElementById('datas');
-      for (i in tracks) {
-        console.log(tracks[i].name + ' ' + tracks[i].gender + ' ' + tracks[i].url);
-        let trTag = document.createElement('tr');
-        trTag.setAttribute('onclick', 'loadSong(this)');
-        trTag.innerHTML = '<td>' + tracks[i].name + '</td>'
-          + '<td>' + tracks[i].gender + '</td>'
-          + '<td>' + tracks[i].url + '</td>'
-          + '<td title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>';
-        displayData.appendChild(trTag);
+
+      getKey.onsuccess = function () {
+
+        let key = getKey.result;
+        let displayData = document.getElementById('datas');
+
+        for (i in tracks) {
+          console.log(tracks[i].name + ' ' + tracks[i].gender + ' ' + tracks[i].url);
+          let trTag = document.createElement('tr');
+          trTag.setAttribute('onclick', 'loadSong(this)');
+          trTag.innerHTML = '<td>' + tracks[i].name + '</td>'
+            + '<td>' + tracks[i].gender + '</td>'
+            + '<td>' + tracks[i].url + '</td>'
+            + '<td id="' + key[i] + '" onclick="songSettings(this)" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>';
+          displayData.appendChild(trTag);
+        }
+
       }
     }
     countData.onsuccess = function () {
       console.log(countData.result);
     }
   }
+}
+
+function songSettings(element) {
+  let request = indexedDB.open(dbName, dbVersion);
+  console.log('settings');
+
+ request.onsuccess = function() {
+  console.log('settings -> success');
+  let transaction = db.transaction([storeName], 'readwrite');
+  console.log(element.id);
+  let getTrackData = transaction.objectStore(storeName).get(Number(element.id));
+
+  getTrackData.onsuccess = function() {
+    let track = getTrackData.result;
+    document.getElementById('trackName').value = track.name;
+    document.getElementById('trackGenre').value = track.gender;
+    document.getElementById('trackURL').value = track.url;
+  }
+
+ }
+
 }
 
 function addFile() {
