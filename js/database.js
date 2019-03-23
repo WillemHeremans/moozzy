@@ -38,6 +38,7 @@ function loadSongsData() {
 
         let key = getKey.result;
         let displayData = document.getElementById('datas');
+        displayData.innerHTML = '';
 
         for (i in tracks) {
           console.log(tracks[i].name + ' ' + tracks[i].gender + ' ' + tracks[i].url);
@@ -109,6 +110,8 @@ function submit() {
     }
 
   }
+  
+  loadSongsData();
 
 }
 

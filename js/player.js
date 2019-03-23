@@ -16,7 +16,9 @@ progressBar.setAttribute('max', music.duration.toString())
 
 function loadSong(element) {
   let music = new Audio();
-  document.getElementById('music').setAttribute('src', element.childNodes[2].textContent)
+  music.load();
+  document.getElementById('songInfo').innerHTML = element.childNodes[0].textContent;
+  document.getElementById('music').setAttribute('src', element.childNodes[2].textContent);
   music.src = element.childNodes[2].textContent;
   music.preload = 'metadata';
   console.log(music);
@@ -25,7 +27,13 @@ function loadSong(element) {
     duration = music.duration;
     start = music.currentTime;
     durationMetaData.innerHTML = ~~(start / 3600) + ':' + ~~((start % 3600) / 60) + ':' + (~~start % 60) + ' / ' + ~~(duration / 3600) + ':' + ~~((duration % 3600) / 60) + ':' + (~~duration % 60);
-    console.log(music.mozGetMetadata());
+    if (!play) {
+      music.pause();
+      play = true;
+      playButton();
+    } else {
+      playButton();
+    }
   }
 }
 
@@ -101,7 +109,7 @@ function loop(element) {
     element.style.color = 'black';
   } else {
     music.loop = true;
-    element.style.color = 'red';
+    element.style.color = '#dc3545';
   }
 }
 
@@ -111,11 +119,15 @@ function muted(element) {
     element.style.color = 'black';
   } else {
     music.muted = true;
-    element.style.color = 'red';
+    element.style.color = '#dc3545';
   }
 }
 
 function volumeUp(element) {
+  console.log(music.volume);
+  if (music.muted) {
+    muted(document.getElementById('muted'));
+  }
   if (music.volume < 1) {
     if (volumeDownValue.childNodes[1]) {
       volumeDownValue.removeChild(volumeDownValue.childNodes[1]);
@@ -134,12 +146,21 @@ function volumeUp(element) {
 }
 
 function volumeDown(element) {
+  console.log(music.volume);
   if (music.volume > 1.3877787807814457e-16) {
+    if (music.muted) {
+      muted(document.getElementById('muted'));
+    }
     if (volumeUpValue.childNodes[1]) {
       volumeUpValue.removeChild(volumeUpValue.childNodes[1]);
     }
     let span = document.createElement('SPAN');
     let volumeValue = document.createTextNode(Math.round((music.volume * 10) - 1).toString().replace('0', ''));
+    if (volumeValue.nodeValue === '') {
+      if (!music.muted) {
+        muted(document.getElementById('muted'));
+      }
+    }
     span.appendChild(volumeValue);
     element.appendChild(span);
     element.onpointerup = function () {

@@ -20,7 +20,7 @@
 
         <div class="row align-items-center justify-content-center top-buffer">
             <!-- <div class="marquee"> -->
-            <h1 id="songInfo">Starling from Podington Bear on Solo Instruments</h1>
+            <h1 id="songInfo">Music Player</h1>
             <!-- </div> -->
         </div>
 
@@ -59,7 +59,7 @@
                 <button type="button" class="btn btn-outline-black btn-sm"><i class="fas fa-random"></i></button>
                 <button onclick="loop(this)" type="button" class="btn btn-outline-black btn-sm"><i
                         class="fas fa-undo-alt"></i></button>
-                <button onclick="muted(this)" type="button" class="btn btn-outline-black btn-sm"><i
+                <button id="muted" onclick="muted(this)" type="button" class="btn btn-outline-black btn-sm"><i
                         class="fas fa-volume-mute"></i></button>
                 <button id="volumeDown" onclick="volumeDown(this)" type="button" class="btn btn-outline-black btn-sm"><i
                         class="fas fa-volume-down"></i></button>
@@ -103,7 +103,7 @@
                 <label class="btn btn-danger btn-lg">
                     <i class="fas fa-plus"></i> <input onchange="addFile()" id="get-files" type="file" hidden multiple>
                 </label>
-                <a href="#broadcast">
+                <a href="#broadcast" onclick="unloadModal()">
                 <label class="btn btn-danger btn-lg">
                     
                     <i class="fas fa-broadcast-tower fa-xs"></i>
@@ -124,7 +124,7 @@
 		<div class="popupBlock">
                 <div class="card">
                         <div class="card-header">
-                                <a onclick="unloadModal()" href="#" class="btn close croix">&#10006;</a>
+                                <a href="#" class="btn close croix">&#10006;</a>
                         </div>
                         <div class="card-body">
                                 <div class="input-group input-group-sm mb-3">
@@ -141,9 +141,9 @@
                         </div>
                         </div>
                         <div class="card-footer">
-                                <button onclick="submit()" type="button" class="btn btn-danger">
+                                <a onclick="submit()" href="#" class="btn btn-danger">
                                     Submit
-                                </button>
+                                </a>
                         </div>
                       </div>
 		</div>
