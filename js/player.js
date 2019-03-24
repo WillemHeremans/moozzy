@@ -127,7 +127,6 @@ function muted(element) {
 }
 
 function volumeUp(element) {
-  console.log(music.volume);
   if (music.muted) {
     muted(document.getElementById('muted'));
   }
@@ -149,7 +148,6 @@ function volumeUp(element) {
 }
 
 function volumeDown(element) {
-  console.log(music.volume);
   if (music.volume > 1.3877787807814457e-16) {
     if (music.muted) {
       muted(document.getElementById('muted'));
