@@ -106,7 +106,7 @@ function progressClick(event) {
 function loop(element) {
   if (music.loop) {
     music.loop = false;
-    element.style.color = 'black';
+    element.style.color = 'rgb(76, 76, 76)';
   } else {
     music.loop = true;
     element.style.color = '#dc3545';
@@ -116,7 +116,7 @@ function loop(element) {
 function muted(element) {
   if (music.muted) {
     music.muted = false;
-    element.style.color = 'black';
+    element.style.color = 'rgb(76, 76, 76)';
   } else {
     music.muted = true;
     element.style.color = '#dc3545';
