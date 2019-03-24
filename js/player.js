@@ -117,6 +117,9 @@ function muted(element) {
   if (music.muted) {
     music.muted = false;
     element.style.color = 'rgb(76, 76, 76)';
+    if (music.volume < 0.10000000000000014) {
+      music.volume = 0.10000000000000014;
+    }
   } else {
     music.muted = true;
     element.style.color = '#dc3545';
