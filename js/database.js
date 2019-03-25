@@ -32,20 +32,20 @@ function loadSongsData() {
 
     getDB.onsuccess = function () {
 
-      let tracks = getDB.result;
+      let songs = getDB.result;
 
       getKey.onsuccess = function () {
 
         let key = getKey.result;
-        let displayData = document.getElementById('datas');
+        let displayData = document.getElementById('songsList');
         displayData.innerHTML = '';
 
-        for (i in tracks) {
-          console.log(tracks[i].name + ' ' + tracks[i].gender + ' ' + tracks[i].url);
+        for (i in songs) {
+          console.log(songs[i].name + ' ' + songs[i].genre + ' ' + songs[i].url);
           let trTag = document.createElement('tr');
-          trTag.innerHTML = `<td onclick="loadSong('`+ tracks[i].name +`', '`+ tracks[i].url +`')">` + tracks[i].name + `</td>`
-            + `<td onclick="loadSong('`+ tracks[i].name +`', '`+ tracks[i].url +`')">` + tracks[i].gender + `</td>`
-            + `<td onclick="loadSong('`+ tracks[i].name +`', '`+ tracks[i].url +`')">` + tracks[i].url + `</td>`
+          trTag.innerHTML = `<td onclick="loadSong('`+ songs[i].name +`', '`+ songs[i].url +`')">` + songs[i].name + `</td>`
+            + `<td onclick="loadSong('`+ songs[i].name +`', '`+ songs[i].url +`')">` + songs[i].genre + `</td>`
+            + `<td onclick="loadSong('`+ songs[i].name +`', '`+ songs[i].url +`')">` + songs[i].url + `</td>`
             + `<td id="` + key[i] + `" onclick="songSettings(this)" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
           displayData.appendChild(trTag);
         }
@@ -70,7 +70,7 @@ function songSettings(element) {
     getTrackData.onsuccess = function () {
       let track = getTrackData.result;
       trackName.value = track.name;
-      trackGenre.value = track.gender;
+      trackGenre.value = track.genre;
       trackURL.value = track.url;
       trackID.value = element.id;
     }
@@ -95,7 +95,7 @@ function submit() {
     request.onsuccess = function () {
 
       let transaction = db.transaction([storeName], 'readwrite');
-      transaction.objectStore(storeName).put({ 'name': trackName.value, 'gender': trackGenre.value, 'url': (trackURL.value).replace(/^.*:\/\//i, ''), 'date': new Date().toLocaleString('fr-FR') }, Number(trackID.value));
+      transaction.objectStore(storeName).put({ 'name': trackName.value, 'genre': trackGenre.value, 'url': (trackURL.value).replace(/^.*:\/\//i, ''), 'date': new Date().toLocaleString('fr-FR') }, Number(trackID.value));
 
     }
 
@@ -104,7 +104,7 @@ function submit() {
     request.onsuccess = function () {
 
       let transaction = db.transaction([storeName], 'readwrite');
-      transaction.objectStore(storeName).put({ 'name': trackName.value, 'gender': trackGenre.value, 'url': (trackURL.value).replace(/^.*:\/\//i, ''), 'date': new Date().toLocaleString('fr-FR') });
+      transaction.objectStore(storeName).put({ 'name': trackName.value, 'genre': trackGenre.value, 'url': (trackURL.value).replace(/^.*:\/\//i, ''), 'date': new Date().toLocaleString('fr-FR') });
 
     }
 
@@ -145,18 +145,18 @@ function addFile() {
       console.log(db);
 
       var transaction = db.transaction([storeName], 'readwrite');
-      console.log(transaction.objectStore(storeName).put({ 'name': 'SWIGG', 'gender': 'Pop, RnB, rap', 'url': 'http://swingfm.ice.infomaniak.ch/swingfm-128', 'date': new Date().toLocaleString('fr-FR') }));
+      console.log(transaction.objectStore(storeName).put({ 'name': 'SWIGG', 'genre': 'Pop, RnB, rap', 'url': 'http://swingfm.ice.infomaniak.ch/swingfm-128', 'date': new Date().toLocaleString('fr-FR') }));
       let getDB = transaction.objectStore(storeName).getAll();
       let getKey = transaction.objectStore(storeName).get('juno');
 
       getDB.onsuccess = function () {
-        let tracks = getDB.result;
+        let songs = getDB.result;
         // var table = document.getElementById('tBody');
-        for (i in tracks) {
-          console.log(tracks[i]);
+        for (i in songs) {
+          console.log(songs[i]);
           //       var row = table.insertRow(i);
           //       var cell1 = row.insertCell(i);
-          // cell1.innerHTML = 'tracks[i]';
+          // cell1.innerHTML = 'songs[i]';
         }
 
         getKey.onsuccess = function () {
