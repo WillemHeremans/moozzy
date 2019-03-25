@@ -14,9 +14,15 @@ document.getElementById('progressBar').addEventListener('click', progressClick);
 progressBar.setAttribute('value', music.currentTime.toString())
 progressBar.setAttribute('max', music.duration.toString())
 
-function loadSong(name, url) {
+function loadSong(element, name, url) {
   let music = new Audio();
   music.load();
+  if (document.getElementById('onPlay')) {
+    document.getElementById('onPlay').removeAttribute('class');
+    document.getElementById('onPlay').removeAttribute('id');
+  }
+  element.parentNode.setAttribute('id', 'onPlay');
+  element.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
   document.getElementById('songInfo').innerHTML = name;
   document.getElementById('music').setAttribute('src', 'http://' + url);
   music.src = 'http://' + url;

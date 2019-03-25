@@ -43,13 +43,12 @@ function loadSongsData() {
         for (i in songs) {
           console.log(songs[i].name + ' ' + songs[i].genre + ' ' + songs[i].url);
           let trTag = document.createElement('tr');
-          trTag.innerHTML = `<td onclick="loadSong('`+ songs[i].name +`', '`+ songs[i].url +`')">` + songs[i].name + `</td>`
-            + `<td onclick="loadSong('`+ songs[i].name +`', '`+ songs[i].url +`')">` + songs[i].genre + `</td>`
-            + `<td onclick="loadSong('`+ songs[i].name +`', '`+ songs[i].url +`')">` + songs[i].url + `</td>`
+          trTag.innerHTML = `<td onclick="loadSong(this,'`+ songs[i].name +`', '`+ songs[i].url +`')">` + songs[i].name + `</td>`
+            + `<td onclick="loadSong(this,'`+ songs[i].name +`', '`+ songs[i].url +`')">` + songs[i].genre + `</td>`
+            + `<td onclick="loadSong(this,'`+ songs[i].name +`', '`+ songs[i].url +`')">` + songs[i].url + `</td>`
             + `<td id="` + key[i] + `" onclick="songSettings(this)" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
           displayData.appendChild(trTag);
         }
-
       }
     }
     countData.onsuccess = function () {
