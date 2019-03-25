@@ -43,11 +43,10 @@ function loadSongsData() {
         for (i in tracks) {
           console.log(tracks[i].name + ' ' + tracks[i].gender + ' ' + tracks[i].url);
           let trTag = document.createElement('tr');
-          trTag.setAttribute('onclick', 'loadSong(this)');
-          trTag.innerHTML = '<td>' + tracks[i].name + '</td>'
-            + '<td>' + tracks[i].gender + '</td>'
-            + '<td>' + tracks[i].url + '</td>'
-            + '<td id="' + key[i] + '" onclick="songSettings(this)" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>';
+          trTag.innerHTML = `<td onclick="loadSong('`+ tracks[i].name +`', '`+ tracks[i].url +`')">` + tracks[i].name + `</td>`
+            + `<td onclick="loadSong('`+ tracks[i].name +`', '`+ tracks[i].url +`')">` + tracks[i].gender + `</td>`
+            + `<td onclick="loadSong('`+ tracks[i].name +`', '`+ tracks[i].url +`')">` + tracks[i].url + `</td>`
+            + `<td id="` + key[i] + `" onclick="songSettings(this)" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
           displayData.appendChild(trTag);
         }
 
@@ -96,7 +95,7 @@ function submit() {
     request.onsuccess = function () {
 
       let transaction = db.transaction([storeName], 'readwrite');
-      transaction.objectStore(storeName).put({ 'name': trackName.value, 'gender': trackGenre.value, 'url': trackURL.value, 'date': new Date().toLocaleString('fr-FR') }, Number(trackID.value));
+      transaction.objectStore(storeName).put({ 'name': trackName.value, 'gender': trackGenre.value, 'url': (trackURL.value).replace(/^.*:\/\//i, ''), 'date': new Date().toLocaleString('fr-FR') }, Number(trackID.value));
 
     }
 
@@ -105,7 +104,7 @@ function submit() {
     request.onsuccess = function () {
 
       let transaction = db.transaction([storeName], 'readwrite');
-      transaction.objectStore(storeName).put({ 'name': trackName.value, 'gender': trackGenre.value, 'url': trackURL.value, 'date': new Date().toLocaleString('fr-FR') });
+      transaction.objectStore(storeName).put({ 'name': trackName.value, 'gender': trackGenre.value, 'url': (trackURL.value).replace(/^.*:\/\//i, ''), 'date': new Date().toLocaleString('fr-FR') });
 
     }
 

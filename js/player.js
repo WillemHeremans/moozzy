@@ -14,12 +14,12 @@ document.getElementById('progressBar').addEventListener('click', progressClick);
 progressBar.setAttribute('value', music.currentTime.toString())
 progressBar.setAttribute('max', music.duration.toString())
 
-function loadSong(element) {
+function loadSong(name, url) {
   let music = new Audio();
   music.load();
-  document.getElementById('songInfo').innerHTML = element.childNodes[0].textContent;
-  document.getElementById('music').setAttribute('src', element.childNodes[2].textContent);
-  music.src = element.childNodes[2].textContent;
+  document.getElementById('songInfo').innerHTML = name;
+  document.getElementById('music').setAttribute('src', 'http://' + url);
+  music.src = 'http://' + url;
   music.preload = 'metadata';
   console.log(music);
 
