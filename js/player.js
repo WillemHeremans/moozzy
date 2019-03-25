@@ -9,6 +9,7 @@ let fastForward = document.getElementById('fastForward');
 let fastBackward = document.getElementById('fastBackward');
 let volumeUpValue = document.getElementById('volumeUp');
 let volumeDownValue = document.getElementById('volumeDown');
+let songsList = document.getElementById('songsList');
 
 document.getElementById('progressBar').addEventListener('click', progressClick);
 progressBar.setAttribute('value', music.currentTime.toString())
@@ -43,23 +44,6 @@ function loadSong(element, name, url) {
   }
 }
 
-
-fastForward.onpointerdown = function () {
-  music.playbackRate += 2.0;
-}
-
-fastForward.onpointerup = function () {
-  music.playbackRate = 1.0;
-}
-
-fastBackward.onpointerdown = function () {
-  music.playbackRate -= 0.5;
-}
-
-fastBackward.onpointerup = function () {
-  music.playbackRate = 1.0;
-}
-
 function playButton() {
   if (play) {
     play = false;
@@ -77,36 +61,32 @@ function playButton() {
   }
 }
 
-function autoMove() {
-  const song = music;
-  const id = setInterval(frame, 500);
-  function frame() {
-    if (song.currentTime >= song.duration) {
-      clearInterval(id);
-    } else {
-      duration = song.duration;
-      start = song.currentTime;
-      progressBar.setAttribute('max', duration.toString());
-      progressBar.setAttribute('value', start.toString());
-      durationMetaData.innerHTML = ~~(start / 3600) + ':' + ~~((start % 3600) / 60) + ':' + (~~start % 60) + ' / ' + ~~(duration / 3600) + ':' + ~~((duration % 3600) / 60) + ':' + (~~duration % 60);
-    }
+function forward() {
+  if (document.getElementById('onPlay')) {
+    loadSong(songsList.childNodes[2], songsList.childNodes[2].childNodes[0].innerHTML, songsList.childNodes[2].childNodes[2].innerHTML)
+    
   }
+
 }
 
-function progressClick(event) {
-  let maxValue = (event.target['offsetWidth']).toString();
-  let currentValue = (event.clientX) - (event.target['offsetLeft']).toString();
-  event.target['max'] = (maxValue / maxValue) * duration;
-  event.target['value'] = (currentValue / maxValue) * duration;
-  if (!play) {
-    music.pause();
-    play = true;
-    start = event.target['value'];
-    playButton();
-  } else {
-    start = event.target['value'];
-    playButton();
-  }
+function backward() {
+
+}
+
+fastForward.onpointerdown = function () {
+  music.playbackRate += 2.0;
+}
+
+fastForward.onpointerup = function () {
+  music.playbackRate = 1.0;
+}
+
+fastBackward.onpointerdown = function () {
+  music.playbackRate -= 0.5;
+}
+
+fastBackward.onpointerup = function () {
+  music.playbackRate = 1.0;
 }
 
 function loop(element) {
@@ -179,3 +159,34 @@ function volumeDown(element) {
   }
 }
 
+function autoMove() {
+  const song = music;
+  const id = setInterval(frame, 500);
+  function frame() {
+    if (song.currentTime >= song.duration) {
+      clearInterval(id);
+    } else {
+      duration = song.duration;
+      start = song.currentTime;
+      progressBar.setAttribute('max', duration.toString());
+      progressBar.setAttribute('value', start.toString());
+      durationMetaData.innerHTML = ~~(start / 3600) + ':' + ~~((start % 3600) / 60) + ':' + (~~start % 60) + ' / ' + ~~(duration / 3600) + ':' + ~~((duration % 3600) / 60) + ':' + (~~duration % 60);
+    }
+  }
+}
+
+function progressClick(event) {
+  let maxValue = (event.target['offsetWidth']).toString();
+  let currentValue = (event.clientX) - (event.target['offsetLeft']).toString();
+  event.target['max'] = (maxValue / maxValue) * duration;
+  event.target['value'] = (currentValue / maxValue) * duration;
+  if (!play) {
+    music.pause();
+    play = true;
+    start = event.target['value'];
+    playButton();
+  } else {
+    start = event.target['value'];
+    playButton();
+  }
+}
