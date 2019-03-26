@@ -11,7 +11,7 @@ let volumeUpValue = document.getElementById('volumeUp');
 let volumeDownValue = document.getElementById('volumeDown');
 let songsList = document.getElementById('songsList');
 
-document.getElementById('progressBar').addEventListener('click', progressClick);
+progressBar.addEventListener('click', progressClick);
 progressBar.setAttribute('value', music.currentTime.toString())
 progressBar.setAttribute('max', music.duration.toString())
 
@@ -66,9 +66,7 @@ function playButton() {
 function forward() {
   if (document.getElementById('onPlay')) {
     loadSong(songsList.childNodes[2], songsList.childNodes[2].childNodes[0].innerHTML, songsList.childNodes[2].childNodes[2].innerHTML)
-    
   }
-
 }
 
 function backward() {

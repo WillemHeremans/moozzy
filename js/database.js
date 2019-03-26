@@ -37,8 +37,6 @@ function loadSongsData() {
       getKey.onsuccess = function () {
 
         let key = getKey.result;
-        let displayData = document.getElementById('songsList');
-        displayData.innerHTML = '';
 
         for (i in songs) {
           let trTag = document.createElement('tr');
@@ -46,7 +44,7 @@ function loadSongsData() {
             + `<td onclick="loadSong(this,'` + songs[i].name + `', '` + songs[i].url + `')">` + songs[i].genre + `</td>`
             + `<td onclick="loadSong(this,'` + songs[i].name + `', '` + songs[i].url + `')">` + songs[i].url + `</td>`
             + `<td id="` + key[i] + `" onclick="songSettings(this)" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
-          displayData.appendChild(trTag);
+            songsList.appendChild(trTag);
         }
       }
     }
@@ -110,13 +108,12 @@ function submit() {
         let getTrackData = transaction.objectStore(storeName).get(newTrack.result);
         getTrackData.onsuccess = function () {
           let song = getTrackData.result;
-          let displayData = document.getElementById('songsList');
           let trTag = document.createElement('tr');
           trTag.innerHTML = `<td onclick="loadSong(this,'` + song.name + `', '` + song.url + `')">` + song.name + `</td>`
             + `<td onclick="loadSong(this,'` + song.name + `', '` + song.url + `')">` + song.genre + `</td>`
             + `<td onclick="loadSong(this,'` + song.name + `', '` + song.url + `')">` + song.url + `</td>`
             + `<td id="` + newTrack.result + `" onclick="songSettings(this)" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
-          displayData.appendChild(trTag);
+            songsList.appendChild(trTag);
         }
 
       }
