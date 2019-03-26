@@ -41,11 +41,10 @@ function loadSongsData() {
         displayData.innerHTML = '';
 
         for (i in songs) {
-          console.log(songs[i].name + ' ' + songs[i].genre + ' ' + songs[i].url);
           let trTag = document.createElement('tr');
-          trTag.innerHTML = `<td onclick="loadSong(this,'`+ songs[i].name +`', '`+ songs[i].url +`')">` + songs[i].name + `</td>`
-            + `<td onclick="loadSong(this,'`+ songs[i].name +`', '`+ songs[i].url +`')">` + songs[i].genre + `</td>`
-            + `<td onclick="loadSong(this,'`+ songs[i].name +`', '`+ songs[i].url +`')">` + songs[i].url + `</td>`
+          trTag.innerHTML = `<td onclick="loadSong(this,'` + songs[i].name + `', '` + songs[i].url + `')">` + songs[i].name + `</td>`
+            + `<td onclick="loadSong(this,'` + songs[i].name + `', '` + songs[i].url + `')">` + songs[i].genre + `</td>`
+            + `<td onclick="loadSong(this,'` + songs[i].name + `', '` + songs[i].url + `')">` + songs[i].url + `</td>`
             + `<td id="` + key[i] + `" onclick="songSettings(this)" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
           displayData.appendChild(trTag);
         }
@@ -95,7 +94,9 @@ function submit() {
 
       let transaction = db.transaction([storeName], 'readwrite');
       transaction.objectStore(storeName).put({ 'name': trackName.value, 'genre': trackGenre.value, 'url': (trackURL.value).replace(/^.*:\/\//i, ''), 'date': new Date().toLocaleString('fr-FR') }, Number(trackID.value));
-
+      document.getElementById(trackID.value).parentNode.childNodes[0].innerHTML = trackName.value;
+      document.getElementById(trackID.value).parentNode.childNodes[1].innerHTML = trackGenre.value;
+      document.getElementById(trackID.value).parentNode.childNodes[2].innerHTML = trackURL.value;
     }
 
   } else {
@@ -103,13 +104,26 @@ function submit() {
     request.onsuccess = function () {
 
       let transaction = db.transaction([storeName], 'readwrite');
-      transaction.objectStore(storeName).put({ 'name': trackName.value, 'genre': trackGenre.value, 'url': (trackURL.value).replace(/^.*:\/\//i, ''), 'date': new Date().toLocaleString('fr-FR') });
+      let newTrack = transaction.objectStore(storeName).put({ 'name': trackName.value, 'genre': trackGenre.value, 'url': (trackURL.value).replace(/^.*:\/\//i, ''), 'date': new Date().toLocaleString('fr-FR') });
+      newTrack.onsuccess = function () {
+        console.log(newTrack.result);
+        let getTrackData = transaction.objectStore(storeName).get(newTrack.result);
+        getTrackData.onsuccess = function () {
+          let song = getTrackData.result;
+          let displayData = document.getElementById('songsList');
+          let trTag = document.createElement('tr');
+          trTag.innerHTML = `<td onclick="loadSong(this,'` + song.name + `', '` + song.url + `')">` + song.name + `</td>`
+            + `<td onclick="loadSong(this,'` + song.name + `', '` + song.url + `')">` + song.genre + `</td>`
+            + `<td onclick="loadSong(this,'` + song.name + `', '` + song.url + `')">` + song.url + `</td>`
+            + `<td id="` + newTrack.result + `" onclick="songSettings(this)" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
+          displayData.appendChild(trTag);
+        }
+
+      }
 
     }
 
   }
-  
-  loadSongsData();
 
 }
 
