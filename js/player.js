@@ -128,18 +128,9 @@ function volumeUp(element) {
     muted(document.getElementById('muted'));
   }
   if (music.volume < 1) {
-    if (volumeDownValue.childNodes[1]) {
-      volumeDownValue.removeChild(volumeDownValue.childNodes[1]);
-    }
-    let span = document.createElement('SPAN');
-    let volumeValue = document.createTextNode(Math.round((music.volume * 10) + 1).toString().replace('10', ''));
-    span.appendChild(volumeValue);
-    element.appendChild(span);
-    element.onpointerup = function () {
-      if (element.childNodes[1]) {
-        element.removeChild(span);
-      }
-    }
+    let volumeValue = Math.round((music.volume * 10) + 1).toString().replace('10', '');
+    document.getElementById('downValue').innerHTML = '';
+    document.getElementById('upValue').innerHTML = volumeValue;
     music.volume += 0.1;
   }
 }
@@ -149,21 +140,12 @@ function volumeDown(element) {
     if (music.muted) {
       muted(document.getElementById('muted'));
     }
-    if (volumeUpValue.childNodes[1]) {
-      volumeUpValue.removeChild(volumeUpValue.childNodes[1]);
-    }
-    let span = document.createElement('SPAN');
-    let volumeValue = document.createTextNode(Math.round((music.volume * 10) - 1).toString().replace('0', ''));
-    if (volumeValue.nodeValue === '') {
+    let volumeValue = Math.round((music.volume * 10) - 1).toString().replace('0', '');
+    document.getElementById('upValue').innerHTML = '';
+    document.getElementById('downValue').innerHTML = volumeValue;
+    if (volumeValue === '') {
       if (!music.muted) {
         muted(document.getElementById('muted'));
-      }
-    }
-    span.appendChild(volumeValue);
-    element.appendChild(span);
-    element.onpointerup = function () {
-      if (element.childNodes[1]) {
-        element.removeChild(span);
       }
     }
     music.volume -= 0.1;
