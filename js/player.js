@@ -24,7 +24,6 @@ function loadSong(element, name, url) {
   }
   element.parentNode.setAttribute('id', 'onPlay');
   element.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
-  console.log(element.parentNode.childNodes[3].id);
   songInfo.firstElementChild.innerHTML = name;
   songInfo.firstElementChild.setAttribute('id', element.parentNode.childNodes[3].id);
   document.getElementById('music').setAttribute('src', 'http://' + url);
@@ -66,7 +65,7 @@ function playButton() {
 function forward() {
   if (document.getElementById('onPlay')) {
     let onPlay = document.getElementById('onPlay');
-    let rank = (document.getElementById('onPlay').rowIndex) - 1;
+    let rank = onPlay.rowIndex - 1;
     let forwardElement = onPlay.parentNode.children[rank + 1];
     if (forwardElement) {
       loadSong(forwardElement.children[0], forwardElement.childNodes[0].innerHTML, forwardElement.childNodes[2].innerHTML)
@@ -77,7 +76,7 @@ function forward() {
 function backward() {
   if (document.getElementById('onPlay')) {
     let onPlay = document.getElementById('onPlay');
-    let rank = (document.getElementById('onPlay').rowIndex) - 1;
+    let rank = onPlay.rowIndex - 1;
     let forwardElement = onPlay.parentNode.children[rank - 1];
     if (forwardElement) {
       loadSong(forwardElement.children[0], forwardElement.childNodes[0].innerHTML, forwardElement.childNodes[2].innerHTML)

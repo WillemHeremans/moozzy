@@ -104,7 +104,6 @@ function submit() {
       let transaction = db.transaction([storeName], 'readwrite');
       let newTrack = transaction.objectStore(storeName).put({ 'name': trackName.value, 'genre': trackGenre.value, 'url': (trackURL.value).replace(/^.*:\/\//i, ''), 'date': new Date().toLocaleString('fr-FR') });
       newTrack.onsuccess = function () {
-        console.log(newTrack.result);
         let getTrackData = transaction.objectStore(storeName).get(newTrack.result);
         getTrackData.onsuccess = function () {
           let song = getTrackData.result;
