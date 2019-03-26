@@ -65,12 +65,24 @@ function playButton() {
 
 function forward() {
   if (document.getElementById('onPlay')) {
-    loadSong(songsList.childNodes[2], songsList.childNodes[2].childNodes[0].innerHTML, songsList.childNodes[2].childNodes[2].innerHTML)
+    let onPlay = document.getElementById('onPlay');
+    let rank = (document.getElementById('onPlay').rowIndex) - 1;
+    let forwardElement = onPlay.parentNode.children[rank + 1];
+    if (forwardElement) {
+      loadSong(forwardElement.children[0], forwardElement.childNodes[0].innerHTML, forwardElement.childNodes[2].innerHTML)
+    }
   }
 }
 
 function backward() {
-
+  if (document.getElementById('onPlay')) {
+    let onPlay = document.getElementById('onPlay');
+    let rank = (document.getElementById('onPlay').rowIndex) - 1;
+    let forwardElement = onPlay.parentNode.children[rank - 1];
+    if (forwardElement) {
+      loadSong(forwardElement.children[0], forwardElement.childNodes[0].innerHTML, forwardElement.childNodes[2].innerHTML)
+    }
+  }
 }
 
 fastForward.onpointerdown = function () {
