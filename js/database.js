@@ -44,7 +44,7 @@ function loadSongsData() {
             + `<td onclick="loadSong(this,'` + songs[i].name + `', '` + songs[i].url + `')">` + songs[i].genre + `</td>`
             + `<td onclick="loadSong(this,'` + songs[i].name + `', '` + songs[i].url + `')">` + songs[i].url + `</td>`
             + `<td id="` + key[i] + `" onclick="songSettings(this)" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
-            songsList.appendChild(trTag);
+          songsList.appendChild(trTag);
         }
       }
     }
@@ -91,10 +91,12 @@ function submit() {
     request.onsuccess = function () {
 
       let transaction = db.transaction([storeName], 'readwrite');
-      transaction.objectStore(storeName).put({ 'name': trackName.value, 'genre': trackGenre.value, 'url': (trackURL.value).replace(/^.*:\/\//i, ''), 'date': new Date().toLocaleString('fr-FR') }, Number(trackID.value));
-      document.getElementById(trackID.value).parentNode.childNodes[0].innerHTML = trackName.value;
-      document.getElementById(trackID.value).parentNode.childNodes[1].innerHTML = trackGenre.value;
-      document.getElementById(trackID.value).parentNode.childNodes[2].innerHTML = trackURL.value;
+      trackURL.value.replace(/^.*:\/\//i, '');
+      transaction.objectStore(storeName).put({ 'name': trackName.value, 'genre': trackGenre.value, 'url': trackURL.value, 'date': new Date().toLocaleString('fr-FR') }, Number(trackID.value));
+      document.getElementById(trackID.value).parentNode.innerHTML = `<td onclick="loadSong(this,'` + trackName.value + `', '` + trackURL.value + `')">` + trackName.value + `</td>`
+        + `<td onclick="loadSong(this,'` + trackName.value + `', '` + trackURL.value + `')">` + trackGenre.value + `</td>`
+        + `<td onclick="loadSong(this,'` + trackName.value + `', '` + trackURL.value + `')">` + trackURL.value + `</td>`
+        + `<td id="` + trackID.value + `" onclick="songSettings(this)" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
     }
 
   } else {
@@ -112,7 +114,7 @@ function submit() {
             + `<td onclick="loadSong(this,'` + song.name + `', '` + song.url + `')">` + song.genre + `</td>`
             + `<td onclick="loadSong(this,'` + song.name + `', '` + song.url + `')">` + song.url + `</td>`
             + `<td id="` + newTrack.result + `" onclick="songSettings(this)" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
-            songsList.appendChild(trTag);
+          songsList.appendChild(trTag);
         }
 
       }

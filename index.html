@@ -98,54 +98,50 @@
                 </table>
             </div>
             <div class="col-sm-1">
-                <label class="btn btn-danger btn-lg">
-                    <i class="fas fa-plus"></i> <input onchange="addFile()" id="get-files" type="file" hidden multiple>
-                </label>
                 <a href="#broadcast" onclick="unloadModal()">
-                <label class="btn btn-danger btn-lg">
-                    
-                    <i class="fas fa-broadcast-tower fa-xs"></i>
-                    
-                </label>
-            </a>
-                <label class="btn btn-danger btn-lg">
-                    <i class="fas fa-music"></i> <input onchange="addFile()" id="get-files" type="file" hidden multiple>
-                </label>
+                    <label class="btn btn-danger btn-lg">
+
+                        <i class="fas fa-plus"></i>
+
+                    </label>
+                </a>
             </div>
         </div>
     </div>
 
-
     <!-- pop-up -->
 
     <div class="modalLayer" id="broadcast">
-		<div class="popupBlock">
-                <div class="card">
-                        <div class="card-header">
-                                <a href="#" class="btn close croix">&#10006;</a>
-                        </div>
-                        <div class="card-body">
-                                <div class="input-group input-group-sm mb-3">
-                                <input id="trackName" class="form-control form-control-sm" type="text" placeholder="Enter a name for your web radio">
-                            </div>
-                            <div class="input-group input-group-sm mb-3">
-                                <input id="trackGenre" class="form-control form-control-sm" type="text" placeholder="Enter a category for your web radio">
-                            </div>
-                            <div class="input-group input-group-sm mb-3">
-                            <input id="trackURL" class="form-control form-control-sm" type="text" placeholder="Enter a web radio URL">
-                        </div>
-                        <div class="input-group input-group-sm mb-3">
-                            <input id="trackID" class="form-control form-control-sm" type="hidden">
-                        </div>
-                        </div>
-                        <div class="card-footer">
-                                <a onclick="submit()" href="#" class="btn btn-danger">
-                                    Submit
-                                </a>
-                        </div>
-                      </div>
-		</div>
-</div>
+        <div class="popupBlock">
+            <div class="card">
+                <div class="card-header">
+                    <a href="#" class="btn close croix">&#10006;</a>
+                </div>
+                <div class="card-body">
+                    <div class="input-group input-group-sm mb-3">
+                        <input id="trackName" class="form-control form-control-sm" type="text"
+                            placeholder="Enter a name for your web radio">
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <input id="trackGenre" class="form-control form-control-sm" type="text"
+                            placeholder="Enter a category for your web radio">
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <input id="trackURL" class="form-control form-control-sm" type="text"
+                            placeholder="Enter a web radio URL">
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <input id="trackID" class="form-control form-control-sm" type="hidden">
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a onclick="submit()" href="#" class="btn btn-danger">
+                        Submit
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="./js/player.js"></script>
     <script src="./js/database.js"></script>

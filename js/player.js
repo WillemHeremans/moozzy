@@ -25,7 +25,6 @@ function loadSong(element, name, url) {
   element.parentNode.setAttribute('id', 'onPlay');
   element.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
   songInfo.firstElementChild.innerHTML = name;
-  songInfo.firstElementChild.setAttribute('id', element.parentNode.childNodes[3].id);
   document.getElementById('music').setAttribute('src', 'http://' + url);
   music.src = 'http://' + url;
   music.preload = 'metadata';
