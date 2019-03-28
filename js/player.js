@@ -68,6 +68,8 @@ function forward() {
     let forwardElement = onPlay.parentNode.children[rank + 1];
     if (forwardElement) {
       loadSong(forwardElement.children[0], forwardElement.childNodes[0].innerHTML, forwardElement.childNodes[2].innerHTML)
+    } else {
+      loadSong(songsList.children[0].children[0], songsList.children[0].children[0].innerHTML, songsList.children[0].children[2].innerHTML)
     }
   }
 }
