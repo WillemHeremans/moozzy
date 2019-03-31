@@ -33,7 +33,7 @@ function loadSong(element, name, url) {
   music.onloadedmetadata = function () {
     duration = music.duration;
     start = music.currentTime;
-    durationMetaData.innerHTML = ~~(start / 3600) + ':' + ~~((start % 3600) / 60) + ':' + (~~start % 60) + ' / ' + ~~(duration / 3600) + ':' + ~~((duration % 3600) / 60) + ':' + (~~duration % 60);
+    durationMetaData.innerHTML = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / ' + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);;
     if (!play) {
       music.pause();
       play = true;
@@ -164,7 +164,7 @@ function autoMove() {
       start = song.currentTime;
       progressBar.setAttribute('max', duration.toString());
       progressBar.setAttribute('value', start.toString());
-      durationMetaData.innerHTML = ~~(start / 3600) + ':' + ~~((start % 3600) / 60) + ':' + (~~start % 60) + ' / ' + ~~(duration / 3600) + ':' + ~~((duration % 3600) / 60) + ':' + (~~duration % 60);
+      durationMetaData.innerHTML = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / ' + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);
     }
   }
 }
@@ -183,4 +183,9 @@ function progressClick(event) {
     start = event.target['value'];
     playButton();
   }
+}
+
+function convertTime(timeValue) {
+  if (timeValue < 10) { timeValue = '0' + timeValue };
+  return timeValue;
 }
