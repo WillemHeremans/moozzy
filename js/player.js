@@ -78,9 +78,14 @@ function backward() {
   if (document.getElementById('onPlay')) {
     let onPlay = document.getElementById('onPlay');
     let rank = onPlay.rowIndex - 1;
+    console.log(rank);
     let forwardElement = onPlay.parentNode.children[rank - 1];
     if (forwardElement) {
       loadSong(forwardElement.children[0], forwardElement.childNodes[0].innerHTML, forwardElement.childNodes[2].innerHTML)
+    } else {
+      rank = songsList.childElementCount - 1;
+      console.log(rank);
+      loadSong(songsList.children[rank].children[0], songsList.children[rank].children[0].innerHTML, songsList.children[rank].children[2].innerHTML)
     }
   }
 }
