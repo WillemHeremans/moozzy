@@ -84,7 +84,6 @@ function backward() {
       loadSong(forwardElement.children[0], forwardElement.childNodes[0].innerHTML, forwardElement.childNodes[2].innerHTML)
     } else {
       rank = songsList.childElementCount - 1;
-      console.log(rank);
       loadSong(songsList.children[rank].children[0], songsList.children[rank].children[0].innerHTML, songsList.children[rank].children[2].innerHTML)
     }
   }
