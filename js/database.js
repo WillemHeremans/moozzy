@@ -8,6 +8,7 @@ let trackGenre = document.getElementById('trackGenre');
 let trackURL = document.getElementById('trackURL');
 let trackID = document.getElementById('trackID');
 let modalTitle = document.getElementById('modalTitle');
+let submitButton = document.getElementById('submit');
 
 function loadSongsData() {
 
@@ -58,6 +59,7 @@ function loadSongsData() {
 function songSettings(element) {
 
   modalTitle.innerHTML = 'Edit song settings';
+  submitButton.innerHTML= 'Edit';
 
   let request = indexedDB.open(dbName, dbVersion);
 
@@ -80,7 +82,7 @@ function songSettings(element) {
 
 function unloadModal() {
   modalTitle.innerHTML = 'Add a song';
-  modalHeader.appendChild(titleTag);
+  submitButton.innerHTML= 'Add';
   trackName.value = '';
   trackGenre.value = '';
   trackURL.value = '';
