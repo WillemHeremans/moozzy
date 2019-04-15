@@ -7,6 +7,7 @@ let trackName = document.getElementById('trackName');
 let trackGenre = document.getElementById('trackGenre');
 let trackURL = document.getElementById('trackURL');
 let trackID = document.getElementById('trackID');
+let modalTitle = document.getElementById('modalTitle');
 
 function loadSongsData() {
 
@@ -56,6 +57,8 @@ function loadSongsData() {
 
 function songSettings(element) {
 
+  modalTitle.innerHTML = 'Edit song settings';
+
   let request = indexedDB.open(dbName, dbVersion);
 
   request.onsuccess = function () {
@@ -76,6 +79,8 @@ function songSettings(element) {
 }
 
 function unloadModal() {
+  modalTitle.innerHTML = 'Add a song';
+  modalHeader.appendChild(titleTag);
   trackName.value = '';
   trackGenre.value = '';
   trackURL.value = '';
