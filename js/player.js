@@ -27,6 +27,7 @@ function loadSong(element, name, url) {
   songInfo.firstElementChild.innerHTML = name;
   document.getElementById('music').setAttribute('src', '//' + url);
   music.src = document.getElementById('music').src;
+  console.log(music.src);
   music.preload = 'metadata';
   console.log(music);
 
