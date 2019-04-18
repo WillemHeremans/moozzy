@@ -109,13 +109,13 @@
         </div>
     </div>
 
-    <!-- pop-up -->
+    <!-- pop-up's -->
 
     <div class="modalLayer" id="broadcast">
         <div class="popupBlock">
             <div class="card">
                 <div class="card-header">
-                        <a href="#" class="btn close croix">&#10006;</a>
+                    <a href="#" class="btn close croix">&#10006;</a>
                     <h4 id="modalTitle"></h4>
                 </div>
                 <div class="card-body">
@@ -135,9 +135,28 @@
                         <input id="trackID" class="form-control form-control-sm" type="hidden">
                     </div>
                 </div>
-                <div class="card-footer">
-                    <a onclick="submit()" href="#" class="btn btn-danger" id="submit">
-                    </a>
+                <div class="modal-footer">
+                    <a href="#confirmation" class="btn btn-danger" id="delete"></a>
+                    <a onclick="submit()" href="#" class="btn btn-primary" id="submit"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modalLayer" id="confirmation">
+        <div class="popupBlock">
+            <div class="card">
+                <div class="card-header">
+                    <a href="#" class="btn close croix">&#10006;</a>
+                </div>
+                <div class="card-body">
+                    <div class="input-group input-group-sm mb-3">
+                        <p>Are you sure you want to delete item ?</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a onclick="deleteSong()" href="#" class="btn btn-danger">confirm</a>
+                    <a href="#" class="btn btn-primary">cancel</a>
                 </div>
             </div>
         </div>

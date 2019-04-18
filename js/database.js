@@ -9,6 +9,7 @@ let trackURL = document.getElementById('trackURL');
 let trackID = document.getElementById('trackID');
 let modalTitle = document.getElementById('modalTitle');
 let submitButton = document.getElementById('submit');
+let deleteButton = document.getElementById('delete');
 
 function loadSongsData() {
 
@@ -59,7 +60,9 @@ function loadSongsData() {
 function songSettings(element) {
 
   modalTitle.innerHTML = 'Edit song settings';
-  submitButton.innerHTML= 'Edit';
+  submitButton.innerHTML = 'Edit';
+  deleteButton.style.display = 'block';
+  deleteButton.innerHTML = 'Delete';
 
   let request = indexedDB.open(dbName, dbVersion);
 
@@ -83,6 +86,7 @@ function songSettings(element) {
 function unloadModal() {
   modalTitle.innerHTML = 'Add a song';
   submitButton.innerHTML= 'Add';
+  deleteButton.style.display = 'none';
   trackName.value = '';
   trackGenre.value = '';
   trackURL.value = '';
@@ -123,13 +127,21 @@ function submit() {
             + `<td id="` + newTrack.result + `" onclick="songSettings(this)" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
           songsList.appendChild(trTag);
         }
-
       }
-
     }
-
   }
+}
 
+function deleteSong() {
+
+  let request = indexedDB.open(dbName, dbVersion);
+  request.onsuccess = function () {
+    let transaction = db.transaction([storeName], 'readwrite');
+    let deletingSong = transaction.objectStore(storeName).delete(Number(trackID.value));
+    deletingSong.onsuccess = function () {
+      document.getElementById(trackID.value).parentNode.innerHTML = '';
+    } 
+  }
 }
 
 function addFile() {
