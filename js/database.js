@@ -85,7 +85,7 @@ function songSettings(element) {
 
 function unloadModal() {
   modalTitle.innerHTML = 'Add a song';
-  submitButton.innerHTML= 'Add';
+  submitButton.innerHTML = 'Add';
   deleteButton.style.display = 'none';
   trackName.value = '';
   trackGenre.value = '';
@@ -140,7 +140,7 @@ function deleteSong() {
     let deletingSong = transaction.objectStore(storeName).delete(Number(trackID.value));
     deletingSong.onsuccess = function () {
       document.getElementById(trackID.value).parentNode.innerHTML = '';
-    } 
+    }
   }
 }
 
