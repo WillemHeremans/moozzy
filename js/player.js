@@ -31,7 +31,6 @@ function loadSong(element, name, url) {
   console.log(music);
 
   music.onloadedmetadata = function () {
-    console.log(music);
     duration = music.duration;
     start = music.currentTime;
     durationMetaData.innerHTML = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / ' + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);;
