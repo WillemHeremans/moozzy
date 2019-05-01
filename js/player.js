@@ -92,9 +92,7 @@ function forward() {
   if (document.getElementById('onPlay')) {
     let onPlay = document.getElementById('onPlay');
     let rank = onPlay.sectionRowIndex;
-    console.log('rank :' + rank);
     let forwardElement = onPlay.parentNode.children[rank + 1];
-    console.log(forwardElement);
     if (forwardElement) {
       loadSong(forwardElement.children[0], forwardElement.childNodes[0].innerHTML, forwardElement.childNodes[2].innerHTML)
     } else {
@@ -108,10 +106,10 @@ function backward() {
   if (document.getElementById('onPlay')) {
     let onPlay = document.getElementById('onPlay');
     let rank = onPlay.sectionRowIndex;
-    let forwardElement = onPlay.parentNode.children[rank - 1];
-    if (forwardElement) {
-      loadSong(forwardElement.children[0], forwardElement.children[0].innerHTML,
-        forwardElement.children[2].innerHTML)
+    let backwardElement = onPlay.parentNode.children[rank - 1];
+    if (backwardElement) {
+      loadSong(backwardElement.children[0], backwardElement.children[0].innerHTML,
+        backwardElement.children[2].innerHTML)
     } else {
       rank = songsList.childElementCount - 1;
       loadSong(songsList.children[rank].children[0], songsList.children[rank].children[0].innerHTML,
