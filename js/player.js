@@ -147,13 +147,13 @@ function loop() {
 function muted() {
   if (music.muted) {
     music.muted = false;
-    this.style.color = 'rgb(76, 76, 76)';
+    mutedButton.style.color = 'rgb(76, 76, 76)';
     if (music.volume < 0.10000000000000014) {
       music.volume = 0.10000000000000014;
     }
   } else {
     music.muted = true;
-    this.style.color = '#dc3545';
+    mutedButton.style.color = '#dc3545';
   }
 }
 
