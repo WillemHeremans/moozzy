@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Music Player</title>
+    <title>moozzy Music Player</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -12,7 +12,7 @@
 
 </head>
 
-<body onload="loadSongsData()">
+<body id="body">
 
     <audio id="music"></audio>
 
@@ -29,13 +29,13 @@
                 <button id="fastBackward" type="button" class="btn btn-muted btn-circle btn-sm"><i
                         class="fas fa-fast-backward"></i></button>
 
-                <button type="button" class="btn btn-info btn-circle btn-lg" onclick="backward()"><i
+                <button type="button" class="btn btn-info btn-circle btn-lg" id="backwardButton"><i
                         class="fas fa-step-backward"></i></button>
 
-                <button type="button" class="btn btn-info btn-circle btn-xl" onclick="playButton()"><i id="playPause"
+                <button type="button" class="btn btn-info btn-circle btn-xl" id="playPauseButton"><i id="playPauseIcon"
                         class="fas fa-play"></i></button>
 
-                <button type="button" class="btn btn-info btn-circle btn-lg" onclick="forward()"><i
+                <button type="button" class="btn btn-info btn-circle btn-lg" id="forwardButton"><i
                         class="fas fa-step-forward"></i></button>
                 <button id="fastForward" type="button" class="btn btn-muted btn-circle btn-sm"><i
                         class="fas fa-fast-forward"></i></button>
@@ -55,9 +55,9 @@
                 <!-- <button type="button" class="btn btn-outline-black btn-sm"><i class="fas fa-volume-off"></i></button>
                              -->
                 <button type="button" class="btn btn-outline-black btn-sm"><i class="fas fa-random"></i></button>
-                <button onclick="loop(this)" type="button" class="btn btn-outline-black btn-sm"><i
+                <button id="loop" type="button" class="btn btn-outline-black btn-sm"><i
                         class="fas fa-undo-alt"></i></button>
-                <button id="muted" onclick="muted(this)" type="button" class="btn btn-outline-black btn-sm"><i
+                <button id="muted" type="button" class="btn btn-outline-black btn-sm"><i
                         class="fas fa-volume-mute"></i></button>
                 <button id="volumeDown" onclick="volumeDown(this)" type="button" class="btn btn-outline-black btn-sm"><i
                         class="fas fa-volume-down"></i><span id="downValue"></span></button>
@@ -98,7 +98,7 @@
                 </table>
             </div>
             <div class="col-sm-1">
-                <a href="#broadcast" onclick="unloadModal()">
+                <a href="#broadcast" id="plusButton">
                     <label class="btn btn-danger btn-lg">
 
                         <i class="fas fa-plus"></i>
@@ -137,7 +137,7 @@
                 </div>
                 <div class="modal-footer">
                     <a href="#confirmation" class="btn btn-danger" id="delete"></a>
-                    <a onclick="submit()" href="#" class="btn btn-primary" id="submit"></a>
+                    <a href="#" class="btn btn-primary" id="submit"></a>
                 </div>
             </div>
         </div>
@@ -155,7 +155,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a onclick="deleteSong()" href="#" class="btn btn-danger">confirm</a>
+                    <a id='confirmDelete' href="#" class="btn btn-danger">confirm</a>
                     <a href="#" class="btn btn-primary">cancel</a>
                 </div>
             </div>

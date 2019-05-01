@@ -3,6 +3,7 @@ let dbName = 'MusicPlayer';
 let dbVersion = 1;
 let storeName = 'MySongs';
 
+let body = document.getElementById('body');
 let trackName = document.getElementById('trackName');
 let trackGenre = document.getElementById('trackGenre');
 let trackURL = document.getElementById('trackURL');
@@ -10,8 +11,10 @@ let trackID = document.getElementById('trackID');
 let modalTitle = document.getElementById('modalTitle');
 let submitButton = document.getElementById('submit');
 let deleteButton = document.getElementById('delete');
+let plusButton = document.getElementById('plusButton');
+let confirmDelete = document.getElementById('confirmDelete');
 
-function loadSongsData() {
+body.onload = function loadSongsData() {
 
   let request = indexedDB.open(dbName, dbVersion);
 
@@ -43,10 +46,10 @@ function loadSongsData() {
 
         for (i in songs) {
           let trTag = document.createElement('tr');
-          trTag.innerHTML = `<td onclick="loadSong(this,'` + songs[i].name + `', '` + songs[i].url + `')">` + songs[i].name + `</td>`
-            + `<td onclick="loadSong(this,'` + songs[i].name + `', '` + songs[i].url + `')">` + songs[i].genre + `</td>`
-            + `<td onclick="loadSong(this,'` + songs[i].name + `', '` + songs[i].url + `')">` + songs[i].url + `</td>`
-            + `<td id="` + key[i] + `" onclick="songSettings(this)" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
+          trTag.innerHTML = `<td>` + songs[i].name + `</td>`
+            + `<td>` + songs[i].genre + `</td>`
+            + `<td>` + songs[i].url + `</td>`
+            + `<td id="` + key[i] + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
           songsList.appendChild(trTag);
         }
       }
@@ -83,7 +86,7 @@ function songSettings(element) {
 
 }
 
-function unloadModal() {
+plusButton.onclick = function unloadModal() {
   modalTitle.innerHTML = 'Add a song';
   submitButton.innerHTML = 'Add';
   deleteButton.style.display = 'none';
@@ -93,7 +96,7 @@ function unloadModal() {
   trackID.value = '';
 }
 
-function submit() {
+submitButton.onclick = function submit() {
 
   let request = indexedDB.open(dbName, dbVersion);
 
@@ -102,12 +105,12 @@ function submit() {
     request.onsuccess = function () {
 
       let transaction = db.transaction([storeName], 'readwrite');
-      trackURL.value.replace(/^.*:\/\//i, '');
+      trackURL.value = trackURL.value.replace(/^.*:\/\//i, '');
       transaction.objectStore(storeName).put({ 'name': trackName.value, 'genre': trackGenre.value, 'url': trackURL.value, 'date': new Date().toLocaleString('fr-FR') }, Number(trackID.value));
-      document.getElementById(trackID.value).parentNode.innerHTML = `<td onclick="loadSong(this,'` + trackName.value + `', '` + trackURL.value + `')">` + trackName.value + `</td>`
-        + `<td onclick="loadSong(this,'` + trackName.value + `', '` + trackURL.value + `')">` + trackGenre.value + `</td>`
-        + `<td onclick="loadSong(this,'` + trackName.value + `', '` + trackURL.value + `')">` + trackURL.value + `</td>`
-        + `<td id="` + trackID.value + `" onclick="songSettings(this)" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
+      document.getElementById(trackID.value).parentNode.innerHTML = `<td>` + trackName.value + `</td>`
+        + `<td>` + trackGenre.value + `</td>`
+        + `<td>` + trackURL.value + `</td>`
+        + `<td id="` + trackID.value + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
     }
 
   } else {
@@ -121,10 +124,10 @@ function submit() {
         getTrackData.onsuccess = function () {
           let song = getTrackData.result;
           let trTag = document.createElement('tr');
-          trTag.innerHTML = `<td onclick="loadSong(this,'` + song.name + `', '` + song.url + `')">` + song.name + `</td>`
-            + `<td onclick="loadSong(this,'` + song.name + `', '` + song.url + `')">` + song.genre + `</td>`
-            + `<td onclick="loadSong(this,'` + song.name + `', '` + song.url + `')">` + song.url + `</td>`
-            + `<td id="` + newTrack.result + `" onclick="songSettings(this)" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
+          trTag.innerHTML = `<td>` + song.name + `</td>`
+            + `<td>` + song.genre + `</td>`
+            + `<td>` + song.url + `</td>`
+            + `<td id="` + newTrack.result + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
           songsList.appendChild(trTag);
         }
       }
@@ -132,14 +135,14 @@ function submit() {
   }
 }
 
-function deleteSong() {
+confirmDelete.onclick = function deleteSong() {
 
   let request = indexedDB.open(dbName, dbVersion);
   request.onsuccess = function () {
     let transaction = db.transaction([storeName], 'readwrite');
     let deletingSong = transaction.objectStore(storeName).delete(Number(trackID.value));
     deletingSong.onsuccess = function () {
-      document.getElementById(trackID.value).parentNode.innerHTML = '';
+      document.getElementById(trackID.value).parentNode.remove();
     }
   }
 }

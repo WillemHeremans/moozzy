@@ -3,33 +3,59 @@ let play = true;
 let pause = false;
 let songInfo = document.getElementById('songInfo');
 let progressBar = document.getElementById('progressBar');
-let playPause = document.getElementById('playPause');
+let playPauseIcon = document.getElementById('playPauseIcon');
+let playPauseButton = document.getElementById('playPauseButton');
+let backwardButton = document.getElementById('backwardButton');
+let forwardButton = document.getElementById('forwardButton');
 let durationMetaData = document.getElementById('durationMetaData');
 let fastForward = document.getElementById('fastForward');
 let fastBackward = document.getElementById('fastBackward');
+let mutedButton = document.getElementById('muted');
+let loopButton = document.getElementById('loop');
 let volumeUpValue = document.getElementById('volumeUp');
 let volumeDownValue = document.getElementById('volumeDown');
 let songsList = document.getElementById('songsList');
 
 progressBar.addEventListener('click', progressClick);
-progressBar.addEventListener('mouseover', progressOver);
-progressBar.setAttribute('value', music.currentTime.toString())
-progressBar.setAttribute('max', music.duration.toString())
+playPauseButton.addEventListener('click', playPause);
+forwardButton.addEventListener('click', forward);
+backwardButton.addEventListener('click', backward);
+mutedButton.addEventListener('click', muted);
+loopButton.addEventListener('click', loop);
+songsList.addEventListener('click', loadSong);
+progressBar.setAttribute('value', music.currentTime.toString());
+progressBar.setAttribute('max', music.duration.toString());
 
 function loadSong(element, name, url) {
   let music = new Audio();
-  music.load();
-  if (document.getElementById('onPlay')) {
-    document.getElementById('onPlay').removeAttribute('class');
-    document.getElementById('onPlay').removeAttribute('id');
+  if (element != event) {
+    if (document.getElementById('onPlay')) {
+      document.getElementById('onPlay').removeAttribute('class');
+      document.getElementById('onPlay').removeAttribute('id');
+    }
+    element.parentNode.setAttribute('id', 'onPlay');
+    element.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
+    songInfo.firstElementChild.innerHTML = name;
+    document.getElementById('music').setAttribute('src', 'http://' + url);
+    music.src = 'http://' + url;
+    music.preload = 'metadata';
+
+  } else {
+    if (event.target.className === 'fas fa-bars') {
+      songSettings(event.target.parentNode.parentNode);
+    } else {
+      if (document.getElementById('onPlay')) {
+        document.getElementById('onPlay').removeAttribute('class');
+        document.getElementById('onPlay').removeAttribute('id');
+      }
+      event.target.parentNode.setAttribute('id', 'onPlay');
+      event.target.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
+      songInfo.firstElementChild.innerHTML = event.target.parentNode.children[0].innerHTML;
+      document.getElementById('music').setAttribute('src', 'http://' + event.target.parentNode.children[2].innerHTML);
+      music.src = 'http://' + event.target.parentNode.children[2].innerHTML;
+      music.preload = 'metadata';
+    }
   }
-  element.parentNode.setAttribute('id', 'onPlay');
-  element.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
-  songInfo.firstElementChild.innerHTML = name;
-  document.getElementById('music').setAttribute('src', 'http://' + url);
-  music.src = 'http://' + url;
-  music.preload = 'metadata';
-  console.log(music);
 
   music.onloadedmetadata = function () {
     duration = music.duration;
@@ -38,24 +64,24 @@ function loadSong(element, name, url) {
     if (!play) {
       music.pause();
       play = true;
-      playButton();
+      playPause();
     } else {
-      playButton();
+      playPause();
     }
   }
 }
 
-function playButton() {
+function playPause() {
   if (play) {
     play = false;
-    playPause.setAttribute('class', 'fas fa-pause')
+    playPauseIcon.setAttribute('class', 'fas fa-pause')
     music.currentTime = start;
     music.play();
     pause = true;
     autoMove();
   } else {
     play = true;
-    playPause.setAttribute('class', 'fas fa-play')
+    playPauseIcon.setAttribute('class', 'fas fa-play')
     music.pause();
     duration = music.duration;
     pause = false;
@@ -65,12 +91,15 @@ function playButton() {
 function forward() {
   if (document.getElementById('onPlay')) {
     let onPlay = document.getElementById('onPlay');
-    let rank = onPlay.rowIndex - 1;
+    let rank = onPlay.sectionRowIndex;
+    console.log('rank :' + rank);
     let forwardElement = onPlay.parentNode.children[rank + 1];
+    console.log(forwardElement);
     if (forwardElement) {
       loadSong(forwardElement.children[0], forwardElement.childNodes[0].innerHTML, forwardElement.childNodes[2].innerHTML)
     } else {
-      loadSong(songsList.children[0].children[0], songsList.children[0].children[0].innerHTML, songsList.children[0].children[2].innerHTML)
+      loadSong(songsList.children[0].children[0], songsList.children[0].children[0].innerHTML,
+        songsList.children[0].children[2].innerHTML)
     }
   }
 }
@@ -78,14 +107,15 @@ function forward() {
 function backward() {
   if (document.getElementById('onPlay')) {
     let onPlay = document.getElementById('onPlay');
-    let rank = onPlay.rowIndex - 1;
-    console.log(rank);
+    let rank = onPlay.sectionRowIndex;
     let forwardElement = onPlay.parentNode.children[rank - 1];
     if (forwardElement) {
-      loadSong(forwardElement.children[0], forwardElement.childNodes[0].innerHTML, forwardElement.childNodes[2].innerHTML)
+      loadSong(forwardElement.children[0], forwardElement.children[0].innerHTML,
+        forwardElement.children[2].innerHTML)
     } else {
       rank = songsList.childElementCount - 1;
-      loadSong(songsList.children[rank].children[0], songsList.children[rank].children[0].innerHTML, songsList.children[rank].children[2].innerHTML)
+      loadSong(songsList.children[rank].children[0], songsList.children[rank].children[0].innerHTML,
+        songsList.children[rank].children[2].innerHTML)
     }
   }
 }
@@ -106,26 +136,26 @@ fastBackward.onpointerup = function () {
   music.playbackRate = 1.0;
 }
 
-function loop(element) {
+function loop() {
   if (music.loop) {
     music.loop = false;
-    element.style.color = 'rgb(76, 76, 76)';
+    this.style.color = 'rgb(76, 76, 76)';
   } else {
     music.loop = true;
-    element.style.color = '#dc3545';
+    this.style.color = '#dc3545';
   }
 }
 
-function muted(element) {
+function muted() {
   if (music.muted) {
     music.muted = false;
-    element.style.color = 'rgb(76, 76, 76)';
+    this.style.color = 'rgb(76, 76, 76)';
     if (music.volume < 0.10000000000000014) {
       music.volume = 0.10000000000000014;
     }
   } else {
     music.muted = true;
-    element.style.color = '#dc3545';
+    this.style.color = '#dc3545';
   }
 }
 
@@ -176,26 +206,18 @@ function autoMove() {
 
 function progressClick(event) {
   let maxValue = (event.target['offsetWidth']).toString();
-  let clickValue = (event.clientX) - (event.target['offsetLeft']).toString();
+  let currentValue = (event.clientX) - (event.target['offsetLeft']).toString();
   event.target['max'] = (maxValue / maxValue) * duration;
-  event.target['value'] = (clickValue / maxValue) * duration;
+  event.target['value'] = (currentValue / maxValue) * duration;
   if (!play) {
     music.pause();
     play = true;
     start = event.target['value'];
-    playButton();
+    playPause();
   } else {
     start = event.target['value'];
-    playButton();
+    playPause();
   }
-}
-
-function progressOver(event) {
-  let maxValue = (event.target['offsetWidth']).toString();
-  let overValue = (event.clientX) - (event.target['offsetLeft']).toString();
-  overValue = (overValue / maxValue) * duration;
-  overValue = convertTime(~~(overValue / 3600)) + ':' + convertTime(~~((overValue % 3600) / 60)) + ':' + convertTime(~~overValue % 60);
-  progressBar.setAttribute('title', overValue);
 }
 
 function convertTime(timeValue) {
