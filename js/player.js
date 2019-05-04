@@ -212,10 +212,10 @@ function progressClick(event) {
     music.pause();
     play = true;
     start = event.target['value'];
-    playButton();
+    playPause();
   } else {
     start = event.target['value'];
-    playButton();
+    playPause();
   }
 }
 
