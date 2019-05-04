@@ -73,19 +73,25 @@ function loadSong(element, name, url) {
 }
 
 function playPause() {
-  if (play) {
-    play = false;
-    playPauseIcon.setAttribute('class', 'fas fa-pause')
-    music.currentTime = start;
-    music.play();
-    pause = true;
-    autoMove();
+  if (!document.getElementById('onPlay')) {
+    loadSong(songsList.children[0].children[0], songsList.children[0].children[0].innerHTML,
+      songsList.children[0].children[2].innerHTML);
   } else {
-    play = true;
-    playPauseIcon.setAttribute('class', 'fas fa-play')
-    music.pause();
-    duration = music.duration;
-    pause = false;
+    
+    if (play) {
+      play = false;
+      playPauseIcon.setAttribute('class', 'fas fa-pause')
+      music.currentTime = start;
+      music.play();
+      pause = true;
+      autoMove();
+    } else {
+      play = true;
+      playPauseIcon.setAttribute('class', 'fas fa-play')
+      music.pause();
+      duration = music.duration;
+      pause = false;
+    }
   }
 }
 
