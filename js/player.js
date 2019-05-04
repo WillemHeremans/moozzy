@@ -17,6 +17,7 @@ let volumeDownValue = document.getElementById('volumeDown');
 let songsList = document.getElementById('songsList');
 
 progressBar.addEventListener('click', progressClick);
+progressBar.addEventListener('mouseover', progressOver);
 playPauseButton.addEventListener('click', playPause);
 forwardButton.addEventListener('click', forward);
 backwardButton.addEventListener('click', backward);
@@ -159,7 +160,7 @@ function muted() {
 
 function volumeUp(element) {
   if (music.muted) {
-    muted(document.getElementById('muted'));
+    muted(mutedButton);
   }
   if (music.volume < 1) {
     let volumeValue = Math.round((music.volume * 10) + 1).toString().replace('10', '');
@@ -172,14 +173,14 @@ function volumeUp(element) {
 function volumeDown(element) {
   if (music.volume > 1.3877787807814457e-16) {
     if (music.muted) {
-      muted(document.getElementById('muted'));
+      muted(mutedButton);
     }
     let volumeValue = Math.round((music.volume * 10) - 1).toString().replace('0', '');
     document.getElementById('upValue').innerHTML = '';
     document.getElementById('downValue').innerHTML = volumeValue;
     if (volumeValue === '') {
       if (!music.muted) {
-        muted(document.getElementById('muted'));
+        muted(mutedButton);
       }
     }
     music.volume -= 0.1;
@@ -204,18 +205,26 @@ function autoMove() {
 
 function progressClick(event) {
   let maxValue = (event.target['offsetWidth']).toString();
-  let currentValue = (event.clientX) - (event.target['offsetLeft']).toString();
+  let clickValue = (event.clientX) - (event.target['offsetLeft']).toString();
   event.target['max'] = (maxValue / maxValue) * duration;
-  event.target['value'] = (currentValue / maxValue) * duration;
+  event.target['value'] = (clickValue / maxValue) * duration;
   if (!play) {
     music.pause();
     play = true;
     start = event.target['value'];
-    playPause();
+    playButton();
   } else {
     start = event.target['value'];
-    playPause();
+    playButton();
   }
+}
+
+function progressOver(event) {
+  let maxValue = (event.target['offsetWidth']).toString();
+  let overValue = (event.clientX) - (event.target['offsetLeft']).toString();
+  overValue = (overValue / maxValue) * duration;
+  overValue = convertTime(~~(overValue / 3600)) + ':' + convertTime(~~((overValue % 3600) / 60)) + ':' + convertTime(~~overValue % 60);
+  progressBar.setAttribute('title', overValue);
 }
 
 function convertTime(timeValue) {
