@@ -203,7 +203,7 @@ function autoMove() {
   }
 }
 
-function progressClick(event) {
+function progressClick() {
   let maxValue = (event.target['offsetWidth']).toString();
   let clickValue = (event.clientX) - (event.target['offsetLeft']).toString();
   event.target['max'] = (maxValue / maxValue) * duration;
@@ -219,12 +219,15 @@ function progressClick(event) {
   }
 }
 
-function progressOver(event) {
-  let maxValue = (event.target['offsetWidth']).toString();
-  let overValue = (event.clientX) - (event.target['offsetLeft']).toString();
-  overValue = (overValue / maxValue) * duration;
-  overValue = convertTime(~~(overValue / 3600)) + ':' + convertTime(~~((overValue % 3600) / 60)) + ':' + convertTime(~~overValue % 60);
-  progressBar.setAttribute('title', overValue);
+function progressOver() {
+  if (document.getElementById('onPlay')) {
+    let maxValue = (event.target['offsetWidth']).toString();
+    let overValue = (event.clientX) - (event.target['offsetLeft']).toString();
+    overValue = (overValue / maxValue) * duration;
+    overValue = convertTime(~~(overValue / 3600)) + ':' + convertTime(~~((overValue % 3600) / 60)) + ':' + convertTime(~~overValue % 60);
+    progressBar.setAttribute('title', overValue);
+
+  }
 }
 
 function convertTime(timeValue) {
