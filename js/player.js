@@ -12,8 +12,10 @@ let fastForward = document.getElementById('fastForward');
 let fastBackward = document.getElementById('fastBackward');
 let mutedButton = document.getElementById('muted');
 let loopButton = document.getElementById('loop');
-let volumeUpValue = document.getElementById('volumeUp');
-let volumeDownValue = document.getElementById('volumeDown');
+let volumeDownButton = document.getElementById('volumeDown');
+let volumeUpButton = document.getElementById('volumeUp');
+let volumeDownValue = document.getElementById('downValue');
+let volumeUpValue = document.getElementById('upValue');
 let songsList = document.getElementById('songsList');
 
 progressBar.addEventListener('click', progressClick);
@@ -23,6 +25,8 @@ forwardButton.addEventListener('click', forward);
 backwardButton.addEventListener('click', backward);
 mutedButton.addEventListener('click', muted);
 loopButton.addEventListener('click', loop);
+volumeDownButton.addEventListener('click', volumeDown);
+volumeUpButton.addEventListener('click', volumeUp);
 songsList.addEventListener('click', loadSong);
 progressBar.setAttribute('value', music.currentTime.toString());
 progressBar.setAttribute('max', music.duration.toString());
@@ -77,7 +81,7 @@ function playPause() {
     loadSong(songsList.children[0].children[0], songsList.children[0].children[0].innerHTML,
       songsList.children[0].children[2].innerHTML);
   } else {
-    
+
     if (play) {
       play = false;
       playPauseIcon.setAttribute('class', 'fas fa-pause')
@@ -164,32 +168,32 @@ function muted() {
   }
 }
 
-function volumeUp(element) {
-  if (music.muted) {
-    muted(mutedButton);
-  }
-  if (music.volume < 1) {
-    let volumeValue = Math.round((music.volume * 10) + 1).toString().replace('10', '');
-    document.getElementById('downValue').innerHTML = '';
-    document.getElementById('upValue').innerHTML = volumeValue;
-    music.volume += 0.1;
-  }
-}
-
-function volumeDown(element) {
+function volumeDown() {
   if (music.volume > 1.3877787807814457e-16) {
     if (music.muted) {
       muted(mutedButton);
     }
     let volumeValue = Math.round((music.volume * 10) - 1).toString().replace('0', '');
-    document.getElementById('upValue').innerHTML = '';
-    document.getElementById('downValue').innerHTML = volumeValue;
+    volumeUpValue.innerHTML = '';
+    volumeDownValue.innerHTML = volumeValue;
     if (volumeValue === '') {
       if (!music.muted) {
         muted(mutedButton);
       }
     }
     music.volume -= 0.1;
+  }
+}
+
+function volumeUp() {
+  if (music.muted) {
+    muted(mutedButton);
+  }
+  if (music.volume < 1) {
+    let volumeValue = Math.round((music.volume * 10) + 1).toString().replace('10', '');
+    volumeDownValue.innerHTML = '';
+    volumeUpValue.innerHTML = volumeValue;
+    music.volume += 0.1;
   }
 }
 
