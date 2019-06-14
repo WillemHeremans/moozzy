@@ -198,7 +198,7 @@ function volumeUp() {
 }
 
 function autoMove() {
-  let id = setInterval(frame, 500);
+  let id = setInterval(frame, 1000);
   function frame() {
     if (audioElement.currentTime >= audioElement.duration) {
       clearInterval(id);
