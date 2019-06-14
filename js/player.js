@@ -1,22 +1,23 @@
 
 let play = true;
 let pause = false;
-let songInfo = document.getElementById('songInfo');
-let progressBar = document.getElementById('progressBar');
-let playPauseIcon = document.getElementById('playPauseIcon');
-let playPauseButton = document.getElementById('playPauseButton');
-let backwardButton = document.getElementById('backwardButton');
-let forwardButton = document.getElementById('forwardButton');
-let durationMetaData = document.getElementById('durationMetaData');
-let fastForward = document.getElementById('fastForward');
-let fastBackward = document.getElementById('fastBackward');
-let mutedButton = document.getElementById('muted');
-let loopButton = document.getElementById('loop');
-let volumeDownButton = document.getElementById('volumeDown');
-let volumeUpButton = document.getElementById('volumeUp');
-let volumeDownValue = document.getElementById('downValue');
-let volumeUpValue = document.getElementById('upValue');
-let songsList = document.getElementById('songsList');
+const songInfo = document.getElementById('songInfo');
+const audioElement = document.getElementById('audioElement');
+const progressBar = document.getElementById('progressBar');
+const playPauseIcon = document.getElementById('playPauseIcon');
+const playPauseButton = document.getElementById('playPauseButton');
+const backwardButton = document.getElementById('backwardButton');
+const forwardButton = document.getElementById('forwardButton');
+const durationMetaData = document.getElementById('durationMetaData');
+const fastForward = document.getElementById('fastForward');
+const fastBackward = document.getElementById('fastBackward');
+const mutedButton = document.getElementById('muted');
+const loopButton = document.getElementById('loop');
+const volumeDownButton = document.getElementById('volumeDown');
+const volumeUpButton = document.getElementById('volumeUp');
+const volumeDownValue = document.getElementById('downValue');
+const volumeUpValue = document.getElementById('upValue');
+const songsList = document.getElementById('songsList');
 
 progressBar.addEventListener('click', progressClick);
 progressBar.addEventListener('mouseover', progressOver);
@@ -28,11 +29,11 @@ loopButton.addEventListener('click', loop);
 volumeDownButton.addEventListener('click', volumeDown);
 volumeUpButton.addEventListener('click', volumeUp);
 songsList.addEventListener('click', loadSong);
-progressBar.setAttribute('value', music.currentTime.toString());
-progressBar.setAttribute('max', music.duration.toString());
+progressBar.setAttribute('value', audioElement.currentTime.toString());
+progressBar.setAttribute('max', audioElement.duration.toString());
 
 function loadSong(element, name, url) {
-  let music = new Audio();
+  audioElement.load();
   if (element != event) {
     if (document.getElementById('onPlay')) {
       document.getElementById('onPlay').removeAttribute('class');
@@ -41,9 +42,8 @@ function loadSong(element, name, url) {
     element.parentNode.setAttribute('id', 'onPlay');
     element.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
     songInfo.firstElementChild.innerHTML =  name;
-    document.getElementById('music').setAttribute('src', 'http://' + url);
-    music.src = 'http://' + url;
-    music.preload = 'metadata';
+    audioElement.src = 'http://' + url;
+    audioElement.preload = 'metadata';
 
   } else {
     if (event.target.className === 'fas fa-bars') {
@@ -56,19 +56,18 @@ function loadSong(element, name, url) {
       event.target.parentNode.setAttribute('id', 'onPlay');
       event.target.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
       songInfo.firstElementChild.innerHTML = event.target.parentNode.children[0].innerHTML;
-      document.getElementById('music').setAttribute('src', 'http://' + event.target.parentNode.children[2].innerHTML);
-      music.src = 'http://' + event.target.parentNode.children[2].innerHTML;
-      music.preload = 'metadata';
+      audioElement.src = 'http://' + event.target.parentNode.children[2].innerHTML;
+      audioElement.preload = 'metadata';
     }
   }
 
-  music.onloadedmetadata = function () {
-    duration = music.duration;
-    start = music.currentTime;
+  audioElement.onloadedmetadata = function () {
+    duration = audioElement.duration;
+    start = audioElement.currentTime;
     durationMetaData.innerHTML = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / '
     + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);
     if (!play) {
-      music.pause();
+      audioElement.pause();
       play = true;
       playPause();
     } else {
@@ -86,15 +85,15 @@ function playPause() {
     if (play) {
       play = false;
       playPauseIcon.setAttribute('class', 'fas fa-pause')
-      music.currentTime = start;
-      music.play();
+      audioElement.currentTime = start;
+      audioElement.play();
       pause = true;
       autoMove();
     } else {
       play = true;
       playPauseIcon.setAttribute('class', 'fas fa-play')
-      music.pause();
-      duration = music.duration;
+      audioElement.pause();
+      duration = audioElement.duration;
       pause = false;
     }
   }
@@ -131,82 +130,82 @@ function backward() {
 }
 
 fastForward.onpointerdown = function () {
-  music.playbackRate += 2.0;
+  audioElement.playbackRate += 2.0;
 }
 
 fastForward.onpointerup = function () {
-  music.playbackRate = 1.0;
+  audioElement.playbackRate = 1.0;
 }
 
 fastBackward.onpointerdown = function () {
-  music.playbackRate -= 0.5;
+  audioElement.playbackRate -= 0.5;
 }
 
 fastBackward.onpointerup = function () {
-  music.playbackRate = 1.0;
+  audioElement.playbackRate = 1.0;
 }
 
 function loop() {
-  if (music.loop) {
-    music.loop = false;
+  if (audioElement.loop) {
+    audioElement.loop = false;
     this.style.color = 'rgb(76, 76, 76)';
   } else {
-    music.loop = true;
+    audioElement.loop = true;
     this.style.color = '#dc3545';
   }
 }
 
 function muted() {
-  if (music.muted) {
-    music.muted = false;
+  if (audioElement.muted) {
+    audioElement.muted = false;
     mutedButton.style.color = 'rgb(76, 76, 76)';
-    if (music.volume < 0.10000000000000014) {
-      music.volume = 0.10000000000000014;
+    if (audioElement.volume < 0.10000000000000014) {
+      audioElement.volume = 0.10000000000000014;
     }
   } else {
-    music.muted = true;
+    audioElement.muted = true;
     mutedButton.style.color = '#dc3545';
   }
 }
 
 function volumeDown() {
-  if (music.volume > 1.3877787807814457e-16) {
-    if (music.muted) {
+  if (audioElement.volume > 1.3877787807814457e-16) {
+    if (audioElement.muted) {
       muted(mutedButton);
     }
-    let volumeValue = Math.round((music.volume * 10) - 1).toString().replace('0', '');
+    let volumeValue = Math.round((audioElement.volume * 10) - 1).toString().replace('0', '');
     volumeUpValue.innerHTML = '';
     volumeDownValue.innerHTML = volumeValue;
     if (volumeValue === '') {
-      if (!music.muted) {
+      if (!audioElement.muted) {
         muted(mutedButton);
       }
     }
-    music.volume -= 0.1;
+    audioElement.volume -= 0.1;
   }
 }
 
 function volumeUp() {
-  if (music.muted) {
+  if (audioElement.muted) {
     muted(mutedButton);
   }
-  if (music.volume < 1) {
-    let volumeValue = Math.round((music.volume * 10) + 1).toString().replace('10', '');
+  if (audioElement.volume < 1) {
+    let volumeValue = Math.round((audioElement.volume * 10) + 1).toString().replace('10', '');
     volumeDownValue.innerHTML = '';
     volumeUpValue.innerHTML = volumeValue;
-    music.volume += 0.1;
+    audioElement.volume += 0.1;
   }
 }
 
 function autoMove() {
-  const song = music;
-  const id = setInterval(frame, 500);
+  // let audioElement = audioElement;
+  let id = setInterval(frame, 500);
   function frame() {
-    if (song.currentTime >= song.duration) {
+    if (audioElement.currentTime >= audioElement.duration) {
       clearInterval(id);
     } else {
-      duration = song.duration;
-      start = song.currentTime;
+      duration = audioElement.duration;
+      start = audioElement.currentTime;
       progressBar.setAttribute('max', duration.toString());
       progressBar.setAttribute('value', start.toString());
       durationMetaData.innerHTML = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / '
@@ -222,7 +221,7 @@ function progressClick() {
     event.target['max'] = (maxValue / maxValue) * duration;
     event.target['value'] = (clickValue / maxValue) * duration;
     if (!play) {
-      music.pause();
+      audioElement.pause();
       play = true;
       start = event.target['value'];
       playPause();
