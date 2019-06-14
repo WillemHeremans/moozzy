@@ -198,7 +198,6 @@ function volumeUp() {
 }
 
 function autoMove() {
-  // let audioElement = audioElement;
   let id = setInterval(frame, 500);
   function frame() {
     if (audioElement.currentTime >= audioElement.duration) {
