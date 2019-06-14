@@ -33,7 +33,6 @@ progressBar.setAttribute('value', audioElement.currentTime.toString());
 progressBar.setAttribute('max', audioElement.duration.toString());
 
 function loadSong(element, name, url) {
-  audioElement.load();
   if (element != event) {
     if (document.getElementById('onPlay')) {
       document.getElementById('onPlay').removeAttribute('class');
