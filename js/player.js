@@ -40,7 +40,7 @@ function loadSong(element, name, url) {
     }
     element.parentNode.setAttribute('id', 'onPlay');
     element.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
-    songInfo.firstElementChild.innerHTML = name;
+    songInfo.firstElementChild.insertAdjacentHTML('beforeend', name);
     document.getElementById('music').setAttribute('src', 'http://' + url);
     music.src = 'http://' + url;
     music.preload = 'metadata';
@@ -65,7 +65,8 @@ function loadSong(element, name, url) {
   music.onloadedmetadata = function () {
     duration = music.duration;
     start = music.currentTime;
-    durationMetaData.innerHTML = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / ' + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);;
+    durationMetaData.innerHTML = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / '
+    + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);
     if (!play) {
       music.pause();
       play = true;
@@ -208,24 +209,27 @@ function autoMove() {
       start = song.currentTime;
       progressBar.setAttribute('max', duration.toString());
       progressBar.setAttribute('value', start.toString());
-      durationMetaData.innerHTML = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / ' + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);
+      durationMetaData.innerHTML = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / '
+      + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);
     }
   }
 }
 
 function progressClick() {
-  let maxValue = (event.target['offsetWidth']).toString();
-  let clickValue = (event.clientX) - (event.target['offsetLeft']).toString();
-  event.target['max'] = (maxValue / maxValue) * duration;
-  event.target['value'] = (clickValue / maxValue) * duration;
-  if (!play) {
-    music.pause();
-    play = true;
-    start = event.target['value'];
-    playPause();
-  } else {
-    start = event.target['value'];
-    playPause();
+  if (document.getElementById('onPlay')) {
+    let maxValue = (event.target['offsetWidth']).toString();
+    let clickValue = (event.clientX) - (event.target['offsetLeft']).toString();
+    event.target['max'] = (maxValue / maxValue) * duration;
+    event.target['value'] = (clickValue / maxValue) * duration;
+    if (!play) {
+      music.pause();
+      play = true;
+      start = event.target['value'];
+      playPause();
+    } else {
+      start = event.target['value'];
+      playPause();
+    }
   }
 }
 

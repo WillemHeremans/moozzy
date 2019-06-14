@@ -45,12 +45,10 @@ body.onload = function loadSongsData() {
         let key = getKey.result;
 
         for (i in songs) {
-          let trTag = document.createElement('tr');
-          trTag.innerHTML = `<td>` + songs[i].name + `</td>`
+          songsList.insertAdjacentHTML('beforeend', `<tr><td>` + songs[i].name + `</td>`
             + `<td>` + songs[i].genre + `</td>`
             + `<td>` + songs[i].url + `</td>`
-            + `<td id="` + key[i] + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
-          songsList.appendChild(trTag);
+            + `<td id="` + key[i] + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
         }
       }
     }
@@ -123,12 +121,10 @@ submitButton.onclick = function submit() {
         let getTrackData = transaction.objectStore(storeName).get(newTrack.result);
         getTrackData.onsuccess = function () {
           let song = getTrackData.result;
-          let trTag = document.createElement('tr');
-          trTag.innerHTML = `<td>` + song.name + `</td>`
-            + `<td>` + song.genre + `</td>`
-            + `<td>` + song.url + `</td>`
-            + `<td id="` + newTrack.result + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
-          songsList.appendChild(trTag);
+          songsList.insertAdjacentHTML('beforeend', `<tr><td>` + song.name + `</td>`
+          + `<td>` + song.genre + `</td>`
+          + `<td>` + song.url + `</td>`
+          + `<td id="` + newTrack.result + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
         }
       }
     }
@@ -147,78 +143,78 @@ confirmDelete.onclick = function deleteSong() {
   }
 }
 
-function addFile() {
+// function addFile() {
 
-  let inp = document.getElementById('get-files');
-  // Access and handle the files 
-  for (i = 0; i < inp.files.length; i++) {
-    let file = inp.files[i];
-    // do things with file
-    console.log(file['name']);
-    console.log('Ce script est bien appelé')
-    // IndexedDB
+//   let inp = document.getElementById('get-files');
+//   // Access and handle the files 
+//   for (i = 0; i < inp.files.length; i++) {
+//     let file = inp.files[i];
+//     // do things with file
+//     console.log(file['name']);
+//     console.log('Ce script est bien appelé')
+//     // IndexedDB
 
-    // Create/open database
-    var request = indexedDB.open(dbName, dbVersion),
-      db,
-      createObjectStore = function (dataBase) {
-        // Create an objectStore
-        console.log('Creating objectStore')
-        //   var objectStore = db.createObjectStore('listeRadios', { autoIncrement: true });
-        dataBase.createObjectStore('MyNewData');
-      }
+//     // Create/open database
+//     var request = indexedDB.open(dbName, dbVersion),
+//       db,
+//       createObjectStore = function (dataBase) {
+//         // Create an objectStore
+//         console.log('Creating objectStore')
+//         //   var objectStore = db.createObjectStore('listeRadios', { autoIncrement: true });
+//         dataBase.createObjectStore('MyNewData');
+//       }
 
-    request.onerror = function (event) {
-      console.log('Error creating/accessing IndexedDB database');
-    };
+//     request.onerror = function (event) {
+//       console.log('Error creating/accessing IndexedDB database');
+//     };
 
-    request.onsuccess = function (event) {
-      console.log('Success creating/accessing IndexedDB database');
-      db = request.result;
-      console.log(db);
+//     request.onsuccess = function (event) {
+//       console.log('Success creating/accessing IndexedDB database');
+//       db = request.result;
+//       console.log(db);
 
-      var transaction = db.transaction([storeName], 'readwrite');
-      console.log(transaction.objectStore(storeName).put({ 'name': 'SWIGG', 'genre': 'Pop, RnB, rap', 'url': 'http://swingfm.ice.infomaniak.ch/swingfm-128', 'date': new Date().toLocaleString('fr-FR') }));
-      let getDB = transaction.objectStore(storeName).getAll();
-      let getKey = transaction.objectStore(storeName).get('juno');
+//       var transaction = db.transaction([storeName], 'readwrite');
+//       console.log(transaction.objectStore(storeName).put({ 'name': 'SWIGG', 'genre': 'Pop, RnB, rap', 'url': 'http://swingfm.ice.infomaniak.ch/swingfm-128', 'date': new Date().toLocaleString('fr-FR') }));
+//       let getDB = transaction.objectStore(storeName).getAll();
+//       let getKey = transaction.objectStore(storeName).get('juno');
 
-      getDB.onsuccess = function () {
-        let songs = getDB.result;
-        // var table = document.getElementById('tBody');
-        for (i in songs) {
-          console.log(songs[i]);
-          //       var row = table.insertRow(i);
-          //       var cell1 = row.insertCell(i);
-          // cell1.innerHTML = 'songs[i]';
-        }
+//       getDB.onsuccess = function () {
+//         let songs = getDB.result;
+//         // var table = document.getElementById('tBody');
+//         for (i in songs) {
+//           console.log(songs[i]);
+//           //       var row = table.insertRow(i);
+//           //       var cell1 = row.insertCell(i);
+//           // cell1.insertAdjacentHTML('beforeend', )'songs[i]';
+//         }
 
-        getKey.onsuccess = function () {
-          let trackTime = getKey.result;
-          // for (i in trackTime) {
-          console.log('result de get : ');
-          console.log(trackTime);
-          document.getElementById('music').src = trackTime;
-          let music = new Audio();
-          music.src = document.getElementById('music').src;
-          music.onloadedmetadata = function () {
-            duration = music.duration;
-            start = music.currentTime;
-            durationMetaData.innerHTML = start + ' / ' + duration;
-            console.log(music.mozGetMetadata());
-          }
-          // }
-        }
+//         getKey.onsuccess = function () {
+//           let trackTime = getKey.result;
+//           // for (i in trackTime) {
+//           console.log('result de get : ');
+//           console.log(trackTime);
+//           document.getElementById('music').src = trackTime;
+//           let music = new Audio();
+//           music.src = document.getElementById('music').src;
+//           music.onloadedmetadata = function () {
+//             duration = music.duration;
+//             start = music.currentTime;
+//             durationMetaData.insertAdjacentHTML('beforeend', )start + ' / ' + duration;
+//             console.log(music.mozGetMetadata());
+//           }
+//           // }
+//         }
 
-      }
-      db.onerror = function (event) {
-        console.log('Error creating/accessing IndexedDB database');
-      };
-    }
+//       }
+//       db.onerror = function (event) {
+//         console.log('Error creating/accessing IndexedDB database');
+//       };
+//     }
 
-    // For future use. Currently only in latest Firefox versions
-    request.onupgradeneeded = function (event) {
-      createObjectStore(event.target.result);
-      console.log(event.target.result);
-    };
-  }
-}
+//     // For future use. Currently only in latest Firefox versions
+//     request.onupgradeneeded = function (event) {
+//       createObjectStore(event.target.result);
+//       console.log(event.target.result);
+//     };
+//   }
+// }
