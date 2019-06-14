@@ -40,7 +40,7 @@ function loadSong(element, name, url) {
     }
     element.parentNode.setAttribute('id', 'onPlay');
     element.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
-    songInfo.firstElementChild.insertAdjacentHTML('beforeend', name);
+    songInfo.firstElementChild.innerHTML =  name;
     document.getElementById('music').setAttribute('src', 'http://' + url);
     music.src = 'http://' + url;
     music.preload = 'metadata';
