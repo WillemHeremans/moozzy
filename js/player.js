@@ -198,14 +198,13 @@ function volumeUp() {
 }
 
 function autoMove() {
-  const song = audioElement;
-  const id = setInterval(frame, 500);
+  let id = setInterval(frame, 500);
   function frame() {
-    if (song.currentTime >= song.duration) {
+    if (audioElement.currentTime >= audioElement.duration) {
       clearInterval(id);
     } else {
-      duration = song.duration;
-      start = song.currentTime;
+      duration = audioElement.duration;
+      start = audioElement.currentTime;
       progressBar.setAttribute('max', duration.toString());
       progressBar.setAttribute('value', start.toString());
       durationMetaData.innerHTML = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / '
