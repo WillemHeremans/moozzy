@@ -202,7 +202,7 @@ function volumeUp() {
 function autoMove() {
   setInterval(move, 1000);
   function move() {
-      // duration = audioElement.duration;
+      duration = audioElement.duration;
       start = audioElement.currentTime;
       progressBar.value = start;
       progressBar.max = duration;
