@@ -94,9 +94,7 @@ function playPause() {
       play = true;
       playPauseIcon.setAttribute('class', 'fas fa-play')
       audioElement.pause();
-      // duration = audioElement.duration;
       pause = false;
-      // console.log(duration);
     }
   }
 }
