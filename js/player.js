@@ -1,6 +1,8 @@
 
 let play = true;
 let pause = false;
+let start = 0;
+let duration = 0;
 const songInfo = document.getElementById('songInfo');
 const audioElement = document.getElementById('audioElement');
 const progressBar = document.getElementById('progressBar');
@@ -29,8 +31,8 @@ loopButton.addEventListener('click', loop);
 volumeDownButton.addEventListener('click', volumeDown);
 volumeUpButton.addEventListener('click', volumeUp);
 songsList.addEventListener('click', loadSong);
-progressBar.setAttribute('value', audioElement.currentTime.toString());
-progressBar.setAttribute('max', audioElement.duration.toString());
+progressBar.value = start;
+progressBar.max = duration;
 
 function loadSong(element, name, url) {
   if (element != event) {
@@ -92,8 +94,9 @@ function playPause() {
       play = true;
       playPauseIcon.setAttribute('class', 'fas fa-play')
       audioElement.pause();
-      duration = audioElement.duration;
+      // duration = audioElement.duration;
       pause = false;
+      // console.log(duration);
     }
   }
 }
@@ -199,10 +202,10 @@ function volumeUp() {
 function autoMove() {
   setInterval(move, 1000);
   function move() {
-      duration = audioElement.duration;
+      // duration = audioElement.duration;
       start = audioElement.currentTime;
-      progressBar.setAttribute('max', duration.toString());
-      progressBar.setAttribute('value', start.toString());
+      progressBar.value = start;
+      progressBar.max = duration;
       durationMetaData.innerHTML = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / '
       + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);
   }
