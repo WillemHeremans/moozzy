@@ -202,8 +202,8 @@ function autoMove() {
   function move() {
       duration = audioElement.duration;
       start = audioElement.currentTime;
-      progressBar.value = start;
-      progressBar.max = duration;
+      progressBar.setAttribute('max', duration.toString());
+      progressBar.setAttribute('value', start.toString());
       durationMetaData.innerHTML = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / '
       + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);
   }
