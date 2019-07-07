@@ -1,8 +1,12 @@
 
-let play = true;
+let play = false;
 let pause = false;
+let sequenceLoopWait = false;
+let sequenceLoopOn = false;
 let start = 0;
 let duration = 0;
+let sequenceStart = 0;
+let sequenceEnd = 0;
 const songInfo = document.getElementById('songInfo');
 const audioElement = document.getElementById('audioElement');
 const progressBar = document.getElementById('progressBar');
@@ -20,6 +24,8 @@ const volumeUpButton = document.getElementById('volumeUp');
 const volumeDownValue = document.getElementById('downValue');
 const volumeUpValue = document.getElementById('upValue');
 const songsList = document.getElementById('songsList');
+const sequenceLoopButton = document.getElementById('sequenceLoop');
+const sequenceLoopIcon = sequenceLoopButton.children[0];
 
 progressBar.addEventListener('click', progressClick);
 progressBar.addEventListener('mouseover', progressOver);
@@ -31,6 +37,8 @@ loopButton.addEventListener('click', loop);
 volumeDownButton.addEventListener('click', volumeDown);
 volumeUpButton.addEventListener('click', volumeUp);
 songsList.addEventListener('click', loadSong);
+sequenceLoopButton.addEventListener('click', sequenceLoop);
+audioElement.addEventListener('timeupdate', sequence);
 progressBar.value = start;
 progressBar.max = duration;
 
@@ -42,7 +50,7 @@ function loadSong(element, name, url) {
     }
     element.parentNode.setAttribute('id', 'onPlay');
     element.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
-    songInfo.firstElementChild.innerHTML =  name;
+    songInfo.firstElementChild.innerHTML = name;
     audioElement.src = 'http://' + url;
     audioElement.preload = 'metadata';
 
@@ -66,10 +74,10 @@ function loadSong(element, name, url) {
     duration = audioElement.duration;
     start = audioElement.currentTime;
     durationMetaData.innerHTML = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / '
-    + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);
-    if (!play) {
+      + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);
+    if (play) {
       audioElement.pause();
-      play = true;
+      play = false;
       playPause();
     } else {
       playPause();
@@ -83,15 +91,15 @@ function playPause() {
       songsList.children[0].children[2].innerHTML);
   } else {
 
-    if (play) {
-      play = false;
+    if (!play) {
+      play = true;
       playPauseIcon.setAttribute('class', 'fas fa-pause')
       audioElement.currentTime = start;
       audioElement.play();
       pause = true;
       autoMove();
     } else {
-      play = true;
+      play = false;
       playPauseIcon.setAttribute('class', 'fas fa-play')
       audioElement.pause();
       pause = false;
@@ -143,6 +151,27 @@ fastBackward.onpointerdown = function () {
 
 fastBackward.onpointerup = function () {
   audioElement.playbackRate = 1.0;
+}
+
+function sequenceLoop() {
+  if (sequenceLoopOn) {
+    sequenceLoopOn = false;
+    sequenceLoopIcon.style.color = 'rgb(76, 76, 76)';
+  } else {
+    sequenceLoopOn = sequenceLoopWait = true;
+    sequenceLoopIcon.classList.add('blink');
+    sequenceStart = audioElement.currentTime;
+  }
+}
+
+function sequence() {
+  if (sequenceLoopOn && !sequenceLoopWait) {
+    if (start > sequenceEnd) {
+      playPause();
+      play = false;
+      progressClick();
+    }
+  }
 }
 
 function loop() {
@@ -200,11 +229,11 @@ function volumeUp() {
 function autoMove() {
   setInterval(move, 1000);
   function move() {
-      duration = audioElement.duration;
-      start = audioElement.currentTime;
-      progressBar.setAttribute('max', duration.toString());
-      progressBar.setAttribute('value', start.toString());
-      durationMetaData.innerHTML = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / '
+    duration = audioElement.duration;
+    start = audioElement.currentTime;
+    progressBar.setAttribute('max', duration.toString());
+    progressBar.setAttribute('value', start.toString());
+    durationMetaData.innerHTML = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / '
       + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);
   }
 }
@@ -215,14 +244,26 @@ function progressClick() {
     let clickValue = (event.clientX) - (event.target['offsetLeft']).toString();
     event.target['max'] = (maxValue / maxValue) * duration;
     event.target['value'] = (clickValue / maxValue) * duration;
-    if (!play) {
-      audioElement.pause();
-      play = true;
+    if (!sequenceLoopOn) {
       start = event.target['value'];
-      playPause();
+      if (play) {
+        audioElement.pause();
+        play = false;
+        playPause();
+      } else {
+        playPause();
+      }
     } else {
-      start = event.target['value'];
-      playPause();
+        start = sequenceStart;
+        if (sequenceLoopWait) {
+          sequenceEnd = event.target['value'];
+          sequenceLoopWait = false;
+        }
+        sequenceLoopIcon.classList.remove('blink');
+        sequenceLoopIcon.style.color = '#dc3545';
+        if (!play) {
+          playPause();
+        }
     }
   }
 }

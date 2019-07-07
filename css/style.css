@@ -140,3 +140,13 @@ button{
   margin:0;
   }
 /* Modal Box end */
+
+.blink {
+  animation: blinking 3s linear infinite;
+}
+
+@keyframes blinking {
+  50% {
+    opacity: 0;
+  }
+}
