@@ -14,6 +14,19 @@ let deleteButton = document.getElementById('delete');
 let plusButton = document.getElementById('plusButton');
 let confirmDelete = document.getElementById('confirmDelete');
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/serviceWorker.js').then(function(registration) {
+      // Registration was successful
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }, function(err) {
+      // registration failed :(
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
+}
+
+
 body.onload = function loadSongsData() {
 
   let request = indexedDB.open(dbName, dbVersion);
