@@ -26,6 +26,7 @@ const volumeUpValue = document.getElementById('upValue');
 const songsList = document.getElementById('songsList');
 const sequenceLoopButton = document.getElementById('sequenceLoop');
 const sequenceLoopIcon = sequenceLoopButton.children[0];
+const styleTag = document.getElementById('style');
 
 progressBar.addEventListener('click', progressClick);
 progressBar.addEventListener('mouseover', progressOver);
@@ -62,11 +63,13 @@ function loadSong(element, name, url) {
         document.getElementById('onPlay').removeAttribute('class');
         document.getElementById('onPlay').removeAttribute('id');
       }
-      event.target.parentNode.setAttribute('id', 'onPlay');
-      event.target.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
-      songInfo.firstElementChild.textContent = event.target.parentNode.children[0].textContent;
-      audioElement.src = 'http://' + event.target.parentNode.children[2].textContent;
-      audioElement.preload = 'metadata';
+      if (event.target.parentNode.children[2]) {
+        event.target.parentNode.setAttribute('id', 'onPlay');
+        event.target.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
+        songInfo.firstElementChild.textContent = event.target.parentNode.children[0].textContent;
+        audioElement.src = 'http://' + event.target.parentNode.children[2].textContent;
+        audioElement.preload = 'metadata';
+      }
     }
   }
 
@@ -154,22 +157,33 @@ fastBackward.onpointerup = function () {
 }
 
 function sequenceLoop() {
-  if (sequenceLoopOn) {
-    sequenceLoopOn = false;
-    sequenceLoopIcon.style.color = 'rgb(76, 76, 76)';
-  } else {
-    sequenceLoopOn = sequenceLoopWait = true;
-    sequenceLoopIcon.classList.add('blink');
-    sequenceStart = audioElement.currentTime;
+  if (document.getElementById('onPlay')) {
+    if (sequenceLoopOn) {
+      sequenceLoopOn = false;
+      sequenceLoopIcon.style.color = 'rgb(76, 76, 76)';
+      progressBar.classList.remove('sequenceLoop');
+    } else {
+      sequenceLoopOn = sequenceLoopWait = true;
+      sequenceLoopIcon.classList.add('blink');
+      sequenceStart = audioElement.currentTime;
+      if (!styleTag.sheet.rules[0]) {
+        styleTag.sheet.insertRule('.sequenceLoop::-moz-progress-bar {background-image: linear-gradient(to right, rgb(230, 230, 230) 100%, rgb(23, 162, 184) 0%);}');
+      }
+      styleTag.sheet.rules[0].style['backgroundImage'] = 'linear-gradient(to right, rgb(230, 230, 230) 100%, rgb(23, 162, 184) 0%)'
+      progressBar.classList.add('sequenceLoop');
+    }
   }
 }
 
 function sequence() {
-  if (sequenceLoopOn && !sequenceLoopWait) {
-    if (start > sequenceEnd) {
-      playPause();
-      play = false;
-      progressClick();
+  if (sequenceLoopOn) {
+    if (!sequenceLoopWait) {
+      if (start > sequenceEnd) {
+        styleTag.sheet.rules[0].style['backgroundImage'] = 'linear-gradient(to right, rgb(230, 230, 230) 100%, rgb(23, 162, 184) 0%)';
+        playPause();
+        play = false;
+        progressClick();
+      }
     }
   }
 }
@@ -231,6 +245,12 @@ function autoMove() {
   function move() {
     duration = audioElement.duration;
     start = audioElement.currentTime;
+
+    if (sequenceLoopOn) {
+      style.sheet.rules[0].style['backgroundImage'] = 'linear-gradient(to right, rgb(230, 230, 230) ' +
+        ((sequenceStart / start) * 100) + '%, rgb(23, 162, 184) 0%)';
+    }
+
     progressBar.setAttribute('max', duration.toString());
     progressBar.setAttribute('value', start.toString());
     durationMetaData.textContent = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / '
@@ -254,16 +274,16 @@ function progressClick() {
         playPause();
       }
     } else {
-        start = sequenceStart;
-        if (sequenceLoopWait) {
-          sequenceEnd = event.target['value'];
-          sequenceLoopWait = false;
-        }
-        sequenceLoopIcon.classList.remove('blink');
-        sequenceLoopIcon.style.color = '#dc3545';
-        if (!play) {
-          playPause();
-        }
+      start = sequenceStart;
+      if (sequenceLoopWait) {
+        sequenceEnd = event.target['value'];
+        sequenceLoopWait = false;
+      }
+      sequenceLoopIcon.classList.remove('blink');
+      sequenceLoopIcon.style.color = '#dc3545';
+      if (!play) {
+        playPause();
+      }
     }
   }
 }
