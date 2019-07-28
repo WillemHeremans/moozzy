@@ -2,14 +2,14 @@
 
 const cacheName = 'moozzy-cache-v1';
 const contentToCache = [
-  '/',
-  '/favicon.ico',
-  '/index.html',
-  '/moozzy.webmanifest',
-  '/css/style.css',
-  '/js/database.js',
-  '/js/metatag.js',
-  '/js/player.js',
+  '/moozzy',
+  '/moozzy/favicon.ico',
+  '/moozzy/index.html',
+  '/moozzy/moozzy.webmanifest',
+  '/moozzy/css/style.css',
+  '/moozzy/js/database.js',
+  '/moozzy/js/metatag.js',
+  '/moozzy/js/player.js',
   'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
   'https://use.fontawesome.com/releases/v5.7.2/css/all.css',
 ];
