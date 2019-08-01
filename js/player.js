@@ -52,7 +52,7 @@ function loadSong(element, name, url) {
     element.parentNode.setAttribute('id', 'onPlay');
     element.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
     songInfo.firstElementChild.textContent = name;
-    audioElement.src = 'http://' + url;
+    audioElement.src = url;
     audioElement.preload = 'metadata';
 
   } else {
@@ -67,7 +67,7 @@ function loadSong(element, name, url) {
         event.target.parentNode.setAttribute('id', 'onPlay');
         event.target.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
         songInfo.firstElementChild.textContent = event.target.parentNode.children[0].textContent;
-        audioElement.src = 'http://' + event.target.parentNode.children[2].textContent;
+        audioElement.src = event.target.parentNode.children[2].textContent;
         audioElement.preload = 'metadata';
       }
     }

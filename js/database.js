@@ -15,17 +15,28 @@ let plusButton = document.getElementById('plusButton');
 let confirmDelete = document.getElementById('confirmDelete');
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/moozzy/serviceWorker.js').then(function(registration) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/moozzy/serviceWorker.js').then(function (registration) {
       // Registration was successful
       console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    }, function(err) {
+    }, function (err) {
       // registration failed :(
       console.log('ServiceWorker registration failed: ', err);
     });
   });
 }
 
+function checkUrl(url) {
+  if (!url.includes('https://')) {
+    if (url.includes('http://')) {
+      url = url.replace('http://', 'https://');
+    } else {
+      const protocol = 'https://';
+      url = protocol.concat(url);
+    }
+  }
+  return url;
+}
 
 body.onload = function loadSongsData() {
 
@@ -92,9 +103,7 @@ function songSettings(element) {
       trackURL.value = track.url;
       trackID.value = element.id;
     }
-
   }
-
 }
 
 plusButton.onclick = function unloadModal() {
@@ -110,36 +119,47 @@ plusButton.onclick = function unloadModal() {
 submitButton.onclick = function submit() {
 
   let request = indexedDB.open(dbName, dbVersion);
+  const url = checkUrl(trackURL.value);
 
   if (trackID.value) {
 
     request.onsuccess = function () {
 
-      let transaction = db.transaction([storeName], 'readwrite');
-      trackURL.value = trackURL.value.replace(/^.*:\/\//i, '');
-      transaction.objectStore(storeName).put({ 'name': trackName.value, 'genre': trackGenre.value, 'url': trackURL.value, 'date': new Date().toLocaleString('fr-FR') }, Number(trackID.value));
-      document.getElementById(trackID.value).parentNode.innerHTML = `<td>` + trackName.value + `</td>`
-        + `<td>` + trackGenre.value + `</td>`
-        + `<td>` + trackURL.value + `</td>`
-        + `<td id="` + trackID.value + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
+      fetch(url).then((response) => {
+        console.log(response);
+        if (response.ok) {
+          let transaction = db.transaction([storeName], 'readwrite');
+          transaction.objectStore(storeName).put({ 'name': trackName.value, 'genre': trackGenre.value, 'url': url, 'date': new Date().toLocaleString('fr-FR') }, Number(trackID.value));
+          document.getElementById(trackID.value).parentNode.innerHTML = `<td>` + trackName.value + `</td>`
+            + `<td>` + trackGenre.value + `</td>`
+            + `<td>` + url + `</td>`
+            + `<td id="` + trackID.value + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
+        }
+      })
+        .catch((e) => alert('L\'URL fournie n\'offre pas de solution sécurisée (HTTPS) et ne peut être ajoutée ' + '(' + e + ')'))
     }
 
   } else {
 
     request.onsuccess = function () {
-
-      let transaction = db.transaction([storeName], 'readwrite');
-      let newTrack = transaction.objectStore(storeName).put({ 'name': trackName.value, 'genre': trackGenre.value, 'url': (trackURL.value).replace(/^.*:\/\//i, ''), 'date': new Date().toLocaleString('fr-FR') });
-      newTrack.onsuccess = function () {
-        let getTrackData = transaction.objectStore(storeName).get(newTrack.result);
-        getTrackData.onsuccess = function () {
-          let song = getTrackData.result;
-          songsList.insertAdjacentHTML('beforeend', `<tr><td>` + song.name + `</td>`
-          + `<td>` + song.genre + `</td>`
-          + `<td>` + song.url + `</td>`
-          + `<td id="` + newTrack.result + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
-        }
-      }
+      fetch(url)
+        .then((response) => {
+          if (response.ok) {
+            let transaction = db.transaction([storeName], 'readwrite');
+            let newTrack = transaction.objectStore(storeName).put({ 'name': trackName.value, 'genre': trackGenre.value, 'url': url, 'date': new Date().toLocaleString('fr-FR') });
+            newTrack.onsuccess = function () {
+              let getTrackData = transaction.objectStore(storeName).get(newTrack.result);
+              getTrackData.onsuccess = function () {
+                let song = getTrackData.result;
+                songsList.insertAdjacentHTML('beforeend', `<tr><td>` + song.name + `</td>`
+                  + `<td>` + song.genre + `</td>`
+                  + `<td>` + url + `</td>`
+                  + `<td id="` + newTrack.result + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
+              }
+            }
+          }
+        })
+        .catch((e) => alert('L\'URL fournie n\'offre pas de solution sécurisée (HTTPS) et ne peut être ajoutée ' + '(' + e + ')'))
     }
   }
 }
