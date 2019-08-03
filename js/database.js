@@ -17,10 +17,8 @@ let confirmDelete = document.getElementById('confirmDelete');
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
     navigator.serviceWorker.register('/moozzy/serviceWorker.js').then(function (registration) {
-      // Registration was successful
       console.log('ServiceWorker registration successful with scope: ', registration.scope);
     }, function (err) {
-      // registration failed :(
       console.log('ServiceWorker registration failed: ', err);
     });
   });
@@ -48,7 +46,11 @@ body.onload = function loadSongsData() {
 
   request.onupgradeneeded = function () {
     db = request.result;
-    db.createObjectStore(storeName, { autoIncrement: true });
+    let objectStore = db.createObjectStore(storeName, { autoIncrement: true });
+    objectStore.createIndex("name", "name", { unique: false });
+    objectStore.createIndex("genre", "genre", { unique: false });
+    objectStore.createIndex("url", "url", { unique: false });
+    objectStore.createIndex("date", "date", { unique: false });
   }
 
   request.onsuccess = function () {
@@ -57,27 +59,52 @@ body.onload = function loadSongsData() {
 
     let transaction = db.transaction([storeName], 'readonly');
     let getDB = transaction.objectStore(storeName).getAll();
-    let getKey = transaction.objectStore(storeName).getAllKeys();
+    let getKeys = transaction.objectStore(storeName).getAllKeys();
     let countData = transaction.objectStore(storeName).count();
 
     getDB.onsuccess = function () {
 
       let songs = getDB.result;
 
-      getKey.onsuccess = function () {
+      getKeys.onsuccess = function () {
 
-        let key = getKey.result;
+        let key = getKeys.result;
 
         for (i in songs) {
           songsList.insertAdjacentHTML('beforeend', `<tr><td>` + songs[i].name + `</td>`
             + `<td>` + songs[i].genre + `</td>`
-            + `<td>` + songs[i].url + `</td>`
             + `<td id="` + key[i] + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
         }
       }
     }
     countData.onsuccess = function () {
       console.log(countData.result);
+    }
+  }
+}
+
+function getSongDataUrl(id) {
+  let request = indexedDB.open(dbName, dbVersion);
+  request.onsuccess = () => {
+    let transaction = db.transaction([storeName], 'readonly');
+    let getDataUrl = transaction.objectStore(storeName).get(id);
+    getDataUrl.onsuccess = () => {
+      let url = getDataUrl.result.url;
+      audioElement.src = url;
+      audioElement.preload = 'metadata';
+      audioElement.onloadedmetadata = function () {
+        duration = audioElement.duration;
+        start = audioElement.currentTime;
+        durationMetaData.textContent = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / '
+          + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);
+        if (play) {
+          audioElement.pause();
+          play = false;
+          playPause();
+        } else {
+          playPause();
+        }
+      }
     }
   }
 }
@@ -132,7 +159,6 @@ submitButton.onclick = function submit() {
           transaction.objectStore(storeName).put({ 'name': trackName.value, 'genre': trackGenre.value, 'url': url, 'date': new Date().toLocaleString('fr-FR') }, Number(trackID.value));
           document.getElementById(trackID.value).parentNode.innerHTML = `<td>` + trackName.value + `</td>`
             + `<td>` + trackGenre.value + `</td>`
-            + `<td>` + url + `</td>`
             + `<td id="` + trackID.value + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
         }
       })
@@ -153,7 +179,6 @@ submitButton.onclick = function submit() {
                 let song = getTrackData.result;
                 songsList.insertAdjacentHTML('beforeend', `<tr><td>` + song.name + `</td>`
                   + `<td>` + song.genre + `</td>`
-                  + `<td>` + url + `</td>`
                   + `<td id="` + newTrack.result + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
               }
             }
@@ -176,78 +201,112 @@ confirmDelete.onclick = function deleteSong() {
   }
 }
 
-// function addFile() {
+function addFile(e) {
 
-//   let inp = document.getElementById('get-files');
-//   // Access and handle the files 
-//   for (i = 0; i < inp.files.length; i++) {
-//     let file = inp.files[i];
-//     // do things with file
-//     console.log(file['name']);
-//     console.log('Ce script est bien appelé')
-//     // IndexedDB
+  let file = e.target.files[0];
+  let reader = new FileReader();
+  reader.onload = (evt) => {
+    let data = evt.target.result;
+    let request = indexedDB.open(dbName, dbVersion);
+    request.onsuccess = () => {
+      let transaction = db.transaction([storeName], 'readwrite');
+      let newSong = transaction.objectStore(storeName).put({ 'name': file.name, 'genre': file.type, 'url': data, 'date': new Date().toLocaleString('fr-FR') });
+      newSong.onsuccess = function () {
+        let getTrackData = transaction.objectStore(storeName).get(newSong.result);
+        getTrackData.onsuccess = function () {
+          let song = getTrackData.result;
+          songsList.insertAdjacentHTML('beforeend', `<tr><td>` + song.name + `</td>`
+            + `<td>` + song.genre + `</td>`
+            // + `<td>` + song.url + `</td>`
+            + `<td id="` + newSong.result + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
+        }
+      }
+    }
+  }
+  reader.readAsDataURL(file);
 
-//     // Create/open database
-//     var request = indexedDB.open(dbName, dbVersion),
-//       db,
-//       createObjectStore = function (dataBase) {
-//         // Create an objectStore
-//         console.log('Creating objectStore')
-//         //   var objectStore = db.createObjectStore('listeRadios', { autoIncrement: true });
-//         dataBase.createObjectStore('MyNewData');
-//       }
+  // metatag :
 
-//     request.onerror = function (event) {
-//       console.log('Error creating/accessing IndexedDB database');
-//     };
+  // let decode = (format, string) => new TextDecoder(format).decode(string);
 
-//     request.onsuccess = function (event) {
-//       console.log('Success creating/accessing IndexedDB database');
-//       db = request.result;
-//       console.log(db);
+  // let synchToInt = synch => {
+  //   const mask = 0b01111111;
+  //   let b1 = synch & mask;
+  //   let b2 = (synch >> 8) & mask;
+  //   let b3 = (synch >> 16) & mask;
+  //   let b4 = (synch >> 24) & mask;
 
-//       var transaction = db.transaction([storeName], 'readwrite');
-//       console.log(transaction.objectStore(storeName).put({ 'name': 'SWIGG', 'genre': 'Pop, RnB, rap', 'url': 'http://swingfm.ice.infomaniak.ch/swingfm-128', 'date': new Date().toLocaleString('fr-FR') }));
-//       let getDB = transaction.objectStore(storeName).getAll();
-//       let getKey = transaction.objectStore(storeName).get('juno');
+  //   return b1 | (b2 << 7) | (b3 << 14) | (b4 << 21);
+  // };
 
-//       getDB.onsuccess = function () {
-//         let songs = getDB.result;
-//         // var table = document.getElementById('tBody');
-//         for (i in songs) {
-//           console.log(songs[i]);
-//           //       var row = table.insertRow(i);
-//           //       var cell1 = row.insertCell(i);
-//           // cell1.insertAdjacentHTML('beforeend', )'songs[i]';
-//         }
+  // const HEADER_SIZE = 10;
+  // const ID3_ENCODINGS = [
+  //   'ascii',
+  //   'utf-16',
+  //   'utf-16be',
+  //   'utf-8'
+  // ];
+  // const LANG_FRAMES = [
+  //   'USLT',
+  //   'SYLT',
+  //   'COMM',
+  //   'USER'
+  // ];
 
-//         getKey.onsuccess = function () {
-//           let trackTime = getKey.result;
-//           // for (i in trackTime) {
-//           console.log('result de get : ');
-//           console.log(trackTime);
-//           document.getElementById('music').src = trackTime;
-//           let music = new Audio();
-//           music.src = document.getElementById('music').src;
-//           music.onloadedmetadata = function () {
-//             duration = music.duration;
-//             start = music.currentTime;
-//             durationMetaData.insertAdjacentHTML('beforeend', )start + ' / ' + duration;
-//             console.log(music.mozGetMetadata());
-//           }
-//           // }
-//         }
+  // reader.onload = (evt) => {
+  //   let buffer = evt.target.result;
+  //   let header = new DataView(buffer, 0, HEADER_SIZE);
+  //   let major = header.getUint8(3);
+  //   let minor = header.getUint8(4);
 
-//       }
-//       db.onerror = function (event) {
-//         console.log('Error creating/accessing IndexedDB database');
-//       };
-//     }
+  //   let version = `ID3v2.${major}.${minor}`;
+  //   console.log(version);
 
-//     // For future use. Currently only in latest Firefox versions
-//     request.onupgradeneeded = function (event) {
-//       createObjectStore(event.target.result);
-//       console.log(event.target.result);
-//     };
-//   }
-// }
+  //   let size = synchToInt(header.getUint32(6));
+
+  //   let offset = HEADER_SIZE;
+  //   let id3Size = HEADER_SIZE + size;
+
+  //   let decodeFrame = (buffer, offset) => {
+  //     let header = new DataView(buffer, offset, HEADER_SIZE + 1);
+
+  //     if (header.getUint8(0) === 0) { return; }
+
+  //     let id = decode('ascii', new Uint8Array(buffer, offset, 4));
+
+  //     let size = header.getUint32(4);
+  //     let contentSize = size - 1;
+  //     let encoding = header.getUint8(HEADER_SIZE);
+
+  //     let contentOffset = offset + HEADER_SIZE + 1;
+
+  //     let lang;
+  //     if (LANG_FRAMES.includes(id)) {
+  //       lang = decode('ascii', new Uint8Array(buffer, contentOffset, 3));
+  //       contentOffset += 3;
+  //       contentSize -= 3;
+  //     }
+
+  //     let value = decode(ID3_ENCODINGS[encoding],
+  //       new Uint8Array(buffer, contentOffset, contentSize));
+
+  //     return {
+  //       id, value, lang,
+  //       size: size + HEADER_SIZE
+  //     };
+  //   };
+
+
+  //   while (offset < id3Size) {
+  //     let frame = decodeFrame(buffer, offset);
+  //     if (!frame) { break; }
+  //     console.log(`${frame.id}: ${frame.value.length > 200 ? '...' : frame.value}`);
+  //     offset += frame.size;
+  //   }
+
+  // }
+
+  // reader.readAsArrayBuffer(file);
+
+
+}

@@ -83,28 +83,33 @@
             <!-- </div> -->
         </div>
         <br>
-        <!-- <div class="row align-items-center justify-content-center">
-            <input onchange="addFile()" type="file" name="client-file" id="get-files" multiple />
-        </div> -->
+        <div class="row align-items-center justify-content-center">
+            <input onchange="addFile(event)" type="file" name="client-file" id="get-files" multiple />
+        </div>
 
         <!-- table : -->
         <div class="row">
             <div class="col-sm-11 table-responsive">
+                    <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                              <a class="nav-link" href="#">Radios</a>
+                            </li>
+                            <li class="nav-item">
+                                    <a class="nav-link active" href="#">Songs</a>
+                                  </li>
+                                  <li class="nav-item">
+                                        <a class="nav-link disabled" href="#">Playlists</a>
+                                      </li>
+                    </ul>
                 <table class="table table-striped table-hover" id="tBody">
                     <thead>
                         <tr>
                             <th>Name</th>
                             <th>Genre</th>
-                            <th>Url</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody id="songsList">
-                        <!-- <tr>
-                            <td>Super Sloppy Space Junk</td>
-                            <td>Milkshake Daddy</td>
-                            <td onclick="loadSong(this)">./songs/Milkshake_Daddy_-_08_-_Super_Sloppy_Space_Junk.mp3</td>
-                        </tr> -->
                     </tbody>
                 </table>
             </div>
@@ -175,7 +180,6 @@
 
     <script src="./js/player.js"></script>
     <script src="./js/database.js"></script>
-    <script src="./js/metatag.js"></script>
 
 </body>
 

@@ -43,7 +43,7 @@ audioElement.addEventListener('timeupdate', sequence);
 progressBar.value = start;
 progressBar.max = duration;
 
-function loadSong(element, name, url) {
+function loadSong(element, name, id) {
   if (element != event) {
     if (document.getElementById('onPlay')) {
       document.getElementById('onPlay').removeAttribute('class');
@@ -52,9 +52,7 @@ function loadSong(element, name, url) {
     element.parentNode.setAttribute('id', 'onPlay');
     element.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
     songInfo.firstElementChild.textContent = name;
-    audioElement.src = url;
-    audioElement.preload = 'metadata';
-
+    getSongDataUrl(Number(id));
   } else {
     if (event.target.className === 'fas fa-bars') {
       songSettings(event.target.parentNode.parentNode);
@@ -67,23 +65,8 @@ function loadSong(element, name, url) {
         event.target.parentNode.setAttribute('id', 'onPlay');
         event.target.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
         songInfo.firstElementChild.textContent = event.target.parentNode.children[0].textContent;
-        audioElement.src = event.target.parentNode.children[2].textContent;
-        audioElement.preload = 'metadata';
+        getSongDataUrl(Number(event.target.parentNode.children[2].id));
       }
-    }
-  }
-
-  audioElement.onloadedmetadata = function () {
-    duration = audioElement.duration;
-    start = audioElement.currentTime;
-    durationMetaData.textContent = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / '
-      + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);
-    if (play) {
-      audioElement.pause();
-      play = false;
-      playPause();
-    } else {
-      playPause();
     }
   }
 }
@@ -91,7 +74,8 @@ function loadSong(element, name, url) {
 function playPause() {
   if (!document.getElementById('onPlay')) {
     loadSong(songsList.children[0].children[0], songsList.children[0].children[0].textContent,
-      songsList.children[0].children[2].textContent);
+      songsList.children[0].children[2].id);
+
   } else {
 
     if (!play) {
@@ -116,10 +100,10 @@ function forward() {
     let rank = onPlay.sectionRowIndex;
     let forwardElement = onPlay.parentNode.children[rank + 1];
     if (forwardElement) {
-      loadSong(forwardElement.children[0], forwardElement.childNodes[0].textContent, forwardElement.childNodes[2].textContent)
+      loadSong(forwardElement.children[0], forwardElement.childNodes[0].textContent, forwardElement.childNodes[2].id)
     } else {
       loadSong(songsList.children[0].children[0], songsList.children[0].children[0].textContent,
-        songsList.children[0].children[2].textContent)
+        songsList.children[0].children[2].id)
     }
   }
 }
@@ -131,11 +115,11 @@ function backward() {
     let backwardElement = onPlay.parentNode.children[rank - 1];
     if (backwardElement) {
       loadSong(backwardElement.children[0], backwardElement.children[0].textContent,
-        backwardElement.children[2].textContent)
+        backwardElement.children[2].id)
     } else {
       rank = songsList.childElementCount - 1;
       loadSong(songsList.children[rank].children[0], songsList.children[rank].children[0].textContent,
-        songsList.children[rank].children[2].textContent)
+        songsList.children[rank].children[2].id)
     }
   }
 }
@@ -158,10 +142,13 @@ fastBackward.onpointerup = function () {
 
 function sequenceLoop() {
   if (document.getElementById('onPlay')) {
-    if (sequenceLoopOn) {
+    if (sequenceLoopOn && !sequenceLoopWait) {
       sequenceLoopOn = false;
       sequenceLoopIcon.style.color = 'rgb(76, 76, 76)';
       progressBar.classList.remove('sequenceLoop');
+    } else if (sequenceLoopWait) {
+      sequenceEnd = audioElement.currentTime;
+      sequenceLoopWait = false;
     } else {
       sequenceLoopOn = sequenceLoopWait = true;
       sequenceLoopIcon.classList.add('blink');
