@@ -71,7 +71,8 @@ body.onload = function loadSongsData() {
         let key = getKeys.result;
 
         for (i in song) {
-          songsList.insertAdjacentHTML('beforeend', `<tr><td data-music-url="${song[i].url}">${song[i].name}</td>`
+          let url = window.URL.createObjectURL(song[i].url);
+          songsList.insertAdjacentHTML('beforeend', `<tr><td data-music-url="${url}">${song[i].name}</td>`
             + `<td>${song[i].genre}</td>`
             + `<td id="${key[i]}" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
         }
@@ -121,17 +122,19 @@ submitButton.onclick = function submit() {
 
   let request = indexedDB.open(dbName, dbVersion);
   let url = checkUrl(songURL.value);
-  
+
   if (songID.value) {
 
     request.onsuccess = function () {
       fetch(url).then((response) => {
         if (response.ok) {
           let transaction = db.transaction([storeName], 'readwrite');
-          transaction.objectStore(storeName).put({ 'name': songName.value, 'genre': songGenre.value,
-          'url': url, 'date': new Date().toLocaleString('fr-FR') }, Number(songID.value));
+          transaction.objectStore(storeName).put({
+            'name': songName.value, 'genre': songGenre.value,
+            'url': url, 'date': new Date().toLocaleString('fr-FR')
+          }, Number(songID.value));
           document.getElementById(songID.value).parentNode.innerHTML =
-          `<td data-music-url="${songURL.value}">${songName.value}</td>`
+            `<td data-music-url="${songURL.value}">${songName.value}</td>`
             + `<td>${songGenre.value}</td>`
             + `<td id="${songID.value}" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
         } else {
@@ -180,21 +183,23 @@ confirmDelete.onclick = function deleteSong() {
 function addFile(e) {
 
   let file = e.target.files[0];
-  let url = window.URL.createObjectURL(file);
-    let request = indexedDB.open(dbName, dbVersion);
-    request.onsuccess = () => {
-      let transaction = db.transaction([storeName], 'readwrite');
-      let newSong = transaction.objectStore(storeName).put({ 'name': file.name, 'genre': file.type, 'url': url, 'date': new Date().toLocaleString('fr-FR') });
-      newSong.onsuccess = function () {
-        let getSongData = transaction.objectStore(storeName).get(newSong.result);
-        getSongData.onsuccess = function () {
-          let song = getSongData.result;
-          songsList.insertAdjacentHTML('beforeend', `<tr><td data-music-url="${song.url}">${song.name}</td>`
-            + `<td>${song.genre}</td>`
-            + `<td id="${newSong.result}" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
-        }
+  let blob = new Blob([file], { type: file.type });
+  let request = indexedDB.open(dbName, dbVersion);
+
+  request.onsuccess = () => {
+    let transaction = db.transaction([storeName], 'readwrite');
+    let newSong = transaction.objectStore(storeName).put({ 'name': file.name, 'genre': file.type, 'url': blob, 'date': new Date().toLocaleString('fr-FR') });
+    newSong.onsuccess = function () {
+      let getSongData = transaction.objectStore(storeName).get(newSong.result);
+      getSongData.onsuccess = function () {
+        let song = getSongData.result;
+        let url = window.URL.createObjectURL(song.url);
+        songsList.insertAdjacentHTML('beforeend', `<tr><td data-music-url="${url}">${song.name}</td>`
+          + `<td>${song.genre}</td>`
+          + `<td id="${newSong.result}" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
       }
     }
+  }
 
   // metatag :
 
