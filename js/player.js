@@ -43,7 +43,7 @@ audioElement.addEventListener('timeupdate', sequence);
 progressBar.value = start;
 progressBar.max = duration;
 
-function loadSong(element, name, id) {
+function loadSong(element, name, url) {
   if (element != event) {
     if (document.getElementById('onPlay')) {
       document.getElementById('onPlay').removeAttribute('class');
@@ -52,7 +52,8 @@ function loadSong(element, name, id) {
     element.parentNode.setAttribute('id', 'onPlay');
     element.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
     songInfo.firstElementChild.textContent = name;
-    getSongDataUrl(Number(id));
+    audioElement.src = url;
+    audioElement.preload = 'metadata';
   } else {
     if (event.target.className === 'fas fa-bars') {
       songSettings(event.target.parentNode.parentNode);
@@ -65,8 +66,22 @@ function loadSong(element, name, id) {
         event.target.parentNode.setAttribute('id', 'onPlay');
         event.target.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
         songInfo.firstElementChild.textContent = event.target.parentNode.children[0].textContent;
-        getSongDataUrl(Number(event.target.parentNode.children[2].id));
+        audioElement.src = event.target.parentNode.children[0].dataset.musicUrl;
+        audioElement.preload = 'metadata';
       }
+    }
+  }
+  audioElement.onloadedmetadata = function () {
+    duration = audioElement.duration;
+    start = audioElement.currentTime;
+    durationMetaData.textContent = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / '
+      + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);
+    if (play) {
+      audioElement.pause();
+      play = false;
+      playPause();
+    } else {
+      playPause();
     }
   }
 }
@@ -74,7 +89,7 @@ function loadSong(element, name, id) {
 function playPause() {
   if (!document.getElementById('onPlay')) {
     loadSong(songsList.children[0].children[0], songsList.children[0].children[0].textContent,
-      songsList.children[0].children[2].id);
+      songsList.children[0].children[0].dataset.musicUrl);
 
   } else {
 
@@ -100,10 +115,11 @@ function forward() {
     let rank = onPlay.sectionRowIndex;
     let forwardElement = onPlay.parentNode.children[rank + 1];
     if (forwardElement) {
-      loadSong(forwardElement.children[0], forwardElement.childNodes[0].textContent, forwardElement.childNodes[2].id)
+      loadSong(forwardElement.children[0], forwardElement.childNodes[0].textContent,
+        forwardElement.childNodes[0].dataset.musicUrl)
     } else {
       loadSong(songsList.children[0].children[0], songsList.children[0].children[0].textContent,
-        songsList.children[0].children[2].id)
+        songsList.children[0].children[0].dataset.musicUrl)
     }
   }
 }
@@ -115,11 +131,11 @@ function backward() {
     let backwardElement = onPlay.parentNode.children[rank - 1];
     if (backwardElement) {
       loadSong(backwardElement.children[0], backwardElement.children[0].textContent,
-        backwardElement.children[2].id)
+        backwardElement.children[0].dataset.musicUrl)
     } else {
       rank = songsList.childElementCount - 1;
       loadSong(songsList.children[rank].children[0], songsList.children[rank].children[0].textContent,
-        songsList.children[rank].children[2].id)
+        songsList.children[rank].children[0].dataset.musicUrl)
     }
   }
 }

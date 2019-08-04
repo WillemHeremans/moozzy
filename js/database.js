@@ -4,10 +4,10 @@ let dbVersion = 1;
 let storeName = 'MySongs';
 
 let body = document.getElementById('body');
-let trackName = document.getElementById('trackName');
-let trackGenre = document.getElementById('trackGenre');
-let trackURL = document.getElementById('trackURL');
-let trackID = document.getElementById('trackID');
+let songName = document.getElementById('songName');
+let songGenre = document.getElementById('songGenre');
+let songURL = document.getElementById('songURL');
+let songID = document.getElementById('songID');
 let modalTitle = document.getElementById('modalTitle');
 let submitButton = document.getElementById('submit');
 let deleteButton = document.getElementById('delete');
@@ -64,47 +64,21 @@ body.onload = function loadSongsData() {
 
     getDB.onsuccess = function () {
 
-      let songs = getDB.result;
+      let song = getDB.result;
 
       getKeys.onsuccess = function () {
 
         let key = getKeys.result;
 
-        for (i in songs) {
-          songsList.insertAdjacentHTML('beforeend', `<tr><td>` + songs[i].name + `</td>`
-            + `<td>` + songs[i].genre + `</td>`
-            + `<td id="` + key[i] + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
+        for (i in song) {
+          songsList.insertAdjacentHTML('beforeend', `<tr><td data-music-url="${song[i].url}">${song[i].name}</td>`
+            + `<td>${song[i].genre}</td>`
+            + `<td id="${key[i]}" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
         }
       }
     }
     countData.onsuccess = function () {
       console.log(countData.result);
-    }
-  }
-}
-
-function getSongDataUrl(id) {
-  let request = indexedDB.open(dbName, dbVersion);
-  request.onsuccess = () => {
-    let transaction = db.transaction([storeName], 'readonly');
-    let getDataUrl = transaction.objectStore(storeName).get(id);
-    getDataUrl.onsuccess = () => {
-      let url = getDataUrl.result.url;
-      audioElement.src = url;
-      audioElement.preload = 'metadata';
-      audioElement.onloadedmetadata = function () {
-        duration = audioElement.duration;
-        start = audioElement.currentTime;
-        durationMetaData.textContent = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / '
-          + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);
-        if (play) {
-          audioElement.pause();
-          play = false;
-          playPause();
-        } else {
-          playPause();
-        }
-      }
     }
   }
 }
@@ -121,14 +95,14 @@ function songSettings(element) {
   request.onsuccess = function () {
 
     let transaction = db.transaction([storeName], 'readwrite');
-    let getTrackData = transaction.objectStore(storeName).get(Number(element.id));
+    let getSongData = transaction.objectStore(storeName).get(Number(element.id));
 
-    getTrackData.onsuccess = function () {
-      let track = getTrackData.result;
-      trackName.value = track.name;
-      trackGenre.value = track.genre;
-      trackURL.value = track.url;
-      trackID.value = element.id;
+    getSongData.onsuccess = function () {
+      let song = getSongData.result;
+      songName.value = song.name;
+      songGenre.value = song.genre;
+      songURL.value = song.url;
+      songID.value = element.id;
     }
   }
 }
@@ -137,32 +111,34 @@ plusButton.onclick = function unloadModal() {
   modalTitle.innerHTML = 'Add a song';
   submitButton.innerHTML = 'Add';
   deleteButton.style.display = 'none';
-  trackName.value = '';
-  trackGenre.value = '';
-  trackURL.value = '';
-  trackID.value = '';
+  songName.value = '';
+  songGenre.value = '';
+  songURL.value = '';
+  songID.value = '';
 }
 
 submitButton.onclick = function submit() {
 
   let request = indexedDB.open(dbName, dbVersion);
-  const url = checkUrl(trackURL.value);
-
-  if (trackID.value) {
+  let url = checkUrl(songURL.value);
+  
+  if (songID.value) {
 
     request.onsuccess = function () {
-
       fetch(url).then((response) => {
-        console.log(response);
         if (response.ok) {
           let transaction = db.transaction([storeName], 'readwrite');
-          transaction.objectStore(storeName).put({ 'name': trackName.value, 'genre': trackGenre.value, 'url': url, 'date': new Date().toLocaleString('fr-FR') }, Number(trackID.value));
-          document.getElementById(trackID.value).parentNode.innerHTML = `<td>` + trackName.value + `</td>`
-            + `<td>` + trackGenre.value + `</td>`
-            + `<td id="` + trackID.value + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
+          transaction.objectStore(storeName).put({ 'name': songName.value, 'genre': songGenre.value,
+          'url': url, 'date': new Date().toLocaleString('fr-FR') }, Number(songID.value));
+          document.getElementById(songID.value).parentNode.innerHTML =
+          `<td data-music-url="${songURL.value}">${songName.value}</td>`
+            + `<td>${songGenre.value}</td>`
+            + `<td id="${songID.value}" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
+        } else {
+          alert(`Les données n'ont pu être ajoutée :
+          l'URL ne fournit pas de protocole HTTPS`)
         }
       })
-        .catch((e) => alert('L\'URL fournie n\'offre pas de solution sécurisée (HTTPS) et ne peut être ajoutée ' + '(' + e + ')'))
     }
 
   } else {
@@ -172,14 +148,14 @@ submitButton.onclick = function submit() {
         .then((response) => {
           if (response.ok) {
             let transaction = db.transaction([storeName], 'readwrite');
-            let newTrack = transaction.objectStore(storeName).put({ 'name': trackName.value, 'genre': trackGenre.value, 'url': url, 'date': new Date().toLocaleString('fr-FR') });
-            newTrack.onsuccess = function () {
-              let getTrackData = transaction.objectStore(storeName).get(newTrack.result);
-              getTrackData.onsuccess = function () {
-                let song = getTrackData.result;
-                songsList.insertAdjacentHTML('beforeend', `<tr><td>` + song.name + `</td>`
-                  + `<td>` + song.genre + `</td>`
-                  + `<td id="` + newTrack.result + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
+            let newSong = transaction.objectStore(storeName).put({ 'name': songName.value, 'genre': songGenre.value, 'url': url, 'date': new Date().toLocaleString('fr-FR') });
+            newSong.onsuccess = function () {
+              let getSongData = transaction.objectStore(storeName).get(newSong.result);
+              getSongData.onsuccess = function () {
+                let song = getSongData.result;
+                songsList.insertAdjacentHTML('beforeend', `<tr><td data-music-url="${song.url}">${song.name}</td>`
+                  + `<td>${song.genre}</td>`
+                  + `<td id="${newSong.result}" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
               }
             }
           }
@@ -194,9 +170,9 @@ confirmDelete.onclick = function deleteSong() {
   let request = indexedDB.open(dbName, dbVersion);
   request.onsuccess = function () {
     let transaction = db.transaction([storeName], 'readwrite');
-    let deletingSong = transaction.objectStore(storeName).delete(Number(trackID.value));
+    let deletingSong = transaction.objectStore(storeName).delete(Number(songID.value));
     deletingSong.onsuccess = function () {
-      document.getElementById(trackID.value).parentNode.remove();
+      document.getElementById(songID.value).parentNode.remove();
     }
   }
 }
@@ -204,26 +180,21 @@ confirmDelete.onclick = function deleteSong() {
 function addFile(e) {
 
   let file = e.target.files[0];
-  let reader = new FileReader();
-  reader.onload = (evt) => {
-    let data = evt.target.result;
+  let url = window.URL.createObjectURL(file);
     let request = indexedDB.open(dbName, dbVersion);
     request.onsuccess = () => {
       let transaction = db.transaction([storeName], 'readwrite');
-      let newSong = transaction.objectStore(storeName).put({ 'name': file.name, 'genre': file.type, 'url': data, 'date': new Date().toLocaleString('fr-FR') });
+      let newSong = transaction.objectStore(storeName).put({ 'name': file.name, 'genre': file.type, 'url': url, 'date': new Date().toLocaleString('fr-FR') });
       newSong.onsuccess = function () {
-        let getTrackData = transaction.objectStore(storeName).get(newSong.result);
-        getTrackData.onsuccess = function () {
-          let song = getTrackData.result;
-          songsList.insertAdjacentHTML('beforeend', `<tr><td>` + song.name + `</td>`
-            + `<td>` + song.genre + `</td>`
-            // + `<td>` + song.url + `</td>`
-            + `<td id="` + newSong.result + `" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
+        let getSongData = transaction.objectStore(storeName).get(newSong.result);
+        getSongData.onsuccess = function () {
+          let song = getSongData.result;
+          songsList.insertAdjacentHTML('beforeend', `<tr><td data-music-url="${song.url}">${song.name}</td>`
+            + `<td>${song.genre}</td>`
+            + `<td id="${newSong.result}" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
         }
       }
     }
-  }
-  reader.readAsDataURL(file);
 
   // metatag :
 

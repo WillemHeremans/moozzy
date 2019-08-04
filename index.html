@@ -53,15 +53,11 @@
         </div>
 
         <div class="row align-items-center justify-content-center">
-            <!-- <div class="center-block"> -->
             <p id="durationMetaData"> 00:00:00 / 00:00:00 </p>
-            <!-- </div>    -->
         </div>
 
         <div class="row justify-content-end">
             <div class="float-sm-right" id="options">
-                <!-- <button type="button" class="btn btn-outline-black btn-sm"><i class="fas fa-volume-off"></i></button>
-                             -->
                 <button id="sequenceLoop" type="button" title="sequenceLoop" class="btn btn-outline-black btn-sm"><i
                         class="fas fa-arrows-alt-h"></i></button>
                 <button type="button" title="random" class="btn btn-outline-black btn-sm"><i
@@ -78,27 +74,21 @@
         </div>
 
         <div class="row align-items-center justify-content-center top-progress">
-            <!-- <div class="center-block"> -->
             <progress id="progressBar"></progress>
-            <!-- </div> -->
         </div>
         <br>
-        <div class="row align-items-center justify-content-center">
-            <input onchange="addFile(event)" type="file" name="client-file" id="get-files" multiple />
-        </div>
-
         <!-- table : -->
         <div class="row">
             <div class="col-sm-11 table-responsive">
-                    <ul class="nav nav-tabs">
+                    <ul id="tabs" class="nav nav-tabs">
                             <li class="nav-item">
-                              <a class="nav-link" href="#">Radios</a>
+                              <span class="nav-link" href="#">Radios</span>
                             </li>
                             <li class="nav-item">
-                                    <a class="nav-link active" href="#">Songs</a>
+                                    <span class="nav-link active">Songs</span>
                                   </li>
                                   <li class="nav-item">
-                                        <a class="nav-link disabled" href="#">Playlists</a>
+                                        <span class="nav-link" href="#">Playlists</span>
                                       </li>
                     </ul>
                 <table class="table table-striped table-hover" id="tBody">
@@ -121,6 +111,11 @@
 
                     </label>
                 </a>
+
+                <label id="addFile" class="btn btn-danger btn-lg">
+                        <i class="fas fa-plus"></i>
+                        <input  style="display: none;" onchange="addFile(event)" type="file" multiple />
+                    </label>
             </div>
         </div>
     </div>
@@ -136,19 +131,19 @@
                 </div>
                 <div class="card-body">
                     <div class="input-group input-group-sm mb-3">
-                        <input id="trackName" class="form-control form-control-sm" type="text"
+                        <input id="songName" class="form-control form-control-sm" type="text"
                             placeholder="Enter a name for your web radio">
                     </div>
                     <div class="input-group input-group-sm mb-3">
-                        <input id="trackGenre" class="form-control form-control-sm" type="text"
+                        <input id="songGenre" class="form-control form-control-sm" type="text"
                             placeholder="Enter a category for your web radio">
                     </div>
                     <div class="input-group input-group-sm mb-3">
-                        <input id="trackURL" class="form-control form-control-sm" type="text"
+                        <input id="songURL" class="form-control form-control-sm" type="text"
                             placeholder="Enter a web radio URL">
                     </div>
                     <div class="input-group input-group-sm mb-3">
-                        <input id="trackID" class="form-control form-control-sm" type="hidden">
+                        <input id="songID" class="form-control form-control-sm" type="hidden">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -180,7 +175,7 @@
 
     <script src="./js/player.js"></script>
     <script src="./js/database.js"></script>
-
+    <script src="./js/display.js"></script>
 </body>
 
 </html>

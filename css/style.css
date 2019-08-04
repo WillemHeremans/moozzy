@@ -15,6 +15,19 @@ td {
 }
 
 
+.nav-item {
+  cursor: pointer;
+}
+
+.nav-link {
+ color:  #6c757d;
+}
+
+.active  {
+    color: #007bff !important; 
+}
+
+
 /* infos song marquee animation*/
 .marquee {
   width: 100%;
