@@ -13,6 +13,7 @@ let submitButton = document.getElementById('submit');
 let deleteButton = document.getElementById('delete');
 let plusButton = document.getElementById('plusButton');
 let confirmDelete = document.getElementById('confirmDelete');
+let url = '';
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
@@ -24,16 +25,16 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-function checkUrl(url) {
-  if (!url.includes('https://')) {
-    if (url.includes('http://')) {
-      url = url.replace('http://', 'https://');
+function checkUrl(string) {
+  if (!string.includes('https://')) {
+    if (string.includes('http://')) {
+      string = string.replace('http://', 'https://');
     } else {
       const protocol = 'https://';
-      url = protocol.concat(url);
+      string = protocol.concat(string);
     }
   }
-  return url;
+  return string;
 }
 
 body.onload = function loadSongsData() {
@@ -71,7 +72,11 @@ body.onload = function loadSongsData() {
         let key = getKeys.result;
 
         for (i in song) {
-          let url = window.URL.createObjectURL(song[i].url);
+          if (typeof(song[i].url) !== 'string') {
+            url = window.URL.createObjectURL(song[i].url);
+          } else {
+            url = song[i].url;
+          }
           songsList.insertAdjacentHTML('beforeend', `<tr><td data-music-url="${url}">${song[i].name}</td>`
             + `<td>${song[i].genre}</td>`
             + `<td id="${key[i]}" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
@@ -121,7 +126,7 @@ plusButton.onclick = function unloadModal() {
 submitButton.onclick = function submit() {
 
   let request = indexedDB.open(dbName, dbVersion);
-  let url = checkUrl(songURL.value);
+  url = checkUrl(songURL.value);
 
   if (songID.value) {
 
@@ -193,7 +198,7 @@ function addFile(e) {
       let getSongData = transaction.objectStore(storeName).get(newSong.result);
       getSongData.onsuccess = function () {
         let song = getSongData.result;
-        let url = window.URL.createObjectURL(song.url);
+        url = window.URL.createObjectURL(song.url);
         songsList.insertAdjacentHTML('beforeend', `<tr><td data-music-url="${url}">${song.name}</td>`
           + `<td>${song.genre}</td>`
           + `<td id="${newSong.result}" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
