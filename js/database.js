@@ -2,18 +2,20 @@ let indexedDB = window.indexedDB;
 let dbName = 'MusicPlayer';
 let dbVersion = 1;
 let storeName = 'MySongs';
-
-let body = document.getElementById('body');
-let songName = document.getElementById('songName');
-let songGenre = document.getElementById('songGenre');
-let songURL = document.getElementById('songURL');
-let songID = document.getElementById('songID');
-let modalTitle = document.getElementById('modalTitle');
-let submitButton = document.getElementById('submit');
-let deleteButton = document.getElementById('delete');
-let plusButton = document.getElementById('plusButton');
-let confirmDelete = document.getElementById('confirmDelete');
 let url = '';
+const body = document.getElementById('body');
+const songName = document.getElementById('songName');
+const songGenre = document.getElementById('songGenre');
+const songURL = document.getElementById('songURL');
+const songID = document.getElementById('songID');
+const modalTitle = document.getElementById('modalTitle');
+const submitButton = document.getElementById('submit');
+const deleteButton = document.getElementById('delete');
+const plusButton = document.getElementById('plusButton');
+const confirmDelete = document.getElementById('confirmDelete');
+const addFileButton = document.getElementById('addFile');
+
+addFileButton.addEventListener('change', addFile);
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
@@ -72,7 +74,7 @@ body.onload = function loadSongsData() {
         let key = getKeys.result;
 
         for (i in song) {
-          if (typeof(song[i].url) !== 'string') {
+          if (typeof (song[i].url) !== 'string') {
             url = window.URL.createObjectURL(song[i].url);
           } else {
             url = song[i].url;
@@ -187,24 +189,26 @@ confirmDelete.onclick = function deleteSong() {
 
 function addFile(e) {
 
-  let file = e.target.files[0];
-  let blob = new Blob([file], { type: file.type });
-  let request = indexedDB.open(dbName, dbVersion);
-
-  request.onsuccess = () => {
-    let transaction = db.transaction([storeName], 'readwrite');
-    let newSong = transaction.objectStore(storeName).put({ 'name': file.name, 'genre': file.type, 'url': blob, 'date': new Date().toLocaleString('fr-FR') });
-    newSong.onsuccess = function () {
-      let getSongData = transaction.objectStore(storeName).get(newSong.result);
-      getSongData.onsuccess = function () {
-        let song = getSongData.result;
-        url = window.URL.createObjectURL(song.url);
-        songsList.insertAdjacentHTML('beforeend', `<tr><td data-music-url="${url}">${song.name}</td>`
-          + `<td>${song.genre}</td>`
-          + `<td id="${newSong.result}" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
+  let file = e.target.files;
+  for (let i = 0; i < file.length; i++) {
+    let blob = new Blob([file[i]], { type: file[i].type });
+    let request = indexedDB.open(dbName, dbVersion);
+    request.onsuccess = () => {
+      let transaction = db.transaction([storeName], 'readwrite');
+      let newSong = transaction.objectStore(storeName).put({ 'name': file[i].name, 'genre': file[i].type, 'url': blob, 'date': new Date().toLocaleString('fr-FR') });
+      newSong.onsuccess = function () {
+        let getSongData = transaction.objectStore(storeName).get(newSong.result);
+        getSongData.onsuccess = function () {
+          let song = getSongData.result;
+          url = window.URL.createObjectURL(song.url);
+          songsList.insertAdjacentHTML('beforeend', `<tr><td data-music-url="${url}">${song.name}</td>`
+            + `<td>${song.genre}</td>`
+            + `<td id="${newSong.result}" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
+        }
       }
     }
   }
+
 
   // metatag :
 
