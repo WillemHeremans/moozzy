@@ -19,13 +19,14 @@ const fastForward = document.getElementById('fastForward');
 const fastBackward = document.getElementById('fastBackward');
 const mutedButton = document.getElementById('muted');
 const loopButton = document.getElementById('loop');
+const sequenceLoopButton = document.getElementById('sequenceLoop');
+const sequenceLoopIcon = sequenceLoopButton.children[0];
+const randomButton = document.getElementById('random');
 const volumeDownButton = document.getElementById('volumeDown');
 const volumeUpButton = document.getElementById('volumeUp');
 const volumeDownValue = document.getElementById('downValue');
 const volumeUpValue = document.getElementById('upValue');
 const songsList = document.getElementById('songsList');
-const sequenceLoopButton = document.getElementById('sequenceLoop');
-const sequenceLoopIcon = sequenceLoopButton.children[0];
 const styleTag = document.getElementById('style');
 
 progressBar.addEventListener('click', progressClick);
@@ -35,6 +36,7 @@ forwardButton.addEventListener('click', forward);
 backwardButton.addEventListener('click', backward);
 mutedButton.addEventListener('click', muted);
 loopButton.addEventListener('click', loop);
+randomButton.addEventListener('click', randomSong);
 volumeDownButton.addEventListener('click', volumeDown);
 volumeUpButton.addEventListener('click', volumeUp);
 songsList.addEventListener('click', loadSong);
@@ -194,11 +196,23 @@ function sequence() {
 function loop() {
   if (audioElement.loop) {
     audioElement.loop = false;
+    this.children[0].classList.replace('fa-undo-alt', 'fa-sync-alt');
+    audioElement.onended = () => {
+      forward()
+    }
+  } else if (audioElement.onended) {
+    audioElement.onended = null;
     this.style.color = 'rgb(76, 76, 76)';
+    this.children[0].classList.replace('fa-sync-alt', 'fa-undo-alt');
   } else {
     audioElement.loop = true;
     this.style.color = '#dc3545';
   }
+}
+
+function randomSong() {
+  this.style.color = '#dc3545';
+
 }
 
 function muted() {

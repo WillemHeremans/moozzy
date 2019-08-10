@@ -27,6 +27,12 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+function songNode(url, name, genre, id) {
+  return `<td data-music-url="${url}">${name}</td>`
+  + `<td>${genre}</td>`
+  + `<td id="${id}" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
+}
+
 function checkUrl(string) {
   if (!string.includes('https://')) {
     if (string.includes('http://')) {
@@ -79,9 +85,8 @@ body.onload = function loadSongsData() {
           } else {
             url = song[i].url;
           }
-          songsList.insertAdjacentHTML('beforeend', `<tr><td data-music-url="${url}">${song[i].name}</td>`
-            + `<td>${song[i].genre}</td>`
-            + `<td id="${key[i]}" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
+          songsList.insertAdjacentHTML('beforeend',
+          '<tr>' + songNode(url, song[i].name, song[i].genre, key[i]) + '</tr>');
         }
       }
     }
@@ -141,9 +146,7 @@ submitButton.onclick = function submit() {
             'url': url, 'date': new Date().toLocaleString('fr-FR')
           }, Number(songID.value));
           document.getElementById(songID.value).parentNode.innerHTML =
-            `<td data-music-url="${songURL.value}">${songName.value}</td>`
-            + `<td>${songGenre.value}</td>`
-            + `<td id="${songID.value}" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
+          songNode(songURL.value, songName.value, songGenre.value, songID.value);
         } else {
           alert(`Les données n'ont pu être ajoutée :
           l'URL ne fournit pas de protocole HTTPS`)
@@ -163,9 +166,8 @@ submitButton.onclick = function submit() {
               let getSongData = transaction.objectStore(storeName).get(newSong.result);
               getSongData.onsuccess = function () {
                 let song = getSongData.result;
-                songsList.insertAdjacentHTML('beforeend', `<tr><td data-music-url="${song.url}">${song.name}</td>`
-                  + `<td>${song.genre}</td>`
-                  + `<td id="${newSong.result}" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
+                songsList.insertAdjacentHTML('beforeend',
+                '<tr>' + songNode(song.url, song.name, song.genre, newSong.result) + '</tr>');
               }
             }
           }
@@ -201,9 +203,8 @@ function addFile(e) {
         getSongData.onsuccess = function () {
           let song = getSongData.result;
           url = window.URL.createObjectURL(song.url);
-          songsList.insertAdjacentHTML('beforeend', `<tr><td data-music-url="${url}">${song.name}</td>`
-            + `<td>${song.genre}</td>`
-            + `<td id="${newSong.result}" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td></tr>`);
+          songsList.insertAdjacentHTML('beforeend',
+          '<tr>' + songNode(url, song.name, song.genre, newSong.result) + '</tr>');
         }
       }
     }
