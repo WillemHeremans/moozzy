@@ -3,6 +3,7 @@ let play = false;
 let pause = false;
 let sequenceLoopWait = false;
 let sequenceLoopOn = false;
+let isRandom = false;
 let start = 0;
 let duration = 0;
 let sequenceStart = 0;
@@ -116,6 +117,10 @@ function forward() {
     let onPlay = document.getElementById('onPlay');
     let rank = onPlay.sectionRowIndex;
     let forwardElement = onPlay.parentNode.children[rank + 1];
+    if (isRandom) {
+     let random = Math.floor(Math.random() * songsList.childElementCount) + 1;
+     forwardElement = onPlay.parentNode.children[random];
+    } 
     if (forwardElement) {
       loadSong(forwardElement.children[0], forwardElement.childNodes[0].textContent,
         forwardElement.childNodes[0].dataset.musicUrl)
@@ -211,8 +216,17 @@ function loop() {
 }
 
 function randomSong() {
-  this.style.color = '#dc3545';
-
+  if (isRandom) {
+isRandom = false;
+this.style.color = 'rgb(76, 76, 76)';
+audioElement.onended = null;
+  } else {
+    isRandom = true;
+    this.style.color = '#dc3545';
+    audioElement.onended = () => {
+      forward()
+    }
+  }
 }
 
 function muted() {
