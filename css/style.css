@@ -122,6 +122,10 @@ button{
   margin: 14px;
 }
 
+.fa-bars {
+  color: black !important;
+}
+
 /* end info song marquee animation */
 
 .modalLayer{
@@ -134,7 +138,7 @@ button{
   right: 0;
   background-color: rgba(0, 0, 0, 0.5);
   }
-   #broadcast:target, #confirmation:target{
+    #confirmation:target{
   display: block;
   }
   .popupBlock{

@@ -91,7 +91,7 @@
                                         <span class="nav-link" href="#">Playlists</span>
                                       </li>
                     </ul>
-                <table class="table table-striped table-hover" id="tBody">
+                <table class="table table-striped table-hover">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -104,29 +104,23 @@
                 </table>
             </div>
             <div class="col-sm-1">
-                <a href="#broadcast" id="plusButton" title="Add a new song">
-                    <label class="btn btn-danger btn-lg">
+                <label id="plusButton" class="btn btn-danger btn-lg"  title="Add a new song">
 
-                        <i class="fas fa-plus"></i>
+                    <i class="fas fa-plus"></i>
 
-                    </label>
-                </a>
-
-                <label class="btn btn-danger btn-lg">
-                        <i class="fas fa-plus"></i>
-                        <input id="addFile" style="display: none;" type="file" multiple />
-                    </label>
+                </label>
+                <input id="addFile" style="display: none;" type="file" multiple />
             </div>
         </div>
     </div>
 
     <!-- pop-up's -->
 
-    <div class="modalLayer" id="broadcast">
+    <div class="modalLayer" id="addRadio">
         <div class="popupBlock">
             <div class="card">
                 <div class="card-header">
-                    <a href="#" class="btn close croix">&#10006;</a>
+                    <span id="closeModal" class="btn close croix">&#10006;</span>
                     <h4 id="modalTitle"></h4>
                 </div>
                 <div class="card-body">
@@ -148,7 +142,7 @@
                 </div>
                 <div class="modal-footer">
                     <a href="#confirmation" class="btn btn-danger" id="delete"></a>
-                    <a href="#" class="btn btn-primary" id="submit"></a>
+                    <span class="btn btn-primary" id="submit"></span>
                 </div>
             </div>
         </div>

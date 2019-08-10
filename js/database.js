@@ -14,6 +14,8 @@ const deleteButton = document.getElementById('delete');
 const plusButton = document.getElementById('plusButton');
 const confirmDelete = document.getElementById('confirmDelete');
 const addFileButton = document.getElementById('addFile');
+const addRadioModal = document.getElementById('addRadio');
+const closeModal = document.getElementById('closeModal');
 
 addFileButton.addEventListener('change', addFile);
 
@@ -29,8 +31,8 @@ if ('serviceWorker' in navigator) {
 
 function songNode(url, name, genre, id) {
   return `<td data-music-url="${url}">${name}</td>`
-  + `<td>${genre}</td>`
-  + `<td id="${id}" title="Edit this item"><a href="#broadcast" style="color: black;"><i class="fas fa-bars"></i></a></td>`;
+    + `<td>${genre}</td>`
+    + `<td id="${id}" title="Edit this item"><i class="fas fa-bars"></i></td>`;
 }
 
 function checkUrl(string) {
@@ -86,7 +88,7 @@ body.onload = function loadSongsData() {
             url = song[i].url;
           }
           songsList.insertAdjacentHTML('beforeend',
-          '<tr>' + songNode(url, song[i].name, song[i].genre, key[i]) + '</tr>');
+            '<tr>' + songNode(url, song[i].name, song[i].genre, key[i]) + '</tr>');
         }
       }
     }
@@ -102,6 +104,8 @@ function songSettings(element) {
   submitButton.innerHTML = 'Edit';
   deleteButton.style.display = 'block';
   deleteButton.innerHTML = 'Delete';
+
+  addRadioModal.style.display = 'block';
 
   let request = indexedDB.open(dbName, dbVersion);
 
@@ -121,17 +125,28 @@ function songSettings(element) {
 }
 
 plusButton.onclick = function unloadModal() {
-  modalTitle.innerHTML = 'Add a song';
-  submitButton.innerHTML = 'Add';
-  deleteButton.style.display = 'none';
-  songName.value = '';
-  songGenre.value = '';
-  songURL.value = '';
-  songID.value = '';
+
+  if (context === 'Radios') {
+    modalTitle.innerHTML = 'Add a song';
+    submitButton.innerHTML = 'Add';
+    deleteButton.style.display = 'none';
+    songName.value = '';
+    songGenre.value = '';
+    songURL.value = '';
+    songID.value = '';
+    addRadioModal.style.display = 'block';
+  } else {
+    addFileButton.click();
+  }
+
+}
+
+closeModal.onclick = () => {
+  addRadioModal.style.display = 'none';
 }
 
 submitButton.onclick = function submit() {
-
+  closeModal.click();
   let request = indexedDB.open(dbName, dbVersion);
   url = checkUrl(songURL.value);
 
@@ -146,7 +161,7 @@ submitButton.onclick = function submit() {
             'url': url, 'date': new Date().toLocaleString('fr-FR')
           }, Number(songID.value));
           document.getElementById(songID.value).parentNode.innerHTML =
-          songNode(songURL.value, songName.value, songGenre.value, songID.value);
+            songNode(songURL.value, songName.value, songGenre.value, songID.value);
         } else {
           alert(`Les données n'ont pu être ajoutée :
           l'URL ne fournit pas de protocole HTTPS`)
@@ -167,7 +182,7 @@ submitButton.onclick = function submit() {
               getSongData.onsuccess = function () {
                 let song = getSongData.result;
                 songsList.insertAdjacentHTML('beforeend',
-                '<tr>' + songNode(song.url, song.name, song.genre, newSong.result) + '</tr>');
+                  '<tr>' + songNode(song.url, song.name, song.genre, newSong.result) + '</tr>');
               }
             }
           }
@@ -178,7 +193,7 @@ submitButton.onclick = function submit() {
 }
 
 confirmDelete.onclick = function deleteSong() {
-
+  closeModal.click();
   let request = indexedDB.open(dbName, dbVersion);
   request.onsuccess = function () {
     let transaction = db.transaction([storeName], 'readwrite');
@@ -204,7 +219,7 @@ function addFile(e) {
           let song = getSongData.result;
           url = window.URL.createObjectURL(song.url);
           songsList.insertAdjacentHTML('beforeend',
-          '<tr>' + songNode(url, song.name, song.genre, newSong.result) + '</tr>');
+            '<tr>' + songNode(url, song.name, song.genre, newSong.result) + '</tr>');
         }
       }
     }

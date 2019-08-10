@@ -59,7 +59,7 @@ function loadSong(element, name, url) {
     audioElement.preload = 'metadata';
   } else {
     if (event.target.className === 'fas fa-bars') {
-      songSettings(event.target.parentNode.parentNode);
+      songSettings(event.target.parentNode);
     } else {
       if (document.getElementById('onPlay')) {
         document.getElementById('onPlay').removeAttribute('class');
