@@ -1,5 +1,5 @@
 const tabs = document.getElementById("tabs");
-let context = 'Songs'
+let context = {name: 'Songs', index: 1};
 
 
 tabs.addEventListener('click', tabsClick);
@@ -14,6 +14,15 @@ function tabsClick() {
       }
     }
     event.target.classList.add('active');
-    context = event.target.textContent;
+    context.name = event.target.textContent;
+  }
+  if (context.name === 'Radios') {
+    songsList.style.display = 'none';
+    radiosList.style.display = 'table-row-group';
+    context.index = 2;
+  } else {
+    songsList.style.display = 'table-row-group';
+    radiosList.style.display = 'none';
+    context.index = 1;
   }
 }

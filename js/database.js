@@ -3,6 +3,8 @@ let dbName = 'MusicPlayer';
 let dbVersion = 1;
 let storeName = 'MySongs';
 let url = '';
+let songsList = HTMLElement;
+let radiosList = HTMLElement;
 const body = document.getElementById('body');
 const songName = document.getElementById('songName');
 const songGenre = document.getElementById('songGenre');
@@ -80,16 +82,35 @@ body.onload = function loadSongsData() {
       getKeys.onsuccess = function () {
 
         let key = getKeys.result;
+        songsList = document.createElement('tbody');
+        radiosList = document.createElement('tbody');
+        songsList.id = 'songsList';
+        radiosList.id = 'radiosList';
+        songsList.addEventListener('click', loadSong);
+        radiosList.addEventListener('click', loadSong);
+        
+        if (context.name === 'Radios') {
+          songsList.style.display = 'none';
+        } else {
+          radiosList.style.display = 'none';
+        }
+        
+        table.insertAdjacentElement('beforeend', songsList)
+        table.insertAdjacentElement('beforeend', radiosList);
 
         for (i in song) {
           if (typeof (song[i].url) !== 'string') {
             url = window.URL.createObjectURL(song[i].url);
+            songsList.insertAdjacentHTML('beforeend',
+            '<tr>' + songNode(url, song[i].name, song[i].genre, key[i]) + '</tr>');
           } else {
             url = song[i].url;
-          }
-          songsList.insertAdjacentHTML('beforeend',
+            radiosList.insertAdjacentHTML('beforeend',
             '<tr>' + songNode(url, song[i].name, song[i].genre, key[i]) + '</tr>');
+          }
         }
+        songsList = document.getElementById('songsList');
+        radiosList = document.getElementById('radiosList');
       }
     }
     countData.onsuccess = function () {
@@ -126,7 +147,7 @@ function songSettings(element) {
 
 plusButton.onclick = function unloadModal() {
 
-  if (context === 'Radios') {
+  if (context.name === 'Radios') {
     modalTitle.innerHTML = 'Add a song';
     submitButton.innerHTML = 'Add';
     deleteButton.style.display = 'none';
@@ -181,7 +202,7 @@ submitButton.onclick = function submit() {
               let getSongData = transaction.objectStore(storeName).get(newSong.result);
               getSongData.onsuccess = function () {
                 let song = getSongData.result;
-                songsList.insertAdjacentHTML('beforeend',
+                radiosList.insertAdjacentHTML('beforeend',
                   '<tr>' + songNode(song.url, song.name, song.genre, newSong.result) + '</tr>');
               }
             }

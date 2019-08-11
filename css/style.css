@@ -1,19 +1,32 @@
 
 body {
-background-color: #44b09e;
 background-image: linear-gradient(315deg, #44b09e 0%, #e0d2c7 74%);
 
+}
+
+h1 {
+  text-align: center;
 }
 
 a {
   text-decoration: none;
 }
 
+.tableFixHead {
+  overflow: auto;
+  height: 400px;
+}
+
+.tableFixHead thead th {
+  position: sticky;
+  top: 0;
+  background-color: #b0c7ba;
+}
+
 td {
   cursor: pointer;
   word-break: break-all;
 }
-
 
 .nav-item {
   cursor: pointer;
@@ -25,32 +38,6 @@ td {
 
 .active  {
     color: #007bff !important; 
-}
-
-
-/* infos song marquee animation*/
-.marquee {
-  width: 100%;
-  margin: 0 auto;
-  white-space: nowrap;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
-.marquee h1 {
-  display: inline-block;
-  padding-left: 100%;  /* show the marquee just outside the paragraph */
-  animation: marquee 15s linear;
-}
-
-.marquee h1:hover {
-  animation-play-state: paused
-}
-
-/* Make it move */
-@keyframes marquee {
-  0%   { transform: translate(0, 0); }
-  100% { transform: translate(-100%, 0); }
 }
 
 .top-buffer { 
@@ -126,8 +113,6 @@ button{
   color: black !important;
 }
 
-/* end info song marquee animation */
-
 .modalLayer{
   overflow: auto;
   display: none;
@@ -141,6 +126,7 @@ button{
     #confirmation:target{
   display: block;
   }
+
   .popupBlock{
   position: relative;
   margin: 5% auto;
@@ -149,7 +135,7 @@ button{
   border-radius: 5px;
   }
 
-  a.croix{
+  .croix{
   float: right;
   cursor: pointer;
   color: black;
@@ -157,14 +143,4 @@ button{
   font-size:1em;
   margin:0;
   }
-/* Modal Box end */
 
-.blink {
-  animation: blinking 3s linear infinite;
-}
-
-@keyframes blinking {
-  50% {
-    opacity: 0;
-  }
-}

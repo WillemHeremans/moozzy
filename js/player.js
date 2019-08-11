@@ -27,7 +27,7 @@ const volumeDownButton = document.getElementById('volumeDown');
 const volumeUpButton = document.getElementById('volumeUp');
 const volumeDownValue = document.getElementById('downValue');
 const volumeUpValue = document.getElementById('upValue');
-const songsList = document.getElementById('songsList');
+const table = document.getElementById('table');
 const styleTag = document.getElementById('style');
 
 progressBar.addEventListener('click', progressClick);
@@ -40,7 +40,6 @@ loopButton.addEventListener('click', loop);
 randomButton.addEventListener('click', randomSong);
 volumeDownButton.addEventListener('click', volumeDown);
 volumeUpButton.addEventListener('click', volumeUp);
-songsList.addEventListener('click', loadSong);
 sequenceLoopButton.addEventListener('click', sequenceLoop);
 audioElement.addEventListener('timeupdate', sequence);
 progressBar.value = start;
@@ -91,8 +90,8 @@ function loadSong(element, name, url) {
 
 function playPause() {
   if (!document.getElementById('onPlay')) {
-    loadSong(songsList.children[0].children[0], songsList.children[0].children[0].textContent,
-      songsList.children[0].children[0].dataset.musicUrl);
+    loadSong(table.children[context.index].children[0].children[0], table.children[context.index].children[0].children[0].textContent,
+      table.children[context.index].children[0].children[0].dataset.musicUrl);
 
   } else {
 
@@ -118,15 +117,15 @@ function forward() {
     let rank = onPlay.sectionRowIndex;
     let forwardElement = onPlay.parentNode.children[rank + 1];
     if (isRandom) {
-     let random = Math.floor(Math.random() * songsList.childElementCount) + 1;
+     let random = Math.floor(Math.random() * table.children[context.index].childElementCount) + 1;
      forwardElement = onPlay.parentNode.children[random];
     } 
     if (forwardElement) {
       loadSong(forwardElement.children[0], forwardElement.childNodes[0].textContent,
         forwardElement.childNodes[0].dataset.musicUrl)
     } else {
-      loadSong(songsList.children[0].children[0], songsList.children[0].children[0].textContent,
-        songsList.children[0].children[0].dataset.musicUrl)
+      loadSong(table.children[context.index].children[0].children[0], table.children[context.index].children[0].children[0].textContent,
+        table.children[context.index].children[0].children[0].dataset.musicUrl)
     }
   }
 }
@@ -140,9 +139,9 @@ function backward() {
       loadSong(backwardElement.children[0], backwardElement.children[0].textContent,
         backwardElement.children[0].dataset.musicUrl)
     } else {
-      rank = songsList.childElementCount - 1;
-      loadSong(songsList.children[rank].children[0], songsList.children[rank].children[0].textContent,
-        songsList.children[rank].children[0].dataset.musicUrl)
+      rank = table.children[context.index].childElementCount - 1;
+      loadSong(table.children[context.index].children[rank].children[0], table.children[context.index].children[rank].children[0].textContent,
+        table.children[context.index].children[rank].children[0].dataset.musicUrl)
     }
   }
 }
