@@ -41,7 +41,7 @@ randomButton.addEventListener('click', randomSong);
 volumeDownButton.addEventListener('click', volumeDown);
 volumeUpButton.addEventListener('click', volumeUp);
 sequenceLoopButton.addEventListener('click', sequenceLoop);
-audioElement.addEventListener('timeupdate', sequence);
+
 progressBar.value = start;
 progressBar.max = duration;
 
@@ -168,9 +168,13 @@ function sequenceLoop() {
       sequenceLoopOn = false;
       sequenceLoopIcon.style.color = 'rgb(76, 76, 76)';
       progressBar.classList.remove('sequenceLoop');
+      audioElement.ontimeupdate = null;
     } else if (sequenceLoopWait) {
       sequenceEnd = audioElement.currentTime;
       sequenceLoopWait = false;
+      audioElement.ontimeupdate = () => {
+        sequence();
+      }
     } else {
       sequenceLoopOn = sequenceLoopWait = true;
       sequenceLoopIcon.classList.add('blink');
@@ -320,6 +324,9 @@ function progressClick() {
       if (sequenceLoopWait) {
         sequenceEnd = event.target['value'];
         sequenceLoopWait = false;
+        audioElement.ontimeupdate = () => {
+          sequence();
+        }
       }
       sequenceLoopIcon.classList.remove('blink');
       sequenceLoopIcon.style.color = '#dc3545';
