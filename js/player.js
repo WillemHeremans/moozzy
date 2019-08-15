@@ -1,6 +1,5 @@
 
 let play = false;
-let pause = false;
 let sequenceLoopWait = false;
 let sequenceLoopOn = false;
 let isRandom = false;
@@ -78,13 +77,12 @@ function loadSong(element, name, url) {
     start = audioElement.currentTime;
     durationMetaData.textContent = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / '
       + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);
-    if (play) {
-      audioElement.pause();
-      play = false;
-      playPause();
-    } else {
-      playPause();
-    }
+      if (play) {
+        play = false;
+        playPause();
+      } else {
+        playPause();
+      }
   }
 }
 
@@ -100,13 +98,11 @@ function playPause() {
       playPauseIcon.setAttribute('class', 'fas fa-pause')
       audioElement.currentTime = start;
       audioElement.play();
-      pause = true;
       autoMove();
     } else {
       play = false;
       playPauseIcon.setAttribute('class', 'fas fa-play')
       audioElement.pause();
-      pause = false;
     }
   }
 }
