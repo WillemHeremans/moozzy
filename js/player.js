@@ -117,9 +117,9 @@ function forward() {
     let rank = onPlay.sectionRowIndex;
     let forwardElement = onPlay.parentNode.children[rank + 1];
     if (isRandom) {
-     let random = Math.floor(Math.random() * table.children[context.index].childElementCount) + 1;
-     forwardElement = onPlay.parentNode.children[random];
-    } 
+      let random = Math.floor(Math.random() * table.children[context.index].childElementCount) + 1;
+      forwardElement = onPlay.parentNode.children[random];
+    }
     if (forwardElement) {
       loadSong(forwardElement.children[0], forwardElement.childNodes[0].textContent,
         forwardElement.childNodes[0].dataset.musicUrl)
@@ -206,9 +206,11 @@ function loop() {
     }
   } else if (audioElement.onended) {
     audioElement.onended = null;
+    randomButton.disabled = false;
     this.style.color = 'rgb(76, 76, 76)';
     this.children[0].classList.replace('fa-sync-alt', 'fa-undo-alt');
   } else {
+    randomButton.disabled = true;
     audioElement.loop = true;
     this.style.color = '#dc3545';
   }
@@ -216,11 +218,13 @@ function loop() {
 
 function randomSong() {
   if (isRandom) {
-isRandom = false;
-this.style.color = 'rgb(76, 76, 76)';
-audioElement.onended = null;
+    isRandom = false;
+    this.style.color = 'rgb(76, 76, 76)';
+    audioElement.onended = null;
+    loopButton.disabled = false;
   } else {
     isRandom = true;
+    loopButton.disabled = true;
     this.style.color = '#dc3545';
     audioElement.onended = () => {
       forward()
@@ -232,8 +236,9 @@ function muted() {
   if (audioElement.muted) {
     audioElement.muted = false;
     mutedButton.style.color = 'rgb(76, 76, 76)';
-    if (audioElement.volume < 0.10000000000000014) {
-      audioElement.volume = 0.10000000000000014;
+    if (audioElement.volume < 0.1) {
+      audioElement.volume = 0.1;
+      volumeDownButton.disabled = false;
     }
   } else {
     audioElement.muted = true;
@@ -242,31 +247,38 @@ function muted() {
 }
 
 function volumeDown() {
-  if (audioElement.volume > 1.3877787807814457e-16) {
+  if (audioElement.volume > 0) {
     if (audioElement.muted) {
-      muted(mutedButton);
+      muted();
     }
-    let volumeValue = Math.round((audioElement.volume * 10) - 1).toString().replace('0', '');
+    volumeUpButton.disabled = false;
     volumeUpValue.textContent = '';
-    volumeDownValue.textContent = volumeValue;
-    if (volumeValue === '') {
+    audioElement.volume = Math.round(audioElement.volume * 100) / 100;
+    audioElement.volume -= 0.1;
+    volumeDownValue.textContent = Math.round(audioElement.volume * 10).toString().replace('0', '');
+    if (volumeDownValue.textContent === '') {
+      this.disabled = true;
       if (!audioElement.muted) {
-        muted(mutedButton);
+        muted();
       }
     }
-    audioElement.volume -= 0.1;
   }
 }
 
 function volumeUp() {
   if (audioElement.muted) {
-    muted(mutedButton);
+    muted();
   }
   if (audioElement.volume < 1) {
-    let volumeValue = Math.round((audioElement.volume * 10) + 1).toString().replace('10', '');
     volumeDownValue.textContent = '';
-    volumeUpValue.textContent = volumeValue;
+    audioElement.volume = Math.round(audioElement.volume * 100) / 100;
     audioElement.volume += 0.1;
+    volumeUpValue.textContent = Math.round(audioElement.volume * 10).toString().replace('10', '');
+    if (volumeUpValue.textContent === '') {
+      this.disabled = true;
+    }
+  } else {
+    this.disabled = true;
   }
 }
 
