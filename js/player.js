@@ -171,12 +171,14 @@ function sequenceLoop() {
       audioElement.ontimeupdate = null;
     } else if (sequenceLoopWait) {
       sequenceEnd = audioElement.currentTime;
+      sequenceLoopIcon.classList.remove('blink');
+      sequenceLoopIcon.style.color = '#dc3545';
       sequenceLoopWait = false;
+      sequenceLoopOn = true;
       audioElement.ontimeupdate = () => {
         sequence();
       }
     } else {
-      sequenceLoopOn = sequenceLoopWait = true;
       sequenceLoopIcon.classList.add('blink');
       sequenceStart = audioElement.currentTime;
       if (!styleTag.sheet.rules[0]) {
@@ -184,6 +186,7 @@ function sequenceLoop() {
       }
       styleTag.sheet.rules[0].style['backgroundImage'] = 'linear-gradient(to right, rgb(230, 230, 230) 100%, rgb(23, 162, 184) 0%)'
       progressBar.classList.add('sequenceLoop');
+      sequenceLoopWait = true;
     }
   }
 }
@@ -194,8 +197,8 @@ function sequence() {
       if (start > sequenceEnd) {
         styleTag.sheet.rules[0].style['backgroundImage'] = 'linear-gradient(to right, rgb(230, 230, 230) 100%, rgb(23, 162, 184) 0%)';
         playPause();
-        play = false;
-        progressClick();
+        start = sequenceStart;
+        playPause();
       }
     }
   }
@@ -292,9 +295,9 @@ function autoMove() {
     duration = audioElement.duration;
     start = audioElement.currentTime;
 
-    if (sequenceLoopOn) {
-      style.sheet.rules[0].style['backgroundImage'] = 'linear-gradient(to right, rgb(230, 230, 230) ' +
-        ((sequenceStart / start) * 100) + '%, rgb(23, 162, 184) 0%)';
+    if (sequenceLoopWait || sequenceLoopOn) {
+      style.sheet.rules[0].style['backgroundImage'] = `linear-gradient(to right, rgb(230, 230, 230)` +
+        `${(sequenceStart / start) * 100}%, rgb(23, 162, 184) 0%)`;
     }
 
     progressBar.setAttribute('max', duration.toString());
@@ -308,31 +311,41 @@ function progressClick() {
   if (document.getElementById('onPlay')) {
     let maxValue = (event.target['offsetWidth']).toString();
     let clickValue = (event.clientX) - (event.target['offsetLeft']).toString();
-    event.target['max'] = (maxValue / maxValue) * duration;
-    event.target['value'] = (clickValue / maxValue) * duration;
-    if (!sequenceLoopOn) {
-      start = event.target['value'];
-      if (play) {
-        audioElement.pause();
-        play = false;
-        playPause();
+    if (!sequenceLoopWait) {
+      if (sequenceLoopOn) {
+        if (((clickValue / maxValue) * duration) > sequenceStart && ((clickValue / maxValue) * duration) < sequenceEnd) {
+          event.target['value'] = (clickValue / maxValue) * duration;
+          start = event.target['value'];
+          if (play) {
+            play = false;
+            playPause();
+          } else {
+            playPause();
+          }
+        }
       } else {
-        playPause();
-      }
-    } else {
-      start = sequenceStart;
-      if (sequenceLoopWait) {
-        sequenceEnd = event.target['value'];
-        sequenceLoopWait = false;
-        audioElement.ontimeupdate = () => {
-          sequence();
+        event.target['max'] = (maxValue / maxValue) * duration;
+        event.target['value'] = (clickValue / maxValue) * duration;
+        start = event.target['value'];
+        if (play) {
+          play = false;
+          playPause();
+        } else {
+          playPause();
         }
       }
+    } else {
+      event.target['max'] = (maxValue / maxValue) * duration;
+      event.target['value'] = (clickValue / maxValue) * duration;
+      start = sequenceStart;
+      sequenceEnd = event.target['value'];
       sequenceLoopIcon.classList.remove('blink');
       sequenceLoopIcon.style.color = '#dc3545';
-      if (!play) {
-        playPause();
+      audioElement.ontimeupdate = () => {
+        sequence();
       }
+      sequenceLoopWait = false;
+      sequenceLoopOn = true;
     }
   }
 }
