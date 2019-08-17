@@ -49,8 +49,7 @@ if (navigator.vendor.includes('Google')) {
   progressRule = '-webkit-progress-value';
 }
 
-
- function loadSong(element, name, url) {
+function loadSong(element, name, url) {
   if (element != event) {
     if (document.getElementById('onPlay')) {
       document.getElementById('onPlay').removeAttribute('class');
@@ -78,25 +77,17 @@ if (navigator.vendor.includes('Google')) {
       }
     }
   }
-  audioElement.onloadedmetadata =  function () {
-    if (audioElement.duration === Infinity) {
-     
-        audioElement.duration = 50.289457;
-      duration = audioElement.duration;
-      start = audioElement.currentTime;
-    } else {
-      duration = audioElement.duration;
-      start = audioElement.currentTime;
-    }
-    
+  audioElement.onloadedmetadata = function () {
+    duration = audioElement.duration;
+    start = audioElement.currentTime;
     durationMetaData.textContent = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / '
       + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);
-      if (play) {
-        play = false;
-        playPause();
-      } else {
-        playPause();
-      }
+    if (play) {
+      play = false;
+      playPause();
+    } else {
+      playPause();
+    }
   }
 }
 
