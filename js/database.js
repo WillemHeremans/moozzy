@@ -51,6 +51,7 @@ function checkUrl(string) {
 
 body.onload = function loadSongsData() {
 
+
   let request = indexedDB.open(dbName, dbVersion);
 
   request.onerror = function (event) {
@@ -91,8 +92,10 @@ body.onload = function loadSongsData() {
         
         if (context.name === 'Radios') {
           songsList.style.display = 'none';
+          tabs.children[0].children[0].classList.add('active');
         } else {
           radiosList.style.display = 'none';
+          tabs.children[1].children[0].classList.add('active');
         }
         
         table.insertAdjacentElement('beforeend', songsList)

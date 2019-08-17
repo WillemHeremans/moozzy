@@ -7,6 +7,7 @@ let start = 0;
 let duration = 0;
 let sequenceStart = 0;
 let sequenceEnd = 0;
+let progressRule = '-moz-progress-bar';
 const songInfo = document.getElementById('songInfo');
 const audioElement = document.getElementById('audioElement');
 const progressBar = document.getElementById('progressBar');
@@ -44,7 +45,12 @@ sequenceLoopButton.addEventListener('click', sequenceLoop);
 progressBar.value = start;
 progressBar.max = duration;
 
-function loadSong(element, name, url) {
+if (navigator.vendor.includes('Google')) {
+  progressRule = '-webkit-progress-value';
+}
+
+
+ function loadSong(element, name, url) {
   if (element != event) {
     if (document.getElementById('onPlay')) {
       document.getElementById('onPlay').removeAttribute('class');
@@ -72,9 +78,17 @@ function loadSong(element, name, url) {
       }
     }
   }
-  audioElement.onloadedmetadata = function () {
-    duration = audioElement.duration;
-    start = audioElement.currentTime;
+  audioElement.onloadedmetadata =  function () {
+    if (audioElement.duration === Infinity) {
+     
+        audioElement.duration = 50.289457;
+      duration = audioElement.duration;
+      start = audioElement.currentTime;
+    } else {
+      duration = audioElement.duration;
+      start = audioElement.currentTime;
+    }
+    
     durationMetaData.textContent = convertTime(~~(start / 3600)) + ':' + convertTime(~~((start % 3600) / 60)) + ':' + convertTime(~~start % 60) + ' / '
       + convertTime(~~(duration / 3600)) + ':' + convertTime(~~((duration % 3600) / 60)) + ':' + convertTime(~~duration % 60);
       if (play) {
@@ -178,7 +192,7 @@ function sequenceLoop() {
       sequenceLoopIcon.classList.add('blink');
       sequenceStart = audioElement.currentTime;
       if (!styleTag.sheet.rules[0]) {
-        styleTag.sheet.insertRule('.sequenceLoop::-moz-progress-bar {background-image: linear-gradient(to right, rgb(230, 230, 230) 100%, rgb(23, 162, 184) 0%);}');
+        styleTag.sheet.insertRule(`.sequenceLoop::${progressRule} {background-image: linear-gradient(to right, rgb(230, 230, 230) 100%, rgb(23, 162, 184) 0%);}`);
       }
       styleTag.sheet.rules[0].style['backgroundImage'] = 'linear-gradient(to right, rgb(230, 230, 230) 100%, rgb(23, 162, 184) 0%)'
       progressBar.classList.add('sequenceLoop');
@@ -304,9 +318,9 @@ function autoMove() {
 }
 
 function progressClick() {
-  if (document.getElementById('onPlay')) {
-    let maxValue = (event.target['offsetWidth']).toString();
-    let clickValue = (event.clientX) - (event.target['offsetLeft']).toString();
+  if (document.getElementById('onPlay') && audioElement.duration !== Infinity) {
+    let maxValue = (event.target['offsetWidth']);
+    let clickValue = (event.clientX) - (event.target['offsetLeft']);
     if (!sequenceLoopWait) {
       if (sequenceLoopOn) {
         if (((clickValue / maxValue) * duration) > sequenceStart && ((clickValue / maxValue) * duration) < sequenceEnd) {
