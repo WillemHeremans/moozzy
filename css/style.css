@@ -28,6 +28,10 @@ td {
   word-break: break-all;
 }
 
+.nav-tabs {
+  border-bottom: 0 !important;
+}
+
 .nav-item {
   cursor: pointer;
 }
