@@ -47,6 +47,10 @@ progressBar.max = duration;
 
 if (navigator.vendor.includes('Google')) {
   progressRule = '-webkit-progress-value';
+  navigator.mediaSession.setActionHandler('previoustrack', backward);
+  navigator.mediaSession.setActionHandler('nexttrack', forward);
+  navigator.mediaSession.setActionHandler('play', playPause);
+  navigator.mediaSession.setActionHandler('pause', playPause);
 }
 
 function loadSong(element, name, url) {
