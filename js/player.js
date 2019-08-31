@@ -60,7 +60,7 @@ function loadSong(element, name, url) {
       document.getElementById('onPlay').removeAttribute('id');
     }
     element.parentNode.setAttribute('id', 'onPlay');
-    element.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
+    element.parentNode.setAttribute('class', 'onplay');
     songInfo.firstElementChild.textContent = name;
     audioElement.src = url;
     audioElement.preload = 'metadata';
@@ -68,13 +68,13 @@ function loadSong(element, name, url) {
     if (event.target.className === 'fas fa-bars') {
       songSettings(event.target.parentNode);
     } else {
-      if (document.getElementById('onPlay')) {
-        document.getElementById('onPlay').removeAttribute('class');
-        document.getElementById('onPlay').removeAttribute('id');
-      }
-      if (event.target.parentNode.children[2]) {
+      if (event.target.parentNode.parentNode.id === ('radiosList') || ('songsList')) {
+        if (document.getElementById('onPlay')) {
+          document.getElementById('onPlay').removeAttribute('class');
+          document.getElementById('onPlay').removeAttribute('id');
+        }
         event.target.parentNode.setAttribute('id', 'onPlay');
-        event.target.parentNode.setAttribute('class', 'text-primary border border-bottom-0 border-primary');
+        event.target.parentNode.setAttribute('class', 'onplay');
         songInfo.firstElementChild.textContent = event.target.parentNode.children[0].textContent;
         audioElement.src = event.target.parentNode.children[0].dataset.musicUrl;
         audioElement.preload = 'metadata';
@@ -343,14 +343,16 @@ function progressClick() {
       event.target['max'] = (maxValue / maxValue) * duration;
       event.target['value'] = (clickValue / maxValue) * duration;
       start = sequenceStart;
-      sequenceEnd = event.target['value'];
-      sequenceLoopIcon.classList.remove('blink');
-      sequenceLoopIcon.style.color = '#dc3545';
-      audioElement.ontimeupdate = () => {
-        sequence();
+      if (start < event.target['value']) {
+        sequenceEnd = event.target['value'];
+        sequenceLoopIcon.classList.remove('blink');
+        sequenceLoopIcon.style.color = '#dc3545';
+        audioElement.ontimeupdate = () => {
+          sequence();
+        }
+        sequenceLoopWait = false;
+        sequenceLoopOn = true;
       }
-      sequenceLoopWait = false;
-      sequenceLoopOn = true;
     }
   }
 }

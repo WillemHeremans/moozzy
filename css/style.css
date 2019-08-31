@@ -23,6 +23,14 @@ a {
   background-color: #b0c7ba;
 }
 
+.onplay {
+  border-right: solid 1px;
+  border-left: solid 2px;
+  border-bottom: 0 !important;
+  border-top: 0 !important;
+  color: #007bff;
+}
+
 td {
   cursor: pointer;
   word-break: break-all;
