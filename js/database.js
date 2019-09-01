@@ -32,15 +32,46 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
     navigator.serviceWorker.register('/moozzy/serviceWorker.js').then(function (registration) {
       console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    }, function (err) {
-      console.log('ServiceWorker registration failed: ', err);
-    });
+      registration.addEventListener('updatefound', () => {
+        // A wild service worker has appeared in registration.installing!
+        let newWorker = registration.installing;
+
+        newWorker.addEventListener('statechange', () => {
+          // Has network.state changed?
+          switch (newWorker.state) {
+            case 'installed':
+              if (navigator.serviceWorker.controller) {
+                // new update available
+                showUpdateBar();
+              }
+              // No update available
+              break;
+          }
+        });
+      });
+    },
+
+      function (err) {
+        console.log('ServiceWorker registration failed: ', err);
+      });
   });
+
+  let refreshing;
+  navigator.serviceWorker.addEventListener('controllerchange', function () {
+    if (refreshing) return;
+    window.location.reload();
+    refreshing = true;
+  });
+}
+
+function showUpdateBar() {
+  let snackbar = document.getElementById('snackbar');
+  snackbar.className = 'show';
 }
 
 function songNode(url, name, album, genre, id) {
   return `<td data-music-url="${url}">${name}</td>`
-  + (album ? `<td>${album}</td>` : `<td></td>`)
+    + (album ? `<td>${album}</td>` : `<td></td>`)
     + `<td>${genre}</td>`
     + `<td id="${id}" title="Edit this item"><i class="fas fa-bars"></i></td>`;
 }
@@ -96,7 +127,7 @@ body.onload = function loadSongsData() {
             url = window.URL.createObjectURL(song[i].url);
             songsList.insertAdjacentHTML('afterbegin',
               '<tr>' + songNode(url, (`${song[i].title}` ? `${song[i].artist} - ${song[i].title}` : `${song[i].artist}`),
-              song[i].album, song[i].genre, key[i]) + '</tr>');
+                song[i].album, song[i].genre, key[i]) + '</tr>');
           } else {
             url = song[i].url;
             radiosList.insertAdjacentHTML('afterbegin',

@@ -1,6 +1,6 @@
 
 
-const cacheName = 'moozzy-cache-v1';
+const cacheName = 'moozzy-cache-v2';
 const contentToCache = [
   '/moozzy',
   '/moozzy/favicon.ico',
@@ -23,6 +23,12 @@ self.addEventListener('install', function(event) {
       return cache.addAll(contentToCache);
     })
   );
+});
+
+self.addEventListener('message', function (event) {
+  if (event.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener('fetch', function(event) {
