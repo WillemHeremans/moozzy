@@ -1,6 +1,6 @@
 
 
-const cacheName = 'moozzy-cache-v1';
+const cacheName = 'moozzy-cache-v2';
 const contentToCache = [
   '/moozzy',
   '/moozzy/favicon.ico',
