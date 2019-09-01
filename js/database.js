@@ -34,6 +34,7 @@ if ('serviceWorker' in navigator) {
       console.log('ServiceWorker registration successful with scope: ', registration.scope);
       registration.addEventListener('updatefound', () => {
         // A wild service worker has appeared in registration.installing!
+        console.log(registration);
         let newWorker = registration.installing;
 
         newWorker.addEventListener('statechange', () => {
