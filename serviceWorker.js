@@ -7,6 +7,7 @@ const contentToCache = [
   '/moozzy/index.html',
   '/moozzy/moozzy.webmanifest',
   '/moozzy/css/style.css',
+  '/moozzy/js/jsmediatags.min.js',
   '/moozzy/js/database.js',
   '/moozzy/js/display.js',
   '/moozzy/js/player.js',

@@ -68,7 +68,7 @@ function loadSong(element, name, url) {
     if (event.target.className === 'fas fa-bars') {
       songSettings(event.target.parentNode);
     } else {
-      if (event.target.parentNode.parentNode.id === ('radiosList') || ('songsList')) {
+      if (event.target.parentNode.parentNode.id) {
         if (document.getElementById('onPlay')) {
           document.getElementById('onPlay').removeAttribute('class');
           document.getElementById('onPlay').removeAttribute('id');

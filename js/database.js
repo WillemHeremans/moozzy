@@ -3,8 +3,6 @@ let dbName = 'MusicPlayer';
 let dbVersion = 1;
 let storeName = 'MySongs';
 let url = '';
-let songsList = HTMLElement;
-let radiosList = HTMLElement;
 const body = document.getElementById('body');
 const radioName = document.getElementById('radioName');
 const artistName = document.getElementById('artistName');
@@ -21,33 +19,13 @@ const confirmDelete = document.getElementById('confirmDelete');
 const addFileButton = document.getElementById('addFile');
 const addRadioModal = document.getElementById('addRadio');
 const closeModal = document.getElementById('closeModal');
+const songsList = document.getElementById('songsList');
+const radiosList = document.getElementById('radiosList');
+const radiosThead = document.getElementById('radiosThead');
+const songsThead = document.getElementById('songsThead');
 
-// Metadata utilities
-const decode = (format, string) => new TextDecoder(format).decode(string);
-const synchToInt = synch => {
-  const mask = 0b01111111;
-  let b1 = synch & mask;
-  let b2 = (synch >> 8) & mask;
-  let b3 = (synch >> 16) & mask;
-  let b4 = (synch >> 24) & mask;
-
-  return b1 | (b2 << 7) | (b3 << 14) | (b4 << 21);
-};
-
-const HEADER_SIZE = 10;
-const ID3_ENCODINGS = [
-  'ascii',
-  'utf-16',
-  'utf-16be',
-  'utf-8'
-];
-const LANG_FRAMES = [
-  'USLT',
-  'SYLT',
-  'COMM',
-  'USER'
-];
-
+songsList.addEventListener('click', loadSong);
+radiosList.addEventListener('click', loadSong);
 addFileButton.addEventListener('change', addFile);
 
 if ('serviceWorker' in navigator) {
@@ -60,8 +38,9 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-function songNode(url, name, genre, id) {
+function songNode(url, name, album, genre, id) {
   return `<td data-music-url="${url}">${name}</td>`
+  + (album ? `<td>${album}</td>` : `<td></td>`)
     + `<td>${genre}</td>`
     + `<td id="${id}" title="Edit this item"><i class="fas fa-bars"></i></td>`;
 }
@@ -79,7 +58,6 @@ function checkUrl(string) {
 }
 
 body.onload = function loadSongsData() {
-
 
   let request = indexedDB.open(dbName, dbVersion);
 
@@ -112,37 +90,19 @@ body.onload = function loadSongsData() {
       getKeys.onsuccess = function () {
 
         let key = getKeys.result;
-        songsList = document.createElement('tbody');
-        radiosList = document.createElement('tbody');
-        songsList.id = 'songsList';
-        radiosList.id = 'radiosList';
-        songsList.addEventListener('click', loadSong);
-        radiosList.addEventListener('click', loadSong);
-
-        if (context.name === 'Radios') {
-          songsList.style.display = 'none';
-          tabs.children[0].children[0].classList.add('active');
-        } else {
-          radiosList.style.display = 'none';
-          tabs.children[1].children[0].classList.add('active');
-        }
-
-        table.insertAdjacentElement('beforeend', songsList)
-        table.insertAdjacentElement('beforeend', radiosList);
 
         for (i in song) {
           if (typeof (song[i].url) !== 'string') {
             url = window.URL.createObjectURL(song[i].url);
-            songsList.insertAdjacentHTML('beforeend',
-              '<tr>' + songNode(url, (`${song[i].title}` ? `${song[i].artist} - ${song[i].title}` : `${song[i].artist}`), song[i].genre, key[i]) + '</tr>');
+            songsList.insertAdjacentHTML('afterbegin',
+              '<tr>' + songNode(url, (`${song[i].title}` ? `${song[i].artist} - ${song[i].title}` : `${song[i].artist}`),
+              song[i].album, song[i].genre, key[i]) + '</tr>');
           } else {
             url = song[i].url;
-            radiosList.insertAdjacentHTML('beforeend',
-              '<tr>' + songNode(url, song[i].name, song[i].genre, key[i]) + '</tr>');
+            radiosList.insertAdjacentHTML('afterbegin',
+              '<tr>' + songNode(url, song[i].name, undefined, song[i].genre, key[i]) + '</tr>');
           }
         }
-        songsList = document.getElementById('songsList');
-        radiosList = document.getElementById('radiosList');
       }
     }
     countData.onsuccess = function () {
@@ -230,29 +190,29 @@ submitButton.onclick = function submit() {
 
     request.onsuccess = function () {
 
-          let transaction = db.transaction([storeName], 'readwrite');
-          if (context.name === 'Radios') {
-            transaction.objectStore(storeName).put({
-              'name': radioName.value, 'genre': songGenre.value,
-              'url': url, 'date': new Date().toLocaleString('fr-FR')
-            }, Number(songID.value));
-            document.getElementById(songID.value).parentNode.innerHTML =
-              songNode(radioURL.value, radioName.value, songGenre.value, songID.value);
-          } else {
-            let data = transaction.objectStore(storeName).get(Number(songID.value));
-            data.onsuccess = () => {
-              let song = data.result;
-              song.artist = artistName.value;
-              song.title = songTitle.value;
-              song.album = albumName.value;
-              song.genre = songGenre.value;
-              transaction.objectStore(storeName).put(song, Number(songID.value));
-            }
-            let node = document.getElementById(songID.value);
-            node.parentNode.innerHTML =
-              songNode(node.parentNode.children[0].dataset.musicUrl, (`${songTitle.value}` ? `${artistName.value} - ${songTitle.value}` : `${artistName.value}`), songGenre.value, songID.value);
-          }
-          
+      let transaction = db.transaction([storeName], 'readwrite');
+      if (context.name === 'Radios') {
+        transaction.objectStore(storeName).put({
+          'name': radioName.value, 'genre': songGenre.value,
+          'url': url, 'date': new Date().toLocaleString('fr-FR')
+        }, Number(songID.value));
+        document.getElementById(songID.value).parentNode.innerHTML =
+          songNode(radioURL.value, radioName.value, undefined, songGenre.value, songID.value);
+      } else {
+        let data = transaction.objectStore(storeName).get(Number(songID.value));
+        data.onsuccess = () => {
+          let song = data.result;
+          song.artist = artistName.value;
+          song.title = songTitle.value;
+          song.album = albumName.value;
+          song.genre = songGenre.value;
+          transaction.objectStore(storeName).put(song, Number(songID.value));
+        }
+        let node = document.getElementById(songID.value);
+        node.parentNode.innerHTML =
+          songNode(node.parentNode.children[0].dataset.musicUrl, (`${songTitle.value}` ? `${artistName.value} - ${songTitle.value}` : `${artistName.value}`), albumName.value, songGenre.value, songID.value);
+      }
+
 
     }
 
@@ -268,7 +228,7 @@ submitButton.onclick = function submit() {
               let getSongData = transaction.objectStore(storeName).get(newSong.result);
               getSongData.onsuccess = function () {
                 let song = getSongData.result;
-                radiosList.insertAdjacentHTML('beforeend',
+                radiosList.insertAdjacentHTML('afterbegin',
                   '<tr>' + songNode(song.url, song.name, song.genre, newSong.result) + '</tr>');
               }
             }
@@ -300,98 +260,37 @@ function addFile(e) {
     let title = '';
     let artist = '';
     let album = '';
-    let comment = '';
     let trackPosition = '';
     let genre = '';
-    let reader = new FileReader();
 
-    reader.readAsArrayBuffer(file[i]);
-    reader.onload = (evt) => {
-      let buffer = evt.target.result;
-      let header = new DataView(buffer, 0, HEADER_SIZE);
+    jsmediatags.read(file[i], {
+      onSuccess: function (data) {
+        data.tags.title ? title = data.tags.title : undefined;
+        data.tags.artist ? artist = data.tags.artist : undefined;
+        data.tags.album ? album = data.tags.album : undefined;
+        data.tags.track ? trackPosition = data.tags.track : undefined;
+        data.tags.genre ? genre = data.tags.genre : undefined;
 
-      let size = synchToInt(header.getUint32(6));
+        let blob = new Blob([file[i]], { type: file[i].type });
+        let request = indexedDB.open(dbName, dbVersion);
 
-      let offset = HEADER_SIZE;
-      let id3Size = HEADER_SIZE + size;
-
-      let decodeFrame = (buffer, offset) => {
-
-        let header = new DataView(buffer, offset, HEADER_SIZE + 1);
-
-        if (header.getUint8(0) === 0) { return; }
-
-        let id = decode('ascii', new Uint8Array(buffer, offset, 4));
-        let size = header.getUint32(4);
-        let contentSize = size - 1;
-        let encoding = header.getUint8(HEADER_SIZE);
-        let contentOffset = offset + HEADER_SIZE + 1;
-
-        if (LANG_FRAMES.includes(id)) {
-          contentOffset += 4;
-          contentSize -= 4;
-        }
-
-        let value = decode(ID3_ENCODINGS[encoding],
-          new Uint8Array(buffer, contentOffset, contentSize));
-
-        return {
-          id, value,
-          size: size + HEADER_SIZE
-        };
-      };
-
-      while (offset < id3Size) {
-        let frame = decodeFrame(buffer, offset);
-        if (!frame) { break; }
-        // console.log(`${frame.id}: ${frame.value}`);
-        // console.log(frame.value.length);
-        switch (frame.id) {
-          case 'TIT2':
-            title = frame.value;
-            console.log(`title: ${title}`);
-            break;
-          case 'TPE1':
-            artist = frame.value;
-            console.log(`artist: ${artist}`);
-            break;
-          case 'TALB':
-            album = frame.value;
-            console.log(`album: ${album}`);
-            break;
-          case 'COMM':
-            comment = frame.value;
-            console.log(`comment: ${comment}`);
-            break;
-          case 'TRCK':
-            trackPosition = frame.value;
-            console.log(`trackPosition: ${trackPosition}`);
-            break;
-          case 'TCON':
-            genre = frame.value;
-            console.log(`genre: ${genre}`);
-            break;
-        }
-        offset += frame.size;
-      }
-
-      let blob = new Blob([file[i]], { type: file[i].type });
-      let request = indexedDB.open(dbName, dbVersion);
-
-      request.onsuccess = () => {
-        // console.log(`default: ${title}, ${artist}, ${album}, ${comment}`);
-        let transaction = db.transaction([storeName], 'readwrite');
-        let newSong = transaction.objectStore(storeName).put({ 'artist': artist ? artist : file[i].name, 'title': title, 'album': album, 'comment': comment, 'genre': genre ? genre : 'Various', 'url': blob, 'date': new Date().toLocaleString('fr-FR') });
-        newSong.onsuccess = function () {
-          let getSongData = transaction.objectStore(storeName).get(newSong.result);
-          getSongData.onsuccess = function () {
-            let song = getSongData.result;
-            url = window.URL.createObjectURL(song.url);
-            songsList.insertAdjacentHTML('beforeend',
-              '<tr>' + songNode(url, (`${song.title}` ? `${song.artist} - ${song.title}` : `${song.artist}`), song.genre, newSong.result) + '</tr>');
+        request.onsuccess = () => {
+          let transaction = db.transaction([storeName], 'readwrite');
+          let newSong = transaction.objectStore(storeName).put({ 'artist': artist ? artist : file[i].name, 'title': title, 'album': album, 'trackPosition': trackPosition, 'genre': genre ? genre : 'Various', 'url': blob, 'date': new Date().toLocaleString('fr-FR') });
+          newSong.onsuccess = function () {
+            let getSongData = transaction.objectStore(storeName).get(newSong.result);
+            getSongData.onsuccess = function () {
+              let song = getSongData.result;
+              url = window.URL.createObjectURL(song.url);
+              songsList.insertAdjacentHTML('afterbegin',
+                '<tr>' + songNode(url, (`${song.title}` ? `${song.artist} - ${song.title}` : `${song.artist}`), song.album, song.genre, newSong.result) + '</tr>');
+            }
           }
         }
+      },
+      onError: function (error) {
+        console.log(error);
       }
-    }
+    });
   }
 }
