@@ -123,6 +123,8 @@ function forward() {
     let forwardElement = onPlay.parentNode.children[rank + 1];
     if (isRandom) {
       let random = Math.floor(Math.random() * table.children[context.index].childElementCount) + 1;
+      console.log(table.children[context.index].childElementCount);
+      console.log(random);
       forwardElement = onPlay.parentNode.children[random];
     }
     if (forwardElement) {

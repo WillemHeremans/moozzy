@@ -1,5 +1,5 @@
 const tabs = document.getElementById("tabs");
-let context = {name: 'Songs', index: 1};
+let context = {name: 'Songs', index: 3};
 
 
 tabs.addEventListener('click', tabsClick);
@@ -31,12 +31,12 @@ function tabsClick() {
     songsList.style.display = 'none';
     radiosThead.style.display = 'table-row-group';
     radiosList.style.display = 'table-row-group';
-    context.index = 2;
+    context.index = 1;
   } else {
     songsThead.style.display = 'table-row-group';
     songsList.style.display = 'table-row-group';
     radiosThead.style.display = 'none';
     radiosList.style.display = 'none';
-    context.index = 1;
+    context.index = 3;
   }
 }
