@@ -261,7 +261,7 @@ submitButton.onclick = function submit() {
               getSongData.onsuccess = function () {
                 let song = getSongData.result;
                 radiosList.insertAdjacentHTML('afterbegin',
-                  '<tr>' + songNode(song.url, song.name, song.genre, newSong.result) + '</tr>');
+                  '<tr>' + songNode(song.url, song.name, undefined, song.genre, newSong.result) + '</tr>');
               }
             }
           }

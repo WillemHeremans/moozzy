@@ -55,6 +55,9 @@ if (navigator.vendor.includes('Google')) {
 
 function loadSong(element, name, url) {
   if (element != event) {
+    if (sequenceLoopOn) {
+      sequenceLoop();
+    }
     if (document.getElementById('onPlay')) {
       document.getElementById('onPlay').removeAttribute('class');
       document.getElementById('onPlay').removeAttribute('id');
@@ -69,6 +72,9 @@ function loadSong(element, name, url) {
       songSettings(event.target.parentNode);
     } else {
       if (event.target.parentNode.parentNode.id) {
+        if (sequenceLoopOn) {
+          sequenceLoop();
+        }
         if (document.getElementById('onPlay')) {
           document.getElementById('onPlay').removeAttribute('class');
           document.getElementById('onPlay').removeAttribute('id');
