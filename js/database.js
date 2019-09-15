@@ -23,9 +23,12 @@ const songsList = document.getElementById('songsList');
 const radiosList = document.getElementById('radiosList');
 const radiosThead = document.getElementById('radiosThead');
 const songsThead = document.getElementById('songsThead');
+const playListThead = document.getElementById('playListThead');
+const playList = document.getElementById('playList');
 
 songsList.addEventListener('click', loadSong);
 radiosList.addEventListener('click', loadSong);
+playList.addEventListener('click', loadSong);
 addFileButton.addEventListener('change', addFile);
 
 if ('serviceWorker' in navigator) {
@@ -72,8 +75,8 @@ function showUpdateBar() {
 
 function songNode(url, name, album, genre, id) {
   return `<td data-music-url="${url}">${name}</td>`
-    + (album ? `<td>${album}</td>` : `<td></td>`)
-    + `<td>${genre}</td>`
+    + (album ? `<td><span class="badge badge-info">${album}</span></td>` : `<td></td>`)
+    + `<td><span class="badge badge-info">${genre}</span></td>`
     + `<td id="${id}" title="Edit this item"><i class="fas fa-bars"></i></td>`;
 }
 
@@ -321,7 +324,22 @@ function addFile(e) {
         }
       },
       onError: function (error) {
-        console.log(error);
+        console.log(`error > ${error.type} : ${error.info}`);
+        let blob = new Blob([file[i]], { type: file[i].type });
+        let request = indexedDB.open(dbName, dbVersion);
+        request.onsuccess = () => {
+          let transaction = db.transaction([storeName], 'readwrite');
+          let newSong = transaction.objectStore(storeName).put({ 'artist': artist ? artist : file[i].name, 'title': title, 'album': album, 'trackPosition': trackPosition, 'genre': genre ? genre : 'Various', 'url': blob, 'date': new Date().toLocaleString('fr-FR') });
+          newSong.onsuccess = function () {
+            let getSongData = transaction.objectStore(storeName).get(newSong.result);
+            getSongData.onsuccess = function () {
+              let song = getSongData.result;
+              url = window.URL.createObjectURL(song.url);
+              songsList.insertAdjacentHTML('afterbegin',
+                '<tr>' + songNode(url, (`${song.title}` ? `${song.artist} - ${song.title}` : `${song.artist}`), song.album, song.genre, newSong.result) + '</tr>');
+            }
+          }
+        }
       }
     });
   }

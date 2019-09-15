@@ -68,8 +68,10 @@ function loadSong(element, name, url) {
     audioElement.src = url;
     audioElement.preload = 'metadata';
   } else {
-    if (event.target.className === 'fas fa-bars') {
+    if (event.target.classList.contains('fa-bars')) {
       songSettings(event.target.parentNode);
+    } else if (event.target.classList.contains('badge')) {
+      setPlayList(event.target.textContent);
     } else {
       if (event.target.parentNode.parentNode.id) {
         if (sequenceLoopOn) {
