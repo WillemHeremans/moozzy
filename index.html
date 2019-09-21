@@ -99,30 +99,30 @@
                             <tr>
                                 <th>Name</th>
                                 <th></th>
-                                <th>Genre</th>
+                                <th>Tag(s)</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody id="radiosList"></tbody>
                         <thead id="songsThead">
                             <tr>
-                                <th>Name</th>
-                                <th>Album</th>
-                                <th>Genre</th>
+                                <th>Name / Album</th>
+                                <!-- <th>Album</th> -->
+                                <th>Tag(s)</th>
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody id="songsList"></tbody>
+                        <tbody id="songsList" ondrop="drop(event)" ondragover="allowDrop(event)"></tbody>
 
                         <thead id="playListThead">
                             <tr>
                                 <th>Name</th>
-                                <th>Album</th>
-                                <th>Genre</th>
+                                <!-- <th>Album</th> -->
+                                <th>Tag(s)</th>
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody id="playList"></tbody>
+                        <tbody id="playList" ondrop="drop(event)" ondragover="allowDrop(event)"></tbody>
 
                     </table>
                 </div>
@@ -180,7 +180,7 @@
 
                     <div class="input-group input-group-sm mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">Genre</span>
+                            <span class="input-group-text">Tag(s)</span>
                         </div>
                         <input id="songGenre" class="form-control form-control-sm" type="text"
                             placeholder="Enter a category for your web radio">
@@ -227,7 +227,7 @@
 
     <script src="./js/player.js"></script>
     <script src="./js/database.js"></script>
-    <script src="./js/display.js"></script>
+    <script src="./js/playlist.js"></script>
     <script src="./js/jsmediatags.min.js"></script>
 </body>
 

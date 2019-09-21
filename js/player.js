@@ -68,10 +68,14 @@ function loadSong(element, name, url) {
     audioElement.src = url;
     audioElement.preload = 'metadata';
   } else {
-    if (event.target.classList.contains('fa-bars')) {
-      songSettings(event.target.parentNode);
+    if (event.target.classList.contains('fa-bars') || event.target.classList.contains('fa-times') || event.target.id) {
+      if (context.name !== 'Playlists') {
+        songSettings(event.target);
+      } else {
+        event.target.id ? event.target.parentNode.remove() : event.target.parentNode.parentNode.remove();
+      }
     } else if (event.target.classList.contains('badge')) {
-      setPlayList(event.target.textContent);
+      setPlayList(event.target);
     } else {
       if (event.target.parentNode.parentNode.id) {
         if (sequenceLoopOn) {

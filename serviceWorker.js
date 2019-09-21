@@ -9,7 +9,7 @@ const contentToCache = [
   '/moozzy/css/style.css',
   '/moozzy/js/jsmediatags.min.js',
   '/moozzy/js/database.js',
-  '/moozzy/js/display.js',
+  '/moozzy/js/playlist.js',
   '/moozzy/js/player.js',
   'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
   'https://use.fontawesome.com/releases/v5.7.2/css/all.css',

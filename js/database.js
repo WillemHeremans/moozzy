@@ -74,8 +74,8 @@ function showUpdateBar() {
 }
 
 function songNode(url, name, album, genre, id) {
-  return `<td data-music-url="${url}">${name}</td>`
-    + (album ? `<td><span class="badge badge-info">${album}</span></td>` : `<td></td>`)
+  return `<td data-music-url="${url}">${name} ${album ? '/ ' : ''}<span class="badge badge-info">${album ? album : ''}</span></td>`
+    // + (album ? `<td><span class="badge badge-info">${album}</span></td>` : `<td></td>`)
     + `<td><span class="badge badge-info">${genre}</span></td>`
     + `<td id="${id}" title="Edit this item"><i class="fas fa-bars"></i></td>`;
 }
@@ -130,7 +130,7 @@ body.onload = function loadSongsData() {
           if (typeof (song[i].url) !== 'string') {
             url = window.URL.createObjectURL(song[i].url);
             songsList.insertAdjacentHTML('afterbegin',
-              '<tr>' + songNode(url, (`${song[i].title}` ? `${song[i].artist} - ${song[i].title}` : `${song[i].artist}`),
+              '<tr draggable="true" ondragstart="drag(event)">' + songNode(url, (`${song[i].title}` ? `<span class="badge badge-info">${song[i].artist}</span> - ${song[i].title}` : `${song[i].artist}`),
                 song[i].album, song[i].genre, key[i]) + '</tr>');
           } else {
             url = song[i].url;
@@ -173,7 +173,7 @@ function songSettings(element) {
   request.onsuccess = function () {
 
     let transaction = db.transaction([storeName], 'readwrite');
-    let getSongData = transaction.objectStore(storeName).get(Number(element.id));
+    let getSongData = transaction.objectStore(storeName).get(Number(element.id ? element.id : element.parentNode.id));
 
     getSongData.onsuccess = function () {
       let song = getSongData.result;
@@ -185,7 +185,7 @@ function songSettings(element) {
         radioURL.value = song.url;
         radioName.value = song.name;
       }
-      songID.value = element.id;
+      songID.value = element.id ? element.id : element.parentNode.id;
     }
   }
 }
@@ -288,7 +288,15 @@ confirmDelete.onclick = function deleteSong() {
 
 function addFile(e) {
 
-  let file = e.target.files;
+  let file;
+
+  if (e.type === 'drop') {
+    
+    file = e.dataTransfer.files
+    
+  } else {
+    file = e.target.files;
+  }
 
   for (let i = 0; i < file.length; i++) {
 
