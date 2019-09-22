@@ -73,6 +73,8 @@ function loadSong(element, name, url) {
         songSettings(event.target);
       } else {
         event.target.id ? event.target.parentNode.remove() : event.target.parentNode.parentNode.remove();
+        const index = playListIDs.indexOf(event.target.id ? event.target.id : event.target.parentNode.id);
+                index !== -1 ? playListIDs.splice(index, 1) : undefined;
       }
     } else if (event.target.classList.contains('badge')) {
       setPlayList(event.target);

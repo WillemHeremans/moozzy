@@ -145,9 +145,7 @@ function setPlayList(tag) {
 
     if (tag.parentNode.dataset.musicUrl) {
       let i =  playList.children.length;
-      console.log(i);
       while (i--) {
-        console.log(i);
         for (const badge of playList.children[i].children[0].children) {
           if ((badge.textContent === tag.textContent) && playList.children[i]) {
               if (playListIDs.includes(playList.children[i].children[2].id)) {
