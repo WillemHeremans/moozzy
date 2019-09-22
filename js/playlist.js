@@ -100,6 +100,10 @@ function setPlayList(tag) {
               if (!playListIDs.includes(item.children[2].id)) {
                 playListIDs.push(item.children[2].id);
                 let clone = item.cloneNode(true);
+                if (clone.id) {
+                  clone.removeAttribute('class');
+                  clone.removeAttribute('id');
+                }
                 clone.children[2].children[0].classList.replace('fa-bars', 'fa-times');
                 for (const badge of clone.children[0].children) {
                   if (badge.textContent === tag.textContent) {
@@ -120,6 +124,10 @@ function setPlayList(tag) {
               if (!playListIDs.includes(item.children[2].id)) {
                 playListIDs.push(item.children[2].id);
                 let clone = item.cloneNode(true);
+                if (clone.id) {
+                  clone.removeAttribute('class');
+                  clone.removeAttribute('id');
+                }
                 clone.children[2].children[0].classList.replace('fa-bars', 'fa-times');
                 for (const badge of clone.children[1].children) {
                   if (badge.textContent === tag.textContent) {
@@ -144,28 +152,28 @@ function setPlayList(tag) {
   } else {
 
     if (tag.parentNode.dataset.musicUrl) {
-      let i =  playList.children.length;
+      let i = playList.children.length;
       while (i--) {
         for (const badge of playList.children[i].children[0].children) {
           if ((badge.textContent === tag.textContent) && playList.children[i]) {
-              if (playListIDs.includes(playList.children[i].children[2].id)) {
-                const index = playListIDs.indexOf(playList.children[i].children[2].id);
-                index !== -1 ? playListIDs.splice(index, 1) : undefined;
-              }
-              playList.children[i].remove();
+            if (playListIDs.includes(playList.children[i].children[2].id)) {
+              const index = playListIDs.indexOf(playList.children[i].children[2].id);
+              index !== -1 ? playListIDs.splice(index, 1) : undefined;
+            }
+            playList.children[i].remove();
           }
         }
       }
     } else {
-      let i =  playList.children.length
+      let i = playList.children.length
       while (i--) {
         for (const badge of playList.children[i].children[1].children) {
           if (badge.textContent === tag.textContent) {
-              if (playListIDs.includes(playList.children[i].children[2].id)) {
-                const index = playListIDs.indexOf(playList.children[i].children[2].id);
-                index !== -1 ? playListIDs.splice(index, 1) : undefined;
-              }
-              playList.children[i].remove();
+            if (playListIDs.includes(playList.children[i].children[2].id)) {
+              const index = playListIDs.indexOf(playList.children[i].children[2].id);
+              index !== -1 ? playListIDs.splice(index, 1) : undefined;
+            }
+            playList.children[i].remove();
           }
         }
       }
