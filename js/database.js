@@ -75,7 +75,6 @@ function showUpdateBar() {
 
 function songNode(url, name, album, genre, id) {
   return `<td data-music-url="${url}">${name} ${album ? '/ ' : ''}<span class="badge badge-info">${album ? album : ''}</span></td>`
-    // + (album ? `<td><span class="badge badge-info">${album}</span></td>` : `<td></td>`)
     + `<td><span class="badge badge-info">${genre}</span></td>`
     + `<td id="${id}" title="Edit this item"><i class="fas fa-bars"></i></td>`;
 }
@@ -245,7 +244,7 @@ submitButton.onclick = function submit() {
         }
         let node = document.getElementById(songID.value);
         node.parentNode.innerHTML =
-          songNode(node.parentNode.children[0].dataset.musicUrl, (`${songTitle.value}` ? `${artistName.value} - ${songTitle.value}` : `${artistName.value}`), albumName.value, songGenre.value, songID.value);
+          songNode(node.parentNode.children[0].dataset.musicUrl, (`${songTitle.value}` ? `<span class="badge badge-info">${artistName.value}</span> - ${songTitle.value}` : `${artistName.value}`), albumName.value, songGenre.value, songID.value);
       }
 
 
@@ -326,7 +325,7 @@ function addFile(e) {
               let song = getSongData.result;
               url = window.URL.createObjectURL(song.url);
               songsList.insertAdjacentHTML('afterbegin',
-                '<tr>' + songNode(url, (`${song.title}` ? `${song.artist} - ${song.title}` : `${song.artist}`), song.album, song.genre, newSong.result) + '</tr>');
+                '<tr>' + songNode(url, (`${song.title}` ? `<span class="badge badge-info">${song.artist}</span> - ${song.title}` : `${song.artist}`), song.album, song.genre, newSong.result) + '</tr>');
             }
           }
         }
@@ -344,7 +343,7 @@ function addFile(e) {
               let song = getSongData.result;
               url = window.URL.createObjectURL(song.url);
               songsList.insertAdjacentHTML('afterbegin',
-                '<tr>' + songNode(url, (`${song.title}` ? `${song.artist} - ${song.title}` : `${song.artist}`), song.album, song.genre, newSong.result) + '</tr>');
+                '<tr>' + songNode(url, (`${song.title}` ? `<span class="badge badge-info">${song.artist}</span> - ${song.title}` : `${song.artist}`), song.album, song.genre, newSong.result) + '</tr>');
             }
           }
         }
