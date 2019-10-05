@@ -73,7 +73,7 @@ function tabsClick(tab) {
 function setPlayList(tag) {
 
   if (!tag.classList.contains('badge-light')) {
-    if (context.name === 'Playlists') {
+    if (context.name === 'Playlist') {
       if (tag.parentNode.dataset.musicUrl) {
         for (const item of playList.children) {
           for (const badge of item.children[0].children) {
@@ -142,7 +142,7 @@ function setPlayList(tag) {
       }
     }
 
-    tabsClick('Playlists');
+    tabsClick('Playlist');
     songsList.style.display = 'none';
     songsThead.style.display = 'none';
     playListThead.style.display = 'table-row-group';
@@ -188,7 +188,7 @@ function allowDrop(ev) {
 }
 
 function drag(ev) {
-  ev.target.id = 'OnDrag';
+  ev.target.id ? ev.target.id : ev.target.id = 'OnDrag';
   ev.dataTransfer.setData("text", ev.target.id);
 }
 
@@ -199,7 +199,13 @@ function drop(ev) {
   } else {
     let data = ev.dataTransfer.getData("text");
     if (ev.target.textContent === 'Playlist') {
-      playList.insertAdjacentElement('afterbegin', (document.getElementById(data)).cloneNode(true));
+      let clone = (document.getElementById(data)).cloneNode(true);
+      if (clone.id) {
+        clone.removeAttribute('class');
+        clone.removeAttribute('id');
+      }
+      clone.children[2].children[0].classList.replace('fa-bars', 'fa-times');
+      playList.insertAdjacentElement('afterbegin', clone);
     } else {
       if (ev.target.classList.contains('badge')) {
         ev.target.parentNode.parentNode.insertAdjacentElement('afterend', document.getElementById(data));
@@ -207,7 +213,7 @@ function drop(ev) {
         ev.target.parentNode.insertAdjacentElement('afterend', document.getElementById(data));
       }
     }
-    document.getElementById('OnDrag').removeAttribute('id');
+    document.getElementById('OnDrag') ? document.getElementById('OnDrag').removeAttribute('id') : undefined;
   }
 }
 

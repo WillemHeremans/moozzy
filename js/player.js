@@ -69,7 +69,7 @@ function loadSong(element, name, url) {
     audioElement.preload = 'metadata';
   } else {
     if (event.target.classList.contains('fa-bars') || event.target.classList.contains('fa-times') || event.target.id) {
-      if (context.name !== 'Playlists') {
+      if (context.name !== 'Playlist') {
         songSettings(event.target);
       } else {
         event.target.id ? event.target.parentNode.remove() : event.target.parentNode.parentNode.remove();
