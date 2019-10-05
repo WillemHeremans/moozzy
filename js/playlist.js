@@ -197,8 +197,17 @@ function drop(ev) {
   if (ev.dataTransfer.files.length > 0) {
     addFile(ev);
   } else {
+    console.log(ev.target);
     let data = ev.dataTransfer.getData("text");
-    ev.target.parentNode.insertAdjacentElement('afterend', document.getElementById(data))
+    if (ev.target.textContent === 'Playlist') {
+      playList.insertAdjacentElement('afterbegin', (document.getElementById(data)).cloneNode(true));
+    } else {
+      if (ev.target.classList.contains('badge')) {
+        ev.target.parentNode.parentNode.insertAdjacentElement('afterend', document.getElementById(data));
+      } else {
+        ev.target.parentNode.insertAdjacentElement('afterend', document.getElementById(data));
+      }
+    }
     document.getElementById('OnDrag').removeAttribute('id');
   }
 }
