@@ -199,13 +199,16 @@ function drop(ev) {
   } else {
     let data = ev.dataTransfer.getData("text");
     if (ev.target.textContent === 'Playlist') {
-      let clone = (document.getElementById(data)).cloneNode(true);
-      if (clone.id) {
-        clone.removeAttribute('class');
-        clone.removeAttribute('id');
+      if (!playListIDs.includes(document.getElementById(data).children[2].id)) {
+        let clone = (document.getElementById(data)).cloneNode(true);
+        playListIDs.push(clone.children[2].id);
+        if (clone.id) {
+          clone.removeAttribute('class');
+          clone.removeAttribute('id');
+        }
+        clone.children[2].children[0].classList.replace('fa-bars', 'fa-times');
+        playList.insertAdjacentElement('afterbegin', clone);
       }
-      clone.children[2].children[0].classList.replace('fa-bars', 'fa-times');
-      playList.insertAdjacentElement('afterbegin', clone);
     } else {
       if (ev.target.classList.contains('badge')) {
         ev.target.parentNode.parentNode.insertAdjacentElement('afterend', document.getElementById(data));
