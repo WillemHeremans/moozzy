@@ -343,7 +343,7 @@ function addFile(e) {
               let song = getSongData.result;
               url = window.URL.createObjectURL(song.url);
               songsList.insertAdjacentHTML('afterbegin',
-                '<tr>' + songNode(url, (`${song.title}` ? `<span class="badge badge-info">${song.artist}</span> - ${song.title}` : `${song.artist}`), song.album, song.genre, newSong.result) + '</tr>');
+              '<tr draggable="true" ondragstart="drag(event)">' + songNode(url, (`${song.title}` ? `<span class="badge badge-info">${song.artist}</span> - ${song.title}` : `${song.artist}`), song.album, song.genre, newSong.result) + '</tr>');
             }
           }
         }
