@@ -15,10 +15,12 @@ const modalTitle = document.getElementById('modalTitle');
 const submitButton = document.getElementById('submit');
 const deleteButton = document.getElementById('delete');
 const plusButton = document.getElementById('plusButton');
+const askConfirm = document.getElementById('askConfirm');
 const confirmDelete = document.getElementById('confirmDelete');
 const addFileButton = document.getElementById('addFile');
 const addRadioModal = document.getElementById('addRadio');
 const closeModal = document.getElementById('closeModal');
+const closeConfirm = document.getElementById('closeConfirm');
 const songsList = document.getElementById('songsList');
 const radiosList = document.getElementById('radiosList');
 const radiosThead = document.getElementById('radiosThead');
@@ -29,6 +31,8 @@ const playList = document.getElementById('playList');
 songsList.addEventListener('click', loadSong);
 radiosList.addEventListener('click', loadSong);
 playList.addEventListener('click', loadSong);
+closeModal.addEventListener('click', close);
+closeConfirm.addEventListener('click', close);
 addFileButton.addEventListener('change', addFile);
 
 if ('serviceWorker' in navigator) {
@@ -129,7 +133,7 @@ body.onload = function loadSongsData() {
           if (typeof (song[i].url) !== 'string') {
             url = window.URL.createObjectURL(song[i].url);
             songsList.insertAdjacentHTML('afterbegin',
-              '<tr draggable="true" ondragstart="drag(event)">' + songNode(url, (`${song[i].title}` ? `<span class="badge badge-info">${song[i].artist}</span> - ${song[i].title}` : `${song[i].artist}`),
+              '<tr draggable="true" ondragstart="drag(event)">' + songNode(url, (`${song[i].title}` ? `<span class="badge badge-info">${song[i].artist}</span><span> - ${song[i].title}</span>` : `<span>${song[i].artist}</span>`),
                 song[i].album, song[i].genre, key[i]) + '</tr>');
           } else {
             url = song[i].url;
@@ -211,8 +215,12 @@ plusButton.onclick = function unloadModal() {
 
 }
 
-closeModal.onclick = () => {
-  addRadioModal.style.display = 'none';
+function close(event) {
+  event.target.parentNode.parentNode.parentNode.parentNode.style.display = 'none';
+}
+
+deleteButton.onclick = () => {
+  askConfirm.style.display = 'block';
 }
 
 submitButton.onclick = function submit() {
@@ -274,6 +282,7 @@ submitButton.onclick = function submit() {
 }
 
 confirmDelete.onclick = function deleteSong() {
+  
   closeModal.click();
   let request = indexedDB.open(dbName, dbVersion);
   request.onsuccess = function () {

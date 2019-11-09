@@ -67,6 +67,11 @@ function loadSong(element, name, url) {
     songInfo.firstElementChild.textContent = name;
     audioElement.src = url;
     audioElement.preload = 'metadata';
+    if (navigator.vendor.includes('Google')) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: name
+      });
+    }
   } else {
     if (event.target.classList.contains('fa-bars') || event.target.classList.contains('fa-times') || event.target.id) {
       if (context.name !== 'Playlist') {
