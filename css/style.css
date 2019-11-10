@@ -23,7 +23,10 @@ background-image: linear-gradient(315deg, #44b09e 0%, #e0d2c7 74%);
 }
 
 h1 {
-  text-align: center; 
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 a {

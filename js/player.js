@@ -147,9 +147,11 @@ function forward() {
     if (forwardElement) {
       loadSong(forwardElement.children[0], forwardElement.childNodes[0].textContent,
         forwardElement.childNodes[0].dataset.musicUrl)
+        window.location.hash = String(Number(forwardElement.children[2].id) + 1);
     } else {
       loadSong(table.children[context.index].children[0].children[0], table.children[context.index].children[0].children[0].textContent,
         table.children[context.index].children[0].children[0].dataset.musicUrl)
+        window.location.hash = 'songsThead';
     }
   }
 }
@@ -161,11 +163,13 @@ function backward() {
     let backwardElement = onPlay.parentNode.children[rank - 1];
     if (backwardElement) {
       loadSong(backwardElement.children[0], backwardElement.children[0].textContent,
-        backwardElement.children[0].dataset.musicUrl)
+        backwardElement.children[0].dataset.musicUrl);
+        window.location.hash = String(Number(backwardElement.children[2].id) + 1);
     } else {
       rank = table.children[context.index].childElementCount - 1;
       loadSong(table.children[context.index].children[rank].children[0], table.children[context.index].children[rank].children[0].textContent,
-        table.children[context.index].children[rank].children[0].dataset.musicUrl)
+        table.children[context.index].children[rank].children[0].dataset.musicUrl);
+        window.location.hash = table.children[context.index].children[rank].children[2].id;
     }
   }
 }
