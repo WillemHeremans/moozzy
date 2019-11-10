@@ -104,6 +104,8 @@ function setPlayList(tag) {
                   clone.removeAttribute('class');
                   clone.removeAttribute('id');
                 }
+                clone.children[0].id = 'list-' + playListIDs.length;
+                clone.children[2].title = 'Remove this item';
                 clone.children[2].children[0].classList.replace('fa-bars', 'fa-times');
                 for (const badge of clone.children[0].children) {
                   if (badge.textContent === tag.textContent) {
@@ -128,6 +130,8 @@ function setPlayList(tag) {
                   clone.removeAttribute('class');
                   clone.removeAttribute('id');
                 }
+                clone.children[0].id = 'list-' + playListIDs.length;
+                clone.children[2].title = 'Remove this item';
                 clone.children[2].children[0].classList.replace('fa-bars', 'fa-times');
                 for (const badge of clone.children[1].children) {
                   if (badge.textContent === tag.textContent) {
@@ -206,6 +210,8 @@ function drop(ev) {
           clone.removeAttribute('class');
           clone.removeAttribute('id');
         }
+        clone.children[0].id = 'list-' + playListIDs.length;
+        clone.children[2].title = 'Remove this item';
         clone.children[2].children[0].classList.replace('fa-bars', 'fa-times');
         playList.insertAdjacentElement('afterbegin', clone);
       }

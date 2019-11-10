@@ -73,7 +73,7 @@ function loadSong(element, name, url) {
       });
     }
   } else {
-    if (event.target.classList.contains('fa-bars') || event.target.classList.contains('fa-times') || event.target.id) {
+    if (event.target.classList.contains('fa-bars') || event.target.classList.contains('fa-times') || event.target.title) {
       if (context.name !== 'Playlist') {
         songSettings(event.target);
       } else {
@@ -147,7 +147,7 @@ function forward() {
     if (forwardElement) {
       loadSong(forwardElement.children[0], forwardElement.childNodes[0].textContent,
         forwardElement.childNodes[0].dataset.musicUrl)
-        window.location.hash = String(Number(forwardElement.children[2].id) + 1);
+        window.location.hash = context.name === 'Playlist' ? 'list-' + String(Number((forwardElement.children[0].id).substring(5)) + 1) : String(Number(forwardElement.children[2].id) + 1);
     } else {
       loadSong(table.children[context.index].children[0].children[0], table.children[context.index].children[0].children[0].textContent,
         table.children[context.index].children[0].children[0].dataset.musicUrl)
@@ -164,7 +164,7 @@ function backward() {
     if (backwardElement) {
       loadSong(backwardElement.children[0], backwardElement.children[0].textContent,
         backwardElement.children[0].dataset.musicUrl);
-        window.location.hash = String(Number(backwardElement.children[2].id) + 1);
+        window.location.hash = context.name === 'Playlist' ? 'list-' + String(Number((backwardElement.children[0].id).substring(5)) + 1) : String(Number(backwardElement.children[2].id) + 1);
     } else {
       rank = table.children[context.index].childElementCount - 1;
       loadSong(table.children[context.index].children[rank].children[0], table.children[context.index].children[rank].children[0].textContent,
