@@ -97,6 +97,11 @@ function loadSong(element, name, url) {
         songInfo.firstElementChild.textContent = event.target.parentNode.children[0].textContent;
         audioElement.src = event.target.parentNode.children[0].dataset.musicUrl;
         audioElement.preload = 'metadata';
+        if (navigator.vendor.includes('Google')) {
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: name
+          });
+        }
       }
     }
   }
