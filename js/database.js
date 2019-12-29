@@ -133,7 +133,7 @@ body.onload = function loadSongsData() {
           if (typeof (song[i].url) !== 'string') {
             url = window.URL.createObjectURL(song[i].url);
             songsList.insertAdjacentHTML('afterbegin',
-              '<tr draggable="true" ondragstart="drag(event)">' + songNode(url, (`${song[i].title}` ? `<span class="badge badge-info">${song[i].artist}</span><span> - ${song[i].title}</span>` : `<span>${song[i].artist}</span>`),
+              '<tr draggable="true" ondragstart="drag(event)">' + songNode(url, (`${song[i].title}` ? `<span class="badge badge-info">${song[i].artist}</span> - ${song[i].title}` : `${song[i].artist}`),
                 song[i].album, song[i].genre, key[i]) + '</tr>');
           } else {
             url = song[i].url;
