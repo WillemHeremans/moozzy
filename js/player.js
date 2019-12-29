@@ -72,6 +72,10 @@ function loadSong(element, name, url) {
         title: name
       });
     }
+    new Notification(name, {
+      icon: './favicon.ico',
+      tag: 'setNewSong'
+    });
   } else {
     if (event.target.classList.contains('fa-bars') || event.target.classList.contains('fa-times') || event.target.title) {
       if (context.name !== 'Playlist') {
@@ -94,7 +98,8 @@ function loadSong(element, name, url) {
         }
         event.target.parentNode.setAttribute('id', 'onPlay');
         event.target.parentNode.setAttribute('class', 'onplay');
-        songInfo.firstElementChild.textContent = event.target.parentNode.children[0].textContent;
+        name = event.target.parentNode.children[0].textContent;
+        songInfo.firstElementChild.textContent = name;
         audioElement.src = event.target.parentNode.children[0].dataset.musicUrl;
         audioElement.preload = 'metadata';
         if (navigator.vendor.includes('Google')) {
@@ -102,6 +107,10 @@ function loadSong(element, name, url) {
             title: name
           });
         }
+        new Notification(name, {
+          icon: './favicon.ico',
+          tag: 'setNewSong'
+        });
       }
     }
   }

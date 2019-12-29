@@ -97,6 +97,12 @@ function checkUrl(string) {
 
 body.onload = function loadSongsData() {
 
+  if (Notification.permission !== "denied") {
+    Notification.requestPermission().then((e) => {
+      console.log(`Notifications : ${e}`);
+    });
+  }
+  
   let request = indexedDB.open(dbName, dbVersion);
 
   request.onerror = function (event) {
