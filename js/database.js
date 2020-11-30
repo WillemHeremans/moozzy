@@ -102,7 +102,7 @@ body.onload = function loadSongsData() {
       console.log(`Notifications : ${e}`);
     });
   }
-  
+
   let request = indexedDB.open(dbName, dbVersion);
 
   request.onerror = function (event) {
@@ -288,7 +288,7 @@ submitButton.onclick = function submit() {
 }
 
 confirmDelete.onclick = function deleteSong() {
-  
+
   closeModal.click();
   let request = indexedDB.open(dbName, dbVersion);
   request.onsuccess = function () {
@@ -302,67 +302,68 @@ confirmDelete.onclick = function deleteSong() {
 
 function addFile(e) {
 
-  let file;
+  let files;
 
   if (e.type === 'drop') {
-    
-    file = e.dataTransfer.files
-    
+
+    files = e.dataTransfer.files
+
   } else {
-    file = e.target.files;
+    files = e.target.files;
   }
 
-  for (let i = 0; i < file.length; i++) {
+  Array.from(files).forEach(
+    (file) => {
+      let title = '';
+      let artist = '';
+      let album = '';
+      let trackPosition = '';
+      let genre = '';
 
-    let title = '';
-    let artist = '';
-    let album = '';
-    let trackPosition = '';
-    let genre = '';
+      jsmediatags.read(file, {
+        onSuccess: function (data) {
+          data.tags.title ? title = data.tags.title : undefined;
+          data.tags.artist ? artist = data.tags.artist : undefined;
+          data.tags.album ? album = data.tags.album : undefined;
+          data.tags.track ? trackPosition = data.tags.track : undefined;
+          data.tags.genre ? genre = data.tags.genre : undefined;
 
-    jsmediatags.read(file[i], {
-      onSuccess: function (data) {
-        data.tags.title ? title = data.tags.title : undefined;
-        data.tags.artist ? artist = data.tags.artist : undefined;
-        data.tags.album ? album = data.tags.album : undefined;
-        data.tags.track ? trackPosition = data.tags.track : undefined;
-        data.tags.genre ? genre = data.tags.genre : undefined;
+          let blob = new Blob([file], { type: file.type });
+          let request = indexedDB.open(dbName, dbVersion);
 
-        let blob = new Blob([file[i]], { type: file[i].type });
-        let request = indexedDB.open(dbName, dbVersion);
-
-        request.onsuccess = () => {
-          let transaction = db.transaction([storeName], 'readwrite');
-          let newSong = transaction.objectStore(storeName).put({ 'artist': artist ? artist : file[i].name, 'title': title, 'album': album, 'trackPosition': trackPosition, 'genre': genre ? genre : 'Various', 'url': blob, 'date': new Date().toLocaleString('fr-FR') });
-          newSong.onsuccess = function () {
-            let getSongData = transaction.objectStore(storeName).get(newSong.result);
-            getSongData.onsuccess = function () {
-              let song = getSongData.result;
-              url = window.URL.createObjectURL(song.url);
-              songsList.insertAdjacentHTML('afterbegin',
-                '<tr draggable="true" ondragstart="drag(event)">' + songNode(url, (`${song.title}` ? `<span class="badge badge-info">${song.artist}</span> - ${song.title}` : `${song.artist}`), song.album, song.genre, newSong.result) + '</tr>');
+          request.onsuccess = () => {
+            let transaction = db.transaction([storeName], 'readwrite');
+            let newSong = transaction.objectStore(storeName).put({ 'artist': artist ? artist : file.name, 'title': title, 'album': album, 'trackPosition': trackPosition, 'genre': genre ? genre : 'Various', 'url': blob, 'date': new Date().toLocaleString('fr-FR') });
+            newSong.onsuccess = function () {
+              let getSongData = transaction.objectStore(storeName).get(newSong.result);
+              getSongData.onsuccess = function () {
+                let song = getSongData.result;
+                url = window.URL.createObjectURL(song.url);
+                songsList.insertAdjacentHTML('afterbegin',
+                  '<tr draggable="true" ondragstart="drag(event)">' + songNode(url, (`${song.title}` ? `<span class="badge badge-info">${song.artist}</span> - ${song.title}` : `${song.artist}`), song.album, song.genre, newSong.result) + '</tr>');
+              }
+            }
+          }
+        },
+        onError: function (error) {
+          console.log(`error > ${error.type} : ${error.info}`);
+          let blob = new Blob([file], { type: file.type });
+          let request = indexedDB.open(dbName, dbVersion);
+          request.onsuccess = () => {
+            let transaction = db.transaction([storeName], 'readwrite');
+            let newSong = transaction.objectStore(storeName).put({ 'artist': artist ? artist : file.name, 'title': title, 'album': album, 'trackPosition': trackPosition, 'genre': genre ? genre : 'Various', 'url': blob, 'date': new Date().toLocaleString('fr-FR') });
+            newSong.onsuccess = function () {
+              let getSongData = transaction.objectStore(storeName).get(newSong.result);
+              getSongData.onsuccess = function () {
+                let song = getSongData.result;
+                url = window.URL.createObjectURL(song.url);
+                songsList.insertAdjacentHTML('afterbegin',
+                  '<tr draggable="true" ondragstart="drag(event)">' + songNode(url, (`${song.title}` ? `<span class="badge badge-info">${song.artist}</span> - ${song.title}` : `${song.artist}`), song.album, song.genre, newSong.result) + '</tr>');
+              }
             }
           }
         }
-      },
-      onError: function (error) {
-        console.log(`error > ${error.type} : ${error.info}`);
-        let blob = new Blob([file[i]], { type: file[i].type });
-        let request = indexedDB.open(dbName, dbVersion);
-        request.onsuccess = () => {
-          let transaction = db.transaction([storeName], 'readwrite');
-          let newSong = transaction.objectStore(storeName).put({ 'artist': artist ? artist : file[i].name, 'title': title, 'album': album, 'trackPosition': trackPosition, 'genre': genre ? genre : 'Various', 'url': blob, 'date': new Date().toLocaleString('fr-FR') });
-          newSong.onsuccess = function () {
-            let getSongData = transaction.objectStore(storeName).get(newSong.result);
-            getSongData.onsuccess = function () {
-              let song = getSongData.result;
-              url = window.URL.createObjectURL(song.url);
-              songsList.insertAdjacentHTML('afterbegin',
-              '<tr draggable="true" ondragstart="drag(event)">' + songNode(url, (`${song.title}` ? `<span class="badge badge-info">${song.artist}</span> - ${song.title}` : `${song.artist}`), song.album, song.genre, newSong.result) + '</tr>');
-            }
-          }
-        }
-      }
-    });
-  }
+      });
+    }
+  );
 }
